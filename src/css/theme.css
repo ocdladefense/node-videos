@@ -1,0 +1,144 @@
+
+.allura-regular {
+  font-family: "Allura", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Smoothy Cursive';
+    src: url(/src/fonts/smoothy-sans-regular.ttf) format('truetype');
+}
+
+
+
+@media screen and (min-width:1024px) {
+    section div.container {
+        max-width: 70%;
+    }
+    /*
+    main:not(.ciders, .drink, .order-progress) {
+        max-width: 90%;
+        margin: 0 auto;
+    }*/
+}
+
+@media screen and (min-width:1200px) {
+    /*
+    main:not(.ciders, .drink, .order-progress) {
+        max-width: 80%;
+        margin: 0 auto;
+    }*/
+}
+
+
+
+
+    section.fullscreen {
+        margin-bottom:0px;
+    }
+
+
+  @font-face {
+    font-family: 'Marketing';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/src/fonts/smoothy-sans-regular.ttf) format('truetype');
+  }
+
+
+.font-smoothy {
+  font-family: var(--font-family-smoothy);
+}
+
+nav .col-span-1 {
+    display: inline-block;
+    padding: 10px 15px;
+    vertical-align:middle;
+}
+
+
+nav .text-base {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+.panel-striped {
+    background-color: rgb(225 215 220);
+    /* margin: 0px -25px 45px -25px;
+    padding: 15px 25px; */
+}
+
+
+section div p {
+    margin-bottom: 1.5rem;
+}
+
+.content-heading {
+    text-transform: uppercase;
+}
+
+.callout {
+
+    /* margin-top: -112px; */
+    
+    font-size: 1.0rem;
+    font-weight: 200;
+    margin: 0 auto;
+    margin-top: -25px;
+}
+
+.callout p {
+    font-size: 1.0rem;
+}
+
+.hero-image {
+  @apply relative;
+  background-position: center;
+}
+
+.overlay-logo {
+  background-image: url('@themes/active/images/logos/logo-white.png');
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background-size:contain;
+  background-position: center;
+  object-fit:contain;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+.overlay-slow-cider {
+  background-image: url('/src/images/mockup/slow-cider.png');
+   position: absolute;
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  background-size:contain;
+  background-position: center;
+  object-fit:contain;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+
+ul.social img {
+    padding: 3px;
+    margin-left: -5px;
+    opacity: 0.6;
+}
+
+
+.hamburgler {
+    margin-left: 60px;
+}

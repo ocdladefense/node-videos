@@ -1,0 +1,18 @@
+{
+    "presets": [
+        ["@babel/preset-env", {"modules": false}],
+        ["@babel/preset-react",
+            {
+                "pragma": "vNode", // default pragma is React.createElement (only in classic runtime)
+                "pragmaFrag": "Fragment", // default is React.Fragment (only in classic runtime)
+                "throwIfNamespace": false, // defaults to true
+                "runtime": "classic", // defaults to classic
+                "targets": {
+                    "chrome": "120"
+                }
+                // "importSource": "custom-jsx-library" // defaults to react (only in automatic runtime)
+            }
+        ]
+    ],
+    "sourceMaps": true
+}

@@ -1,0 +1,9 @@
+{
+    "name": "@themes/ken-morrow",
+    "version": "0.0.1",
+    "description": "Tailwind theme, components and images for the template installation.",
+    "keywords": [],
+    "author": "José Bernal",
+    "license": "ISC",
+    "type": "module"
+}

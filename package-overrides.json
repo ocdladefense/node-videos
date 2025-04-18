@@ -1,0 +1,11 @@
+{
+    "dependencies": {
+        "@themes/active": "file:./dev_modules/@themes/ken-morrow",
+        "@local/openai": "file:./dev_modules/@local/openai",
+        "@ocdla/global-components": "file:./dev_modules/@ocdla/global-components",
+        "@ocdla/lib-routing": "file:./dev_modules/@ocdla/lib-routing"
+    },
+  "scripts": {
+    "example": "webpack --config webpack.config.js --env USE_MOCK --env MODULE_PATH=@local/lod"
+  }
+}
