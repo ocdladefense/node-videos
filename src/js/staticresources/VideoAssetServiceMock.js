@@ -1,0 +1,5 @@
+const VideoAssetServiceMock = (function(){
+    
+    
+    
+})();

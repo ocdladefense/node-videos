@@ -1,0 +1,181 @@
+.main .content {
+    
+    padding: 0px !important;
+}
+
+.main {
+    display: block;
+    width: 100%;
+}
+
+.column-right {
+    padding:5%;
+    text-align:center;
+}
+
+#picker-content {
+    margin: 0 auto;
+    text-align: left;
+}
+
+.hasFixedNav .page-wrapper {
+    margin-top: 113px !important;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#player {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #000;
+    min-height: 50vh;
+    width: 100%;
+}
+
+
+
+.video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    pointer-events: none; 
+    touch-action: none;
+}
+
+
+.with-video-player .video-container::after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-asset-container {
+    max-width: 300px;
+    margin-bottom: 20px;
+    display: block;
+    cursor: pointer;
+}  
+
+#time-slider {
+    cursor: pointer;
+}
+
+.video-asset-title {
+    font-weight: bold;
+    font-family: 'Trebuchet MS';
+    font-size: larger;
+    margin-bottom: 7px;
+}
+
+.video-asset-speakers {
+    font-style: italic;
+    margin-bottom:10px;
+}
+
+.video-asset-container {
+    max-width: 250px;
+    margin-bottom:30px;
+}  
+
+
+.video-controls-slider, .video-controls-buttons {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 8px;
+}
+
+.video-controls-slider {
+    margin-top:13px;
+}
+
+.video-controls-buttons img {
+    max-width: 30px;
+    margin-right: 15px;
+}
+
+
+@media screen and (min-width: 860px){
+
+    .video-controls-slider {
+        max-width: auto;
+        margin: auto;
+    }
+    
+    .main {
+        display: inline-block;
+        width: 75%;
+    }
+        
+    #player {
+        min-height: 60vh;
+    }
+    
+    
+    
+    #media-asset-container {
+        width: 300px;
+    }
+    
+	#video-controls img {
+        width: 33px;
+        padding: 5px;
+        margin-left:4px;
+        margin-right:4px;
+        cursor:pointer;
+        border-radius:2px solid #fff;
+    }
+    
+    #video-controls img:hover {
+        background-color:#eee;
+
+    }
+    
+
+    
+    .page-wrapper {
+        position:relative;
+    }
+    
+
+
+        
+    #picker {
+        width:25%;
+       	max-height: 100vh;
+        overflow-y: hidden;
+        position: static;
+        display: inline-block;
+        vertical-align:top;
+        top: 0px;
+        right: 0px;
+    }  
+    
+    #picker-content {
+        max-height:75vh;
+        overflow-y:scroll;
+    }
+    
+    .media-asset-image {
+        padding: 8px;
+    }
+    
+    .video-asset-thumbnail {
+        width: 230px;
+    }
+    
+    
+	.column {
+        padding: 15px;
+    }
+        
+}
+
+
