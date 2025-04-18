@@ -1,9 +1,6 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import '../css/styles.scss';
-// import bootstrap from "bootstrap";
 
-import data from '../data/data.json';
-console.log(data);
+
+
 
 //import Main from './Main.js';
 // import "../css/input.css";
