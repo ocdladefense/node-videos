@@ -1,18 +1,15 @@
 
 
 
-
-//import Main from './Main.js';
-// import "../css/input.css";
-// import "@themes/active/css/theme.css";
-
 // Uncomment when ready to use components to display the weather data.
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from '../components/App.jsx';
+import videos from '../data/videos.json';
+import Home from '../components/Home.jsx';
 import Controller from './Controller.js';
 
 const API_KEY = process.env.API_KEY;
+console.log(API_KEY);
 if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
@@ -27,17 +24,18 @@ const regeneratorRuntime = require("regenerator-runtime");
 /**
  * Uncomment when ready to use components to display the weather data.
  */
-const $root = document.getElementById("app-container");
+const $root = document.getElementById("app");
 const root = createRoot($root);
 
 // temporarily fetching a forecast for the zipcode 97477 
 const c = new Controller();
-const { lat, lon } = await window.c.fetchLatLon("97405");
-const weatherData = await window.c.fetchRawData(lat, lon);
-let forecast = window.c.sendRawWeatherDataToParser(weatherData);
+
+// const { lat, lon } = await window.c.fetchLatLon("97405");
+// const weatherData = await window.c.fetchRawData(lat, lon);
+// let forecast = window.c.sendRawWeatherDataToParser(weatherData);
 
 
-root.render(<App forecast={forecast} />);
+root.render(<Home videos={videos} />);
 
 
 
