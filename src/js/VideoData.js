@@ -26,6 +26,9 @@ export default class VideoData {
         return this.data.originalDate;
     }
 
+    getVideoFree() {
+        return this.data.free;
+    }
     getVideoPublished() {
         return this.data.published;
     }

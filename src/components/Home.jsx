@@ -23,7 +23,8 @@ return (
   {videos.map((video, index) => (
     <li key={index}>{video.getVideoName()}
         <ul>
-            <li key={index}>{video.getVideoDescription()}</li>
+            <li>{video.getVideoDescription()}</li>
+            <li>{String(video.getVideoFree())}</li>
         </ul>
     </li>
   ))}

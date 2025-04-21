@@ -5,6 +5,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
+// import morevideos from '../data/morevideos.json'
 import Home from '../components/Home.jsx';
 import Controller from './Controller.js';
 import VideoDataController from './VideoDataController.js';
@@ -20,9 +21,18 @@ const dataUrl = "https://ocdla.my.site.com/VideoData";
 
 window.c = new Controller(API_KEY);
 
+console.log(videos);
+
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
 
+for (let i = 0; i < videos.length; i++) {
+    if (i % 2 === 0) {
+        videos[i].free = true;
+    } else videos[i].free = false;
+}
+
+console.log(JSON.stringify(videos));
 
 /**
  * Uncomment when ready to use components to display the weather data.
@@ -44,7 +54,7 @@ let d = vdc.fetchVideoData();
 console.log(d);
 
 let vidData = vdc.parseVideoData(videos);
-console.log(vidData);
+console.log(videos);
 let vd = vdp.getVideoData();
 
 // let testDescription = test.getVideoDescription();
