@@ -14,6 +14,14 @@ if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
 
+// mod free = ture, free = false
+for (let i = 0; i < videos.length; i++) {
+    if (i % 2 === 0) {
+        videos[i].free = true;
+    } else videos[i].free = false;
+}
+//console.log strignify videos
+console.log(JSON.stringify(videos));
 
 window.c = new Controller(API_KEY);
 
