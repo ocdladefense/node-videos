@@ -1,35 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import VideoPlayer from './VideoPlayer';
 //import forecast from '../data/data.json';
 /*
 
 /// Components:
-- App (Master Component);                                                                   Check[X]
-- ZipCodeInput(A text input for the user to enter a zip code)                               Check[X]
-- WeatherListItem  (A button that summarizes the high/low for a day; it's also selectable)   Check[]
-- WeatherList (Parent component that displays all of the WeatherListItems)                  Check[]
-- DailyForecastDetails currentday(Show all of the important weather for a given day)                  Check[]
+- home (Master Component);                                                                   Check[X]
+- app (second componet);
+-
 */
 
+export default function Home() {
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
+  useEffect(() => {
+    fetch('/data/videos.json')
+      .then(res => res.json())
+      .then(data => {console.log("Fetched videos:", data); setVideos(data);})
+      .catch(err => console.error('Failed to load videos:', err));
+  }, []);
 
-export default function Home({videos}) {
-
-return (
-
-<div className="app">
-<h2>Here is the list of videos!</h2>
-
-<ul>
-  {videos.map((video, index) => (
-    <li key={index}>{video.description}</li>
-  ))}
-</ul>
-</div>
-)
+  return (
+    <div className="app">
+      {!selectedVideo ? (
+        <>
+          <h2>Here is the list off videos!</h2>
+          <ul className="video-list">
+            {videos.map(video => (
+              <li key={video.id} onClick={() => setSelectedVideo(video)} style={{ cursor: 'pointer', marginBottom: '1rem' }}>
+                <div><strong>{video.description}</strong></div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
+        //if video is selected and is not null it will show componet called VideoPlayer 
+      )}
+    </div>
+  );
 }
-
-// export default function WeatherListItem() {}
-// export default function WeatherList() {}
-// export default function DailyForecastDetails() {}
-
-
