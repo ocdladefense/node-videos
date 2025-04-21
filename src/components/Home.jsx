@@ -21,7 +21,11 @@ return (
 
 <ul>
   {videos.map((video, index) => (
-    <li key={index}>{video.description}</li>
+    <li key={index}>{video.getVideoName()}
+        <ul>
+            <li key={index}>{video.getVideoDescription()}</li>
+        </ul>
+    </li>
   ))}
 </ul>
 </div>
