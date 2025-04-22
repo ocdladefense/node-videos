@@ -6,7 +6,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
 import Home from '../components/Home.jsx';
-import Controller from './Controller.js';
+// import Controller from './Controller.js';
 
 const API_KEY = process.env.API_KEY;
 console.log(API_KEY);
@@ -23,7 +23,7 @@ for (let i = 0; i < videos.length; i++) {
 //console.log strignify videos
 console.log(JSON.stringify(videos));
 
-window.c = new Controller(API_KEY);
+// window.c = new Controller(API_KEY);
 
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
@@ -35,8 +35,7 @@ const regeneratorRuntime = require("regenerator-runtime");
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
-// temporarily fetching a forecast for the zipcode 97477 
-const c = new Controller();
+
 
 // const { lat, lon } = await window.c.fetchLatLon("97405");
 // const weatherData = await window.c.fetchRawData(lat, lon);
