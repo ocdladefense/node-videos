@@ -7,7 +7,6 @@ import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
 import Home from '../components/Home.jsx';
 import Thumbs from '../components/Thumbs.jsx'
-// import Controller from './Controller.js';
 import VideoThumbnails from '../js/VideoThumbs'
 
 const API_KEY = process.env.API_KEY;
@@ -45,7 +44,7 @@ VideoThumbnails.getThumbs(videoIDs.slice(0, 49)).then(data => {
 
     const urls = data.map(thumbData => thumbData.thumbs.default.url);
 
-    root.render(<div><Thumbs urls={urls} /><Home videos={videos} /></div>);
+    root.render(<Thumbs urls={urls} />);
 });
 
 
