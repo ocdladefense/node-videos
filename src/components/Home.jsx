@@ -9,8 +9,8 @@ import VideoPlayer from './VideoPlayer';
 -
 */
 
-export default function Home() {
-  const [videos, setVideos] = useState([]);
+export default function Home({videos}) {
+  const [videosState, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   useEffect(() => {

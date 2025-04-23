@@ -14,6 +14,7 @@ import VideoDataParser from './VideoDataParser.js';
 import VideoData from './VideoData.js';
 import users from '../data/users.json';
 
+const dataUrl = "https://ocdla.my.site.com/VideoData";
 
 const API_KEY = process.env.API_KEY;
 console.log(API_KEY);
@@ -34,12 +35,13 @@ const test = new VideoData(videos[0]);
 
 const vidData = vdc.parseVideoData(videos);
 
+console.log(vidData);
 
 
+const allData = vdp.getVideoData();
+console.log(allData);
 
-const vd = vdp.getVideoData();
-
-const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vd);
+const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", allData);
 console.log(filteredVideo);
 
 
@@ -67,7 +69,7 @@ VideoThumbnails.getThumbs(videoIDs.slice(0, 49)).then(data => {
 
     const urls = data.map(thumbData => thumbData.thumbs.default.url);
 
-    root.render(<div><Thumbs urls={urls} /><Home videos={videos} /></div>);
+    root.render(<div><Thumbs urls={urls} /><Home videos={vidData} /></div>);
 });
 
 
