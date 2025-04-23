@@ -37,6 +37,22 @@ export default function Home() {
         <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
         //if video is selected and is not null it will show componet called VideoPlayer 
       )}
+
+
+<>
+<h2>Here is the list of videos!</h2>
+
+<ul>
+  {videos.map((video, index) => (
+    <li key={index}>{video.getVideoName()}
+        <ul>
+            <li>{video.getVideoDescription()}</li>
+            <li>{String(video.getVideoFree())}</li>
+        </ul>
+    </li>
+  ))}
+</ul>
+</>
     </div>
   );
 }
