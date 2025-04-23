@@ -25,7 +25,24 @@ if (process.env.NODE_ENV === 'debug') {
 //console.log strignify videos
 console.log(videos);
 
-// window.c = new Controller(API_KEY);
+
+const vdc = new VideoDataController(dataUrl);
+const vdp = new VideoDataParser(videos);
+const test = new VideoData(videos[0]);
+
+
+
+const vidData = vdc.parseVideoData(videos);
+
+
+
+
+const vd = vdp.getVideoData();
+
+const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vd);
+console.log(filteredVideo);
+
+
 
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
