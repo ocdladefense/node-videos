@@ -6,9 +6,14 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
 import Home from '../components/Home.jsx';
-import Thumbs from '../components/Thumbs.jsx'
+import Thumbs from '../components/Thumbs.jsx';
 // import Controller from './Controller.js';
-import VideoThumbnails from '../js/VideoThumbs'
+import VideoThumbnails from '../js/VideoThumbs';
+import VideoDataController from './VideoDataController.js';
+import VideoDataParser from './VideoDataParser.js';
+import VideoData from './VideoData.js';
+import users from '../data/users.json';
+
 
 const API_KEY = process.env.API_KEY;
 console.log(API_KEY);
