@@ -12,6 +12,7 @@ import VideoDataController from './VideoDataController.js';
 import VideoDataParser from './VideoDataParser.js';
 import VideoData from './VideoData.js';
 import users from '../data/users.json';
+import UserController from './UserController.js';
 
 const API_KEY = process.env.API_KEY;
 console.log(API_KEY);
@@ -43,7 +44,11 @@ const root = createRoot($root);
 const c = new Controller();
 const vdc = new VideoDataController(dataUrl);
 const vdp = new VideoDataParser(videos);
-const test = new VideoData(videos[0]);
+const u = new UserController(users);
+
+const user1 = u.getUser(1);
+console.log(user1);
+console.log(users);
 
 
 
