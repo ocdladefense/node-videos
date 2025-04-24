@@ -16,12 +16,6 @@ import users from '../data/users.json';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 
-const API_KEY = process.env.API_KEY;
-console.log(API_KEY);
-if (process.env.NODE_ENV === 'debug') {
-    setDebugLevel(1)
-}
-
 
 //console.log strignify videos
 console.log(videos);
@@ -71,6 +65,7 @@ VideoThumbnails.getThumbs(videoIDs.slice(0, 49)).then(data => {
 
     root.render(<div><Thumbs urls={urls} /><Home videos={vidData} /></div>);
 });
+
 
 
 
