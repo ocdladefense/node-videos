@@ -14,6 +14,7 @@ import VideoDataController from './VideoDataController.js';
 import VideoDataParser from './VideoDataParser.js';
 import VideoData from './VideoData.js';
 import users from '../data/users.json';
+import UserController from './UserController.js';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 
@@ -29,21 +30,10 @@ console.log(videos);
 
 
 const vdc = new VideoDataController(dataUrl);
-const vdp = new VideoDataParser(videos);
-const test = new VideoData(videos[0]);
-
-
 
 const vidData = vdc.parseVideoData(videos);
-
 console.log(vidData);
 
-
-const allData = vdp.getVideoData();
-console.log(allData);
-
-const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", allData);
-console.log(filteredVideo);
 
 
 
@@ -64,11 +54,6 @@ console.log(users);
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
-
-
-const user1 = u.getUser(1);
-console.log(user1);
-console.log(users);
 
 //add thumbnail metadeta as function for appending data
 let videoIDs = videos.map(video => video.resourceId);
