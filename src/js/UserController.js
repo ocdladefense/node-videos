@@ -7,8 +7,11 @@ export default class UserController {
 
     getUser(id) {
         const filter = this.userData.filter(i => i.userId === id );
-        return filter.length > 1 ? filter[0] : filter;
+        return filter.length > 0 ? filter[0] : filter;
     }
 
+    addVideoToUserPurchased(user, videoId) {
+        
+    }
 
 }

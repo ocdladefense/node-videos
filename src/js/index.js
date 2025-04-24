@@ -35,9 +35,10 @@ const vidData = vdc.parseVideoData(videos);
 console.log(vidData);
 
 
+const use = new UserController(users);
 
-
-
+const u = use.getUser(1);
+console.log(u);
 
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
