@@ -35,7 +35,7 @@ export default function Home({videos}) {
                 <div>
                   <strong>{video.getVideoName ? video.getVideoName() : video.title}</strong>
                   <ul>
-                    {/* <li>{video.getVideoDescription ? video.getVideoDescription() : video.description}</li> */}
+                    <li>{video.getVideoDescription ? video.getVideoDescription() : video.description}</li>
                     <li>{video.getVideoFree ? String(video.getVideoFree()) : 'N/A'}</li>
                   </ul>
                 </div>
