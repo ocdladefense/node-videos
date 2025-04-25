@@ -40,8 +40,40 @@ const regeneratorRuntime = require("regenerator-runtime");
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
-//add thumbnail metadeta as function for appending data
+////split ids into batches
+//function chunkArray(array, size) {
+//    const chunks = [];
+//    for (let i = 0; i < array.length; i += size) {
+//        chunks.push(array.slice(i, i + size))
+//    }
+//    return chunks;
+//}
+
+////fetch thumbnails in batches
+//async function fetchThumbnails(videoIDs) {
+//    const chunks = chunkArray(videoIDs, 50);
+//    const thumbnailMap = {}
+//    for (const chunk of chunks) {
+//        const data = await VideoThumbnails.getThumbs(chunk);
+//        data.foreach(thumbData => {
+//            thumbnailMap[thumbData.id] = thumbData.thumbs.default.url;
+//        });
+//    }
+//    //combine into a full map of all returns
+//    return thumbnailMap;
+//}
+
 let videoIDs = videos.map(video => video.resourceId);
+
+//fetchThumbnails(videoIDs).then(thumbnailMap => {
+//    const mergedData = vidData.map(video => ({
+//        ...video.data,
+//        thumbnail: thumbnailMap[video.data.resourceId]
+//    }));
+
+//    root.render(<div><Home videos={mergedData} /></div>);
+//})
+
 VideoThumbnails.getThumbs(videoIDs.slice(0, 50)).then(data => {
     const thumbnailMap = data.reduce((acc, thumbData) => {
         acc[thumbData.id] = thumbData.thumbs.default.url;
