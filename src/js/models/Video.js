@@ -20,40 +20,40 @@ export default class Video {
     }
 
     getVideoId() {
-        return this.data.id;
+        return this.id;
     }
 
     getVideoResourceId() {
-        return this.data.resourceId;
+        return this.resourceId;
     }
 
     getVideoName() {
-        return this.data.name;
+        return this.name;
     }
 
     getVideoDescription() {
         if (this.data.description != null) {
-            return this.data.description;
+            return this.description;
         } else return "No description given."
     }
 
     getVideoOriginalDate() {
-        return this.data.originalDate;
+        return this.originalDate;
     }
 
     isFree() {
-        return this.data.free;
+        return this.free;
     }
     getVideoPublished() {
-        return this.data.published;
+        return this.published;
     }
 
     getVideoSpeakers() {
-        return this.data.speakers;
+        return this.speakers;
     }
 
     getVideoSubject() {
-        return this.data.subject;
+        return this.subject;
     }
 
     getVideoThumbnail() {

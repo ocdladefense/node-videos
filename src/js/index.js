@@ -64,6 +64,6 @@ const root = createRoot($root);
 
 const thumbnailMap = await initThumbs(videos);
 
-vidData.forEach(video => video.setThumbnail(thumbnailMap[video.data.resourceId]));
+vidData.forEach(video => video.setThumbnail(thumbnailMap[video.resourceId]));
 
 root.render(<div><Home videos={vidData} /></div>);

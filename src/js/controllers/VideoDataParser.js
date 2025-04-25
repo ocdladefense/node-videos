@@ -14,7 +14,7 @@ export default class VideoDataParser {
            
             let vd = this.videoData[d];
 
-            this.videoDataArray.push(Video.fromApiData(data));
+            this.videoDataArray.push(Video.fromApiData(vd));
             //console.log(this.videoDataArray);
         }
         

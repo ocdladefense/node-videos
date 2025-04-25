@@ -28,7 +28,7 @@ export default class VideoDataController {
 
     getVideoById(videoId, videoData) {
         
-        let filter = videoData.filter(video => video.data.id === videoId )
+        let filter = videoData.filter(video => video.id === videoId )
         return filter.length === 1 ? filter[0] : filter;
     }
 
