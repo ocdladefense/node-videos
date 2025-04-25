@@ -1,6 +1,6 @@
 
 import VideoDataParser from "./VideoDataParser";
-import videos from '../data/videos.json';
+import videos from '../../data/videos.json';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 
@@ -21,14 +21,9 @@ export default class VideoDataController {
     // }
 
     parseVideoData(videoData) {
-        try {
-            let parser = new VideoDataParser(videoData);
-            let data = parser.getVideoData();
-            return data;
-        } catch (err) {
-            console.error("Error in parseVideoData:", err);
-            return err;
-        }
+        let parser = new VideoDataParser(videoData);
+        let data = parser.getVideoData();
+        return data;
     }
 
     getVideoById(videoId, videoData) {

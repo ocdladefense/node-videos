@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import VideoPlayer from './VideoPlayer';
+import TitleComponent from './TitleComponent';
 /*
 /// Components:
 - home (Master Component);                                                                   Check[X]
@@ -24,23 +25,7 @@ export default function Home({ videos }) {
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
                         {videos.map((video, index) => (
-                            <li
-                                key={video.id || index}
-                                onClick={() => setSelectedVideo(video)}
-                                style={{ cursor: 'pointer', marginBottom: '1rem' }}
-                            >
-                                <div>
-                                    <img
-                                        src={video.thumbnail}
-                                        alt={'Thumbnail for ${video.title}'}
-                                    />
-                                    <strong>{video.getVideoName ? video.getVideoName() : video.title}</strong>
-                                    <ul>
-                                        <li>{video.getVideoDescription ? video.getVideoDescription() : video.description}</li>
-                                        <li>{video.getVideoFree ? String(video.getVideoFree()) : 'N/A'}</li>
-                                    </ul>
-                                </div>
-                            </li>
+                            <TitleComponent video={video} index={index} />
                         ))}
                     </ul>
                 </>

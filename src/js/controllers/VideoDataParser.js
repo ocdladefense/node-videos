@@ -1,4 +1,4 @@
-import VideoData from "./VideoData";
+import Video from '../models/Video.js';
 
 
 export default class VideoDataParser {
@@ -13,8 +13,8 @@ export default class VideoDataParser {
         for (let d in this.videoData) {
            
             let vd = this.videoData[d];
-            
-            this.videoDataArray.push(new VideoData(vd));
+
+            this.videoDataArray.push(Video.fromApiData(data));
             //console.log(this.videoDataArray);
         }
         
