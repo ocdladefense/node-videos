@@ -1,7 +1,3 @@
-
-
-
-// Uncomment when ready to use components to display the weather data.
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
@@ -15,65 +11,51 @@ import VideoData from './VideoData.js';
 import users from '../data/users.json';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
-
 const API_KEY = process.env.API_KEY;
-console.log(API_KEY);
+
+//console.log(API_KEY);
+
 if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
 
-
 //console.log strignify videos
-console.log(videos);
-
+//console.log(videos);
 
 const vdc = new VideoDataController(dataUrl);
 const vdp = new VideoDataParser(videos);
 const test = new VideoData(videos[0]);
-
-
-
 const vidData = vdc.parseVideoData(videos);
-
-console.log(vidData);
-
+//console.log("vidData", vidData);
 
 const allData = vdp.getVideoData();
-console.log(allData);
+//console.log(allData);
 
 const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", allData);
-console.log(filteredVideo);
-
-
+//console.log(filteredVideo);
 
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
 
-
-/**
- * Uncomment when ready to use components to display the weather data.
- */
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
-
-
-// const { lat, lon } = await window.c.fetchLatLon("97405");
-// const weatherData = await window.c.fetchRawData(lat, lon);
-// let forecast = window.c.sendRawWeatherDataToParser(weatherData);
-
 //add thumbnail metadeta as function for appending data
 let videoIDs = videos.map(video => video.resourceId);
-VideoThumbnails.getThumbs(videoIDs.slice(0, 49)).then(data => {
-    console.log(data);
+VideoThumbnails.getThumbs(videoIDs.slice(0, 50)).then(data => {
+    const thumbnailMap = data.reduce((acc, thumbData) => {
+        acc[thumbData.id] = thumbData.thumbs.default.url;
+        return acc;
+    }, {});
 
-    const urls = data.map(thumbData => thumbData.thumbs.default.url);
+    //console.log("Thumbnail Map:", thumbnailMap);
 
-    root.render(<div><Thumbs urls={urls} /><Home videos={vidData} /></div>);
+    const mergedData = vidData.map(video => ({
+        ...video.data,
+        thumbnail: thumbnailMap[video.data.resourceId],
+    }));
+
+    //console.log("Video Data w/ Thumbs", mergedData);
+
+    root.render(<div><Home videos={mergedData} /></div>);
 });
-
-
-
-
-// Initialize the Weather class on window load
-//window.onload = () => { new Main(); }
