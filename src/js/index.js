@@ -41,17 +41,22 @@ const vidData = vdc.parseVideoData(videos);
 console.log(vidData);
 
 
+const use = new UserController(users);
+
+const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 const allData = vdp.getVideoData();
 console.log(allData);
 
-const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", allData);
+
 console.log(filteredVideo);
 
 window.ydc = new YoutubeDisplayController
-const use = new UserController(users);
-
 const u = use.getUser(1);
 console.log(u);
+
+
+
+
 
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
