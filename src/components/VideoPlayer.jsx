@@ -12,28 +12,14 @@ export default function VideoPlayer({ video, onBack }) {
       <p><strong>Title:</strong> {video.getVideoName()}</p>
       <p><strong>Description:</strong> {video.getVideoDescription()}</p>
       <p><strong>Published:</strong> {String(video.getVideoPublished())}</p>
-<<<<<<< HEAD
       
         <iframe width="420" height="315"
         src={youtube+video.getVideoResourceId()}>
         </iframe>
         {/* <source src={youtube+video.getVideoResourceId()} type="video/mp4" /> */}
-=======
-      <video controls width="600">
-        <source src={youtube+video.getVideoResourceId()} type="video/mp4" />
->>>>>>> development
         {console.log(youtube+video.getVideoResourceId())}
         Your browser does not support the video tag.
       
     </div>
   );
 }
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
->>>>>>> development
