@@ -21,38 +21,31 @@ export default function Home({videos}) {
   }, []);
 
   return (
-    <div className="app">
+   <div className="app">
       {!selectedVideo ? (
         <>
-          <h2>Here is the list off videos!</h2>
+          <h2>Here is the list of videos!</h2>
           <ul className="video-list">
-            {videos.map(video => (
-              <li key={video.id} onClick={() => setSelectedVideo(video)} style={{ cursor: 'pointer', marginBottom: '1rem' }}>
-                <div><strong>{video.description}</strong></div>
+            {videos.map((video, index) => (
+              <li
+                key={video.id || index}
+                onClick={() => setSelectedVideo(video)}
+                style={{ cursor: 'pointer', marginBottom: '1rem' }}
+              >
+                <div>
+                  <strong>{video.getVideoName ? video.getVideoName() : video.title}</strong>
+                  <ul>
+                    <li>{video.getVideoDescription ? video.getVideoDescription() : video.description}</li>
+                    <li>{video.getVideoFree ? String(video.getVideoFree()) : 'N/A'}</li>
+                  </ul>
+                </div>
               </li>
             ))}
           </ul>
         </>
       ) : (
         <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
-        //if video is selected and is not null it will show componet called VideoPlayer 
       )}
-
-
-<>
-<h2>Here is the list of videos!</h2>
-
-<ul>
-  {videos.map((video, index) => (
-    <li key={index}>{video.getVideoName()}
-        <ul>
-            <li>{video.getVideoDescription()}</li>
-            <li>{String(video.getVideoFree())}</li>
-        </ul>
-    </li>
-  ))}
-</ul>
-</>
     </div>
   );
 }
