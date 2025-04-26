@@ -1,11 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
-import Home from '../components/Home.jsx';
-import Thumbs from '../components/Thumbs.jsx';
-import Player from '../components/Player.jsx';
-import VideoDataController from './controllers/VideoDataController.js';
 import users from '../data/users.json';
+import Home from '../components/Home.jsx';
+import VideoDataController from './controllers/VideoDataController.js';
 import YoutubeDisplayController from './controllers/YoutubeDisplayController.js';
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
@@ -19,14 +17,8 @@ if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
 
-//console.log strignify videos
-//console.log(videos);
-
 window.ydc = new YoutubeDisplayController();
 const vdc = new VideoDataController(dataUrl);
-
-const playerData = '';
-
 const vidData = vdc.parseVideoData(videos);
 console.log(vidData);
 
@@ -38,7 +30,7 @@ const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 
 console.log(filteredVideo);
 
-window.ydc = new YoutubeDisplayController
+window.ydc = new YoutubeDisplayController();
 const u = use.getUser(1);
 console.log(u);
 

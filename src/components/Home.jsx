@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import VideoPlayer from './VideoPlayer';
+import Player from './Player';
 import TitleComponent from './TitleComponent';
 /*
 /// Components:
@@ -22,6 +23,7 @@ export default function Home({ videos }) {
         <div className="app">
             {!selectedVideo ? (
                 <>
+                    <Player />
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
                         {videos.map((video, index) => (
