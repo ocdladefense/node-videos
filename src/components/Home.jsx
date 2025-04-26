@@ -11,6 +11,7 @@ import TitleComponent from './TitleComponent';
 export default function Home({ videos }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
+    const mockIndex = 0;
 
     useEffect(() => {
         fetch('/data/videos.json')
@@ -18,12 +19,11 @@ export default function Home({ videos }) {
             .then(data => { console.log("Fetched videos:", data); setVideos(data); })
             .catch(err => console.error('Failed to load videos:', err));
     }, []);
-
     return (
         <div className="app">
             {!selectedVideo ? (
                 <>
-                    <Player />
+                    <Player videoData={videos} index={mockIndex}/>
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
                         {videos.map((video, index) => (

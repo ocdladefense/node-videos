@@ -1,12 +1,12 @@
-//import VideoData from "./VideoData";
 const iframeURL = "https://www.youtube.com/iframe_api";
 
 export default class YoutubeDisplayController {
-    configYoutubeDisplay(videoData, onPlayerReady) {
+    
+    configYoutubeDisplay(videoData, index ,onPlayerReady) {
         return {
             height: '390',
             width: '640',
-            videoId: videoData.getResourceId(),
+            videoId: videoData[index].getVideoResourceId(),
             controls: 0,
             playerVars: {
                 autoplay: 0,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function YoutubePlayer({ videoData }) {
+export default function YoutubePlayer({ videoData, index }) {
     const [player, setPlayer] = useState(null);
     const handlePlayerReady = (event) => {
         setPlayer(event.target)
@@ -8,7 +8,7 @@ export default function YoutubePlayer({ videoData }) {
 
     useEffect(() => {
         window.onYouTubeIframeAPIReady = () => {
-            const config = window.ydc.configYoutubeDisplay(videoData, handlePlayerReady);
+            const config = window.ydc.configYoutubeDisplay(videoData, index , handlePlayerReady);
             const newPlayer = new window.YT.Player('player', config);
             window.newPlayer = newPlayer;
             setPlayer(newPlayer);
