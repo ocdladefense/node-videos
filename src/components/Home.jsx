@@ -26,7 +26,7 @@ export default function Home({ videos }) {
                     <Player videoData={videos} index={mockIndex}/>
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
-                        {videos.map((video, index, setSelectedVideo) => (
+                        {videos.map((video, index) => (
                             <TitleComponent video={video} index={index} setSelectedVideo={setSelectedVideo} />
                         ))}
                     </ul>
