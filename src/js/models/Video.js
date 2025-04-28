@@ -32,7 +32,7 @@ export default class Video {
     }
 
     getVideoDescription() {
-        if (this.data.description != null) {
+        if (this.description != null) {
             return this.description;
         } else return "No description given."
     }

@@ -1,3 +1,4 @@
+import "../css/input.css";
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';

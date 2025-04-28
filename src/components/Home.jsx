@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import VideoPlayer from './VideoPlayer';
 import Player from './Player';
 import TitleComponent from './TitleComponent';
+import VideoDetails from './VideoDetails';
 /*
 /// Components:
 - home (Master Component);                                                                   Check[X]
@@ -27,12 +28,12 @@ export default function Home({ videos }) {
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
                         {videos.map((video, index) => (
-                            <TitleComponent video={video} index={index} />
+                           <TitleComponent video={video} index={index} setSelectedVideo={setSelectedVideo} />
                         ))}
                     </ul>
                 </>
             ) : (
-                    <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
+                     <VideoDetails video={selectedVideo} onBack={() => setSelectedVideo(null)} />
             )}
         </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function TitleComponent({ video, index }) {
+export default function TitleComponent({ video, index, setSelectedVideo }) {
     return (
         <li
             key={video.id || index}

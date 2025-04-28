@@ -45,18 +45,7 @@
 
                 </div>
 
-                <div id="video-controls">
-
-                    <div class="video-controls-slider">
-                        <input type="range" id="time-slider" value="0" style="width: 100%;" />
-                    </div>
-
-                    <div class="video-controls-buttons">
-                        <apex:image html-data-action="play" alt="Play" url="{!URLFOR($Resource.VideoPlayIcon)}" />
-                        <apex:image html-data-action="pause" alt="Pause" url="{!URLFOR($Resource.VideoPauseIcon)}" />
-                        <apex:image html-data-action="stop" alt="Stop" url="{!URLFOR($Resource.VideoStopIcon)}" />
-                    </div>
-                </div>
+                
             </div>
 
         </div><!-- end content -->
@@ -70,9 +59,7 @@
         <div id="picker-content">
 
             <apex:form>
-                <h2 style="font-size:12pt;">
-                    Select your CLE Video here
-                </h2>
+              
                 <apex:selectList size="1" styleClass="subject-picker">
                     <apex:selectOptions value="{!subjects}" />
                 </apex:selectList>

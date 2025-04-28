@@ -6,7 +6,7 @@ export default function VideoPlayer({ video, onBack }) {
 
   return (
     <div className="video-details">
-      <button onClick={onBack}>← Back to List</button>
+      <button onClick={onBack}>← Back to Details</button>
       <h2>{video.title}</h2>
       <img src={video.largeThumbnail} alt={video.title} style={{ maxWidth: '100%' }} />
       <p><strong>Title:</strong> {video.getVideoName()}</p>
