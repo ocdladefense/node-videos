@@ -6,7 +6,7 @@ const VideoThumbnails = (function() {
     var apiKey = "AIzaSyB95m4ud1CBRSP-4evnK_ng8CkMBG6Hyu0";
     var endpoint = "https://www.googleapis.com/youtube/v3/videos";
 
-    function getThumbs(ids) {
+    async function getThumbs(ids) {
         ids = ids.join(",");
 
         let url = endpoint + "?part=" + parts + "&id=" + ids + "&key=" + apiKey;
@@ -83,4 +83,19 @@ const VideoThumbnails = (function() {
 
 })();
 
-export default VideoThumbnails;
+
+//add thumbnail metadeta as function for appending data
+async function initThumbs(videos) {
+    let videoIDs = videos.map(video => video.resourceId);
+
+    return await VideoThumbnails.getThumbs(videoIDs.slice(0, 50)).then(data => {
+        const thumbnailMap = data.reduce((acc, thumbData) => {
+            acc[thumbData.id] = thumbData.thumbs.default.url;
+            return acc;
+        });
+
+        return thumbnailMap;
+    });
+};
+
+export default initThumbs;
