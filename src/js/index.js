@@ -24,15 +24,23 @@ console.log(vidData);
 
 
 const use = new UserController(users);
+const allUsers = use.getAllUsers();
+console.log(allUsers);
+const filteredUser = use.getUser(1);
+console.log(filteredUser);
+const userName = filteredUser.getUserName();
+console.log(userName);
+
 
 const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
+use.addVideoToPurchased(filteredUser, filteredVideo);
+const userVideo = filteredUser.getUserPurchasedVideos();
+console.log(userVideo.getVideoName());
 
 
-console.log(filteredVideo);
 
 window.ydc = new YoutubeDisplayController();
-const u = use.getUser(1);
-console.log(u);
+
 
 
 
@@ -48,7 +56,7 @@ for (let i = 0; i < videos.length; i++) {
 }
 
 //console.log(JSON.stringify(videos));
-console.log(users);
+
 
 const $root = document.getElementById("app");
 const root = createRoot($root);
