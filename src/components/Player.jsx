@@ -1,3 +1,4 @@
+import VideoControlBar from './VideoControlBar.jsx';
 import React, { useEffect, useState } from 'react';
 
 export default function YoutubePlayer({ videoData, index }) {
@@ -8,25 +9,17 @@ export default function YoutubePlayer({ videoData, index }) {
 
     useEffect(() => {
         window.onYouTubeIframeAPIReady = () => {
-            const config = window.ydc.configYoutubeDisplay(videoData, index , handlePlayerReady);
+            const config = window.ydc.configYoutubeDisplay(videoData, index, handlePlayerReady);
             const newPlayer = new window.YT.Player('player', config);
-            window.newPlayer = newPlayer;
             setPlayer(newPlayer);
         }
         window.ydc.injectScriptElement();
     });
     return (
-        <div id="controls">
-            <div id="player"></div>
-            <div className="controls">
-                <button onClick={() => newPlayer.playVideo()}>Start</button>
-                <button onClick={() => newPlayer.pauseVideo()}>Pause</button>
-                <button onClick={() => newPlayer.stopVideo()}>Stop</button>
-                <button onClick={() => {
-                    newPlayer.seekTo(0, true);
-                    newPlayer.playVideo();
-                }}>Restart</button>
-            </div>
+        <div id="videoPlayer">
+            <div id="player"></div><br />
+            <VideoControlBar player={player} />
         </div>
+
     );
 }

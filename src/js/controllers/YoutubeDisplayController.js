@@ -7,10 +7,10 @@ export default class YoutubeDisplayController {
             height: '390',
             width: '640',
             videoId: videoData[index].getVideoResourceId(),
-            controls: 0,
             playerVars: {
                 autoplay: 0,
-                rel: 0
+                rel: 0,
+                controls: 0
             },
             events: {
                 onReady: onPlayerReady

@@ -11,7 +11,7 @@ import TitleComponent from './TitleComponent';
 export default function Home({ videos }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const mockIndex = 0;
+    const mockIndex = 1;
 
     useEffect(() => {
         fetch('/data/videos.json')
@@ -23,7 +23,7 @@ export default function Home({ videos }) {
         <div className="app">
             {!selectedVideo ? (
                 <>
-                    <Player videoData={videos} index={mockIndex}/>
+                    <Player videoData={videos} index={mockIndex} />
                     <h2>Here is the list of videos!</h2>
                     <ul className="video-list">
                         {videos.map((video, index) => (
@@ -32,7 +32,7 @@ export default function Home({ videos }) {
                     </ul>
                 </>
             ) : (
-                    <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
+                <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
             )}
         </div>
     );
