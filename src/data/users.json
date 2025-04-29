@@ -1,1 +1,18 @@
-[{"userId": 1, "userName": "John Doe", "purchasedVideos": []}, {"userId": 2, "userName": "Jane Smith", "purchasedVideos": []}]
+[
+    {
+        "userId": 1,
+        "userName": "John Doe",
+        "purchasedVideos": [],
+        "previouslyWatched": [
+            {
+                "resourceId": "_4xNa80IP3o",
+                "timeStamp": 120
+            }
+        ]
+    },
+    {
+        "userId": 2,
+        "userName": "Jane Smith",
+        "purchasedVideos": []
+    }
+]

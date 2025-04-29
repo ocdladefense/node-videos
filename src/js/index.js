@@ -24,7 +24,7 @@ const vidData = vdc.parseVideoData(videos);
 console.log(vidData);
 
 
-const use = new UserController(users);
+const userController = new UserController(users);
 
 const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 
@@ -32,8 +32,8 @@ const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 console.log(filteredVideo);
 
 window.ydc = new YoutubeDisplayController();
-const u = use.getUser(1);
-console.log(u);
+const user = userController.getUser(1);
+console.log(user);
 
 
 
@@ -59,4 +59,4 @@ const thumbnailMap = await initThumbs(videos);
 
 vidData.forEach(video => video.setThumbnail(thumbnailMap[video.resourceId]));
 
-root.render(<div><Home videos={vidData} /></div>);
+root.render(<div><Home videos={vidData} user={user} /></div>);

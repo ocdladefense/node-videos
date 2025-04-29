@@ -1,4 +1,4 @@
-import users from '../../data/users.json';
+import User from '../models/User.js';
 
 export default class UserController {
     constructor(userData) {

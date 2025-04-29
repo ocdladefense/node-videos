@@ -19,5 +19,11 @@
         "editor.defaultFormatter": "fabianlauer.vs-code-xml-format"
     },
     "html.format.wrapLineLength": 0,
-    "visualforce.format.wrapLineLength": 0
+    "visualforce.format.wrapLineLength": 0,
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

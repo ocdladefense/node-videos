@@ -28,7 +28,7 @@ const controlBarTheme = createTheme({
     },
 });
 
-export default function VideoControlBar({ player }) {
+export default function VideoControlBar({ player, setTime }) {
     return (
         <div id="controlBar">
             <ThemeProvider theme={controlBarTheme}>

@@ -10,7 +10,7 @@ import VideoPlayer from './VideoPlayer';
 - app (second componet);
 */
 
-export default function Home({ videos }) {
+export default function Home({ videos, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const mockIndex = 1;
@@ -28,14 +28,14 @@ export default function Home({ videos }) {
             .catch(err => console.error('Failed to load videos:', err));
     }, []);
 
-    if(route == "list") {
+    if (route == "list") {
         component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} />;
-    } else if(route == "details") {
-        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => {setRoute("list"); setSelectedVideo(null);}} />;
-    } else if(route == "player") {
+    } else if (route == "details") {
+        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} />;
+    } else if (route == "player") {
         // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
         console.log()
-        component = <VideoPlayer video={selectedVideo} />
+        component = <VideoPlayer video={selectedVideo} user={user} />
     }
 
     return (
