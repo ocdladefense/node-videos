@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
 import Home from '../components/Home.jsx';
 import Thumbs from '../components/Thumbs.jsx'
-import VideoThumbnails from '../js/VideoThumbs'
+import VideoThumbnails from './controllers/VideoThumbs'
 
 const API_KEY = process.env.API_KEY;
 console.log(API_KEY);
