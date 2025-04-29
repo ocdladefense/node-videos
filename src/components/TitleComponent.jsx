@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function TitleComponent({ video, index, setSelectedVideo }) {
+export default function TitleComponent({ video, index, setSelectedVideo, setRoute }) {
     return (
         <li
             key={video.id || index}
-            onClick={() => setSelectedVideo(video)}
+            onClick={() => {setRoute("details"); setSelectedVideo(video);}}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
         >
             <div>

@@ -1,10 +1,13 @@
 import React from "react";
 
-export default function VideoDetails({video, onBack}){
+export default function VideoDetails({video, onBack, setRoute}){
 
     let onPlay = function(){
-        console.log("Hello world")
-    }
+        console.log("About to play the video!");
+        setRoute("player");
+    };
+
+
     return(
           <div style={{backgroundColor: 'black'}} className="video-details">
             <button style={{color: 'white'}} onClick={onBack}>← Back to List</button>
