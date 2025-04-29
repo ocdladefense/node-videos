@@ -1,4 +1,4 @@
-const VideoThumbnails = (function() {
+const VideoThumbnails = (function () {
 
 
     var parts = "snippet,contentDetails,statistics";
@@ -18,9 +18,9 @@ const VideoThumbnails = (function() {
             return resp.json();
         })
             .then(function(json) {
-                console.log(json);
+                //console.log(json);
                 return json.items.map(function(item) {
-                    //  console.log(item);
+                    console.log("item from getThumbs", item);
                     var obj = {};
                     var id = item.id;
                     obj["id"] = id;
@@ -30,18 +30,16 @@ const VideoThumbnails = (function() {
                     obj["thumbs"] = {
                         default: item.snippet.thumbnails.default,
                         high: item.snippet.thumbnails.high,
-                        maxres: item.snippet.thumbnails.maxres,
-                        medium: item.snippet.thumbnails.medium,
+                        detailsView: item.snippet.thumbnails.maxres,
+                        listView: item.snippet.thumbnails.medium,
                         standard: item.snippet.thumbnails.standard,
                     }
-                    // console.log(obj);
+                    console.log(obj);
                     return obj;
                 });
             });
 
     }
-
-
 
     function getThumbById(thumbs, id) {
         if (null == id) return {};
@@ -68,14 +66,6 @@ const VideoThumbnails = (function() {
         });
     };
 
-
-
-
-
-
-
-
-
     return {
         getThumbs: getThumbs,
         prepareThumbnailData: prepareThumbnailData
@@ -83,19 +73,58 @@ const VideoThumbnails = (function() {
 
 })();
 
-
 //add thumbnail metadeta as function for appending data
 async function initThumbs(videos) {
-    let videoIDs = videos.map(video => video.resourceId);
+    const videoIDs = videos.map(video => video.resourceId);
+    const cachedThumbs = getCachedThumbs(); //determine which thumbs have already been cached
 
-    return await VideoThumbnails.getThumbs(videoIDs.slice(0, 50)).then(data => {
-        const thumbnailMap = data.reduce((acc, thumbData) => {
-            acc[thumbData.id] = thumbData.thumbs.default.url;
-            return acc;
-        });
+    const uncachedIDs = videoIDs.filter(id => !cachedThumbs[id]); //check for thumbs that havent been cached, and therefore need to be fetched
+    const uncollectedThumbs = chunkArray(uncachedIDs, 50);
+    const thumbnailMap = { ...cachedThumbs };
 
-        return thumbnailMap;
-    });
-};
+    for (const batch of uncollectedThumbs) {
+        try {
+            const data = await VideoThumbnails.getThumbs(batch);
+            data.forEach(thumbData => {
+                thumbnailMap[thumbData.id] = thumbData.thumbs.listView.url;
+                //thumbnailMap[thumbData.id] = thumbData.thumbs;
+            });
+        } catch (error) {
+            console.error("Error fetching thumbs", chunk, error);
+        }
+    }
+
+    //console.log("thumbnailMap", thumbnailMap);
+    //console.log(`Total items in thumbnailMap: ${Object.keys(thumbnailMap).length}`);
+
+    updateCachedThumbs(thumbnailMap);
+
+    return thumbnailMap;
+}
+
+function chunkArray(array, size) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+}
+
+function getCachedThumbs() {
+    const cached = localStorage.getItem("thumbnailMap");
+    return cached ? JSON.parse(cached) : {};
+}
+
+function updateCachedThumbs(newThumbnails) {
+    const existingCache = getCachedThumbs();
+    const updatedCache = { ...existingCache, ...newThumbnails };
+    localStorage.setItem("thumbnailMap", JSON.stringify(updatedCache));
+    return updatedCache;
+}
+
+export function clearThumbCache() {
+    localStorage.removeItem("thumbnailMap"); // Remove the thumbnail cache
+    console.log("Thumbnail cache cleared.");
+}
 
 export default initThumbs;

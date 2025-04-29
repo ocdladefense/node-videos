@@ -7,7 +7,7 @@ import Home from '../components/Home.jsx';
 import VideoDataController from './controllers/VideoDataController.js';
 import YoutubeDisplayController from './controllers/YoutubeDisplayController.js';
 import UserController from './controllers/UserController.js';
-import initThumbs from './controllers/VideoThumbs';
+import initThumbs, { clearThumbCache } from './controllers/VideoThumbs';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 const API_KEY = process.env.API_KEY;
@@ -23,6 +23,7 @@ const vdc = new VideoDataController(dataUrl);
 const vidData = vdc.parseVideoData(videos);
 console.log(vidData);
 
+window.clearCache = clearThumbCache;
 
 const use = new UserController(users);
 
