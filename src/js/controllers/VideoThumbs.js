@@ -20,7 +20,7 @@ const VideoThumbnails = (function () {
             .then(function (json) {
                 //console.log(json);
                 return json.items.map(function (item) {
-                    console.log("item from getThumbs", item);
+                    //console.log("item from getThumbs", item);
                     var obj = {};
                     var id = item.id;
                     obj["id"] = id;
@@ -119,10 +119,6 @@ export function clearThumbCache() {
     const cache = new ThumbnailCache();
     cache.clear();
     console.log("Thumbnail cache cleared.");
-}
-
-export function getMaxResThumb(video) {
-
 }
 
 class ThumbnailCache {

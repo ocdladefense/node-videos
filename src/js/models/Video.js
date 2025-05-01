@@ -76,6 +76,20 @@ export default class Video {
         }
     }
 
+    getMaxResThumb() {
+    const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
+
+    if (this.thumbnail) {
+        for (let resolution of resolutionOrder) {
+            if (this.thumbnail[resolution] && this.thumbnail[resolution].url) {
+                return resolution;
+            }
+        }
+    }
+
+    return "default";
+}
+
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;
     }
