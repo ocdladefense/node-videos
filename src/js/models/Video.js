@@ -68,15 +68,15 @@ export default class Video {
         return this.subject;
     }
 
-    getVideoThumbnail() {
-        if (this.thumbnail != null) {
-            return this.thumbnail;
+    getVideoThumbnail(resolution = "default") {
+        if (this.thumbnail && this.thumbnail[resolution]) {
+            return this.thumbnail[resolution].url;
         } else {
-            return "No thumbnail data";
+            return `No thumbnailData for resolution: ${resolution}`;
         }
     }
 
-    setThumbnail(url) {
-        this.thumbnail = url;
+    setThumbnail(thumbnailData) {
+        this.thumbnail = thumbnailData;
     }
 }

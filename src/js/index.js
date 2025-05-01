@@ -8,6 +8,7 @@ import VideoDataController from './controllers/VideoDataController.js';
 import YoutubeDisplayController from './controllers/YoutubeDisplayController.js';
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
+import { clearThumbCache } from './controllers/VideoThumbs';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 const API_KEY = process.env.API_KEY;
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
 
+window.clearCache = clearThumbCache;
 window.ydc = new YoutubeDisplayController();
 const vdc = new VideoDataController(dataUrl);
 const vidData = vdc.parseVideoData(videos);
@@ -60,12 +62,17 @@ for (let i = 0; i < videos.length; i++) {
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
-
 const thumbnailMap = await initThumbs(videos);
 
-vidData.forEach(video => video.setThumbnail(thumbnailMap[video.resourceId]));
+//lookup depending on the data type returned by initThumbs
+vidData.forEach(video => {
+    const thumbs = thumbnailMap instanceof Map
+        ? thumbnailMap.get(video.resourceId)
+        : thumbnailMap[video.resourceId];
+    //console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
+    video.setThumbnail(thumbs);
+});
 
 root.render(<div><Home videos={vidData} user={user} /></div>);
-
 
 
