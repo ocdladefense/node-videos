@@ -1,5 +1,17 @@
 
 export default class Video {
+    id;
+    resourceId;
+    name;
+    description;
+    originalDate;
+    published;
+    speakers;
+    subject;
+    free;
+    
+
+
     constructor(title) {
         this.name = title;
     }

@@ -4,7 +4,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
     return (
         <li
             key={video.id || index}
-            onClick={() => {setRoute("details"); setSelectedVideo(video);}}
+            onClick={() => { setRoute("details"); setSelectedVideo(video); }}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
         >
             <div>
@@ -12,7 +12,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                 <img
                     src={video.getVideoThumbnail()}
                     alt={'Thumbnail for ' + video.getVideoName()}
-                /> <br/>
+                /> <br />
                 <ul>
                     <li>{video.isFree() ? "Free!" : 'N/A'}</li>
                 </ul>
