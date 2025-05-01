@@ -1,7 +1,7 @@
 import VideoControlBar from './VideoControlBar.jsx';
 import React, { useEffect, useState } from 'react';
 
-export default function YouTubePlayer({ video, user }) {
+export default function YouTubePlayer({ video, user, onBack }) {
     const [player, setPlayer] = useState(null);
     const [timeStamp, setTimeStamp] = useState(null);
     const handlePlayerReady = (event) => {
@@ -20,6 +20,7 @@ export default function YouTubePlayer({ video, user }) {
     });
     return (
         <div id="videoPlayer">
+
             <div id="player"></div><br />
             <VideoControlBar player={player} setTime={setTimeStamp} />
         </div>
