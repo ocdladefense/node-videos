@@ -14,12 +14,12 @@ const VideoThumbnails = (function () {
         //$thumbs = fetch(url);
         let thumbs = fetch(url);
 
-        return thumbs.then(function(resp) {
+        return thumbs.then(function (resp) {
             return resp.json();
         })
-            .then(function(json) {
+            .then(function (json) {
                 //console.log(json);
-                return json.items.map(function(item) {
+                return json.items.map(function (item) {
                     console.log("item from getThumbs", item);
                     var obj = {};
                     var id = item.id;
@@ -30,11 +30,11 @@ const VideoThumbnails = (function () {
                     obj["thumbs"] = {
                         default: item.snippet.thumbnails.default,
                         high: item.snippet.thumbnails.high,
-                        detailsView: item.snippet.thumbnails.maxres,
-                        listView: item.snippet.thumbnails.medium,
+                        maxres: item.snippet.thumbnails.maxres,
+                        medium: item.snippet.thumbnails.medium,
                         standard: item.snippet.thumbnails.standard,
                     }
-                    console.log(obj);
+                    //console.log(obj);
                     return obj;
                 });
             });
@@ -49,17 +49,17 @@ const VideoThumbnails = (function () {
         return {};
     }
 
-    var prepareThumbnailData = function(chapters) {
+    var prepareThumbnailData = function (chapters) {
 
-        var published = chapters.filter(function(chapter) { return chapter.VideoURL != null && chapter.PublishVideo != false; });
+        var published = chapters.filter(function (chapter) { return chapter.VideoURL != null && chapter.PublishVideo != false; });
         console.log("Chapters are: ", published);
 
-        videoIds = published.map(function(chapter) {
+        videoIds = published.map(function (chapter) {
             return chapter.VideoURL;
         });
-        return getThumbs(videoIds).then(function(thumbs) {
+        return getThumbs(videoIds).then(function (thumbs) {
             console.log("Thumbs are: ", thumbs);
-            return chapters.map(function(chapter) {
+            return chapters.map(function (chapter) {
                 chapter.thumb = getThumbById(thumbs, chapter.VideoURL);
                 return chapter;
             });
@@ -73,35 +73,40 @@ const VideoThumbnails = (function () {
 
 })();
 
-//add thumbnail metadeta as function for appending data
 async function initThumbs(videos) {
-    const videoIDs = videos.map(video => video.resourceId);
-    const cachedThumbs = getCachedThumbs(); //determine which thumbs have already been cached
 
-    const uncachedIDs = videoIDs.filter(id => !cachedThumbs[id]); //check for thumbs that havent been cached, and therefore need to be fetched
+    let cache = new ThumbnailCache(false);
+    let thumbnailMap = new Map();
+
+    const videoIDs = videos.map(video => video.resourceId);
+
+    //check for thumbs that havent been cached, and therefore need to be fetched
+    const uncachedIDs = videoIDs.filter(id => !cache.hasKey(id));
+
+    //divide thumbs to collect to fit within api call size limits
     const uncollectedThumbs = chunkArray(uncachedIDs, 50);
-    const thumbnailMap = { ...cachedThumbs };
 
     for (const batch of uncollectedThumbs) {
         try {
+            //fetch for thumb data
             const data = await VideoThumbnails.getThumbs(batch);
+
+            //cache thumb data
             data.forEach(thumbData => {
-                thumbnailMap[thumbData.id] = thumbData.thumbs.listView.url;
-                //thumbnailMap[thumbData.id] = thumbData.thumbs;
+                cache.set(thumbData.id, thumbData.thumbs);
+                thumbnailMap.set(thumbData.id, thumbData.thumbs);
             });
         } catch (error) {
-            console.error("Error fetching thumbs", chunk, error);
+            console.error("Error fetching thumbs", batch, error);
         }
     }
 
-    //console.log("thumbnailMap", thumbnailMap);
-    //console.log(`Total items in thumbnailMap: ${Object.keys(thumbnailMap).length}`);
-
-    updateCachedThumbs(thumbnailMap);
-
-    return thumbnailMap;
+    //console.log("cache:", cache);
+    //console.log("thumbnailMap:", thumbnailMap)
+    return cache.isEnabled() ? cache : thumbnailMap;
 }
 
+//for slicing data to handle youTube api limits
 function chunkArray(array, size) {
     const chunks = [];
     for (let i = 0; i < array.length; i += size) {
@@ -110,21 +115,54 @@ function chunkArray(array, size) {
     return chunks;
 }
 
-function getCachedThumbs() {
-    const cached = localStorage.getItem("thumbnailMap");
-    return cached ? JSON.parse(cached) : {};
-}
-
-function updateCachedThumbs(newThumbnails) {
-    const existingCache = getCachedThumbs();
-    const updatedCache = { ...existingCache, ...newThumbnails };
-    localStorage.setItem("thumbnailMap", JSON.stringify(updatedCache));
-    return updatedCache;
-}
-
 export function clearThumbCache() {
-    localStorage.removeItem("thumbnailMap"); // Remove the thumbnail cache
+    const cache = new ThumbnailCache();
+    cache.clear();
     console.log("Thumbnail cache cleared.");
+}
+
+export function getMaxResThumb(video) {
+
+}
+
+class ThumbnailCache {
+    static PREFIX = "thumb.";
+    #enabled;
+
+    constructor(enabled = true) {
+        this.#enabled = enabled;
+    }
+
+    set(key, value) {
+        if (this.#enabled === true) {
+            localStorage.setItem(ThumbnailCache.PREFIX + key, JSON.stringify(value));
+        }
+    };
+
+    get(key) {
+        return JSON.parse(localStorage.getItem(ThumbnailCache.PREFIX + key));
+    };
+
+    clear() {
+        localStorage.clear();
+    };
+
+    remove(key) {
+        localStorage.removeItem(ThumbnailCache.PREFIX + key);
+    };
+
+    persist() {
+        //push to longterm data storage
+    };
+
+    hasKey(key) {
+        //key = Array.isArray(key) ? key : [key];
+        return null == localStorage.getItem(ThumbnailCache.PREFIX + key) ? false : true;
+    };
+
+    isEnabled() {
+        return this.#enabled;
+    };
 }
 
 export default initThumbs;

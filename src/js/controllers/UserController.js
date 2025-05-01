@@ -1,24 +1,26 @@
-import users from '../../data/users.json';
+import User from '../models/User.js';
 
 export default class UserController {
+    users;
+
     constructor(userData) {
         this.userData = userData;
     }
 
 
-
      parseUsers() {
-        let users = [];
+        this.users = [];
         for (let u in this.userData) {
                    
             let ud = this.userData[u];    
-            users.push(new User(ud));
+            this.users.push(User.fromUserData(ud));
         }
-        return users;
+        return this.users;
     }
 
     getUser(id) {
-        const filter = this.userData.filter(i => i.userId === id );
+        let allUsers = this.parseUsers();
+        const filter = allUsers.filter(i => i.userId === id );
         return filter.length > 0 ? filter[0] : filter;
     }
 
@@ -32,12 +34,10 @@ export default class UserController {
         }
     }
 
-    getUserPurchased(user) {
-        return user.purchasedVideos;
-    }
 
     getAllUsers() {
-        return this.userData;
+        let allUsers = this.parseUsers();
+        return allUsers;
     }
 
 }

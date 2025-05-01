@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import VideoPlayer from './VideoPlayer';
-import Player from './Player';
-import TitleComponent from './TitleComponent';
+import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
+import VideoPlayerContainer from './VideoPlayerContainer';
+import VideoPlayer from './VideoPlayer';
+
 /*
 /// Components:
 - home (Master Component);                                                                   Check[X]
 - app (second componet);
 */
 
-export default function Home({ videos }) {
+export default function Home({ videos, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const mockIndex = 0;
+    const mockIndex = 1;
+
+    const [route, setRoute] = useState("list");
+    // For now, we need a way to reliably switch to the "player" scene.
+    // route = "player";
+
+    let component = null;
 
     useEffect(() => {
         fetch('/data/videos.json')
@@ -20,21 +27,20 @@ export default function Home({ videos }) {
             .then(data => { console.log("Fetched videos:", data); setVideos(data); })
             .catch(err => console.error('Failed to load videos:', err));
     }, []);
+
+    if (route == "list") {
+        component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} />;
+    } else if (route == "details") {
+        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} />;
+    } else if (route == "player") {
+        // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
+        console.log()
+        component = <VideoPlayer video={selectedVideo} user={user} />
+    }
+
+    console.log(user.getPreviouslyWatchedVideos());
+    if (selectedVideo) console.log(user.getWatchedVideo(selectedVideo.resourceId));
     return (
-        <div className="app">
-            {!selectedVideo ? (
-                <>
-                    <Player videoData={videos} index={mockIndex}/>
-                    <h2>Here is the list of videos!</h2>
-                    <ul className="video-list">
-                        {videos.map((video, index) => (
-                           <TitleComponent video={video} index={index} setSelectedVideo={setSelectedVideo} />
-                        ))}
-                    </ul>
-                </>
-            ) : (
-                     <VideoDetails video={selectedVideo} onBack={() => setSelectedVideo(null)} />
-            )}
-        </div>
+        <div className="app">{component}</div>
     );
 }

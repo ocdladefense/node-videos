@@ -1,16 +1,17 @@
 const iframeURL = "https://www.youtube.com/iframe_api";
 
 export default class YoutubeDisplayController {
-    
-    configYoutubeDisplay(videoData, index ,onPlayerReady) {
+
+    configYoutubeDisplay(video, timeStamp ,onPlayerReady) {
         return {
             height: '390',
             width: '640',
-            videoId: videoData[index].getVideoResourceId(),
-            controls: 0,
+            videoId: video.getVideoResourceId(),
             playerVars: {
                 autoplay: 0,
-                rel: 0
+                rel: 0,
+                controls: 1,
+                start: timeStamp
             },
             events: {
                 onReady: onPlayerReady
