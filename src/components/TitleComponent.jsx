@@ -4,17 +4,19 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
     return (
         <li
             key={video.id || index}
-            onClick={() => {setRoute("details"); setSelectedVideo(video);}}
+            onClick={() => { setRoute("details"); setSelectedVideo(video); }}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
         >
             <div>
-                <strong>{video.getVideoName()}</strong> <br />
+                {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
                 <img
                     src={video.getVideoThumbnail()}
                     alt={'Thumbnail for ' + video.getVideoName()}
-                /> <br/>
+                    style={{ width: '100%', height: '100%' }}
+                /> <br />
+                <strong className="text-2xl">{video.getVideoName()}</strong> <br />
                 <ul>
-                    <li>{video.isFree() ? "Free!" : 'N/A'}</li>
+                    <li>{video.isFree() ? "Free!" : 'Paid'}</li>
                 </ul>
             </div>
         </li>)

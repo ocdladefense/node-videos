@@ -39,6 +39,6 @@ export default function Home({ videos, user }) {
     }
 
     return (
-        <div style={{ backgroundColor: 'black', color: 'white' }} className="app">{component}</div>
+        <div className="app">{component}</div>
     );
 }
