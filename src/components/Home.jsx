@@ -38,25 +38,9 @@ export default function Home({ videos, user }) {
         component = <VideoPlayer video={selectedVideo} user={user} />
     }
 
+    console.log(user.getPreviouslyWatchedVideos());
+    if (selectedVideo) console.log(user.getWatchedVideo(selectedVideo.resourceId));
     return (
-<<<<<<< HEAD
         <div className="app">{component}</div>
-=======
-        <div className="app">
-            {!selectedVideo ? (
-                <>
-                    <Player videoData={videos} index={mockIndex}/>
-                    <h2>Here is the list of videos!</h2>
-                    <ul className="video-list">
-                        {videos.map((video, index, setSelectedVideo) => (
-                            <TitleComponent video={video} index={index} setSelectedVideo={setSelectedVideo} />
-                        ))}
-                    </ul>
-                </>
-            ) : (
-                    <VideoPlayer video={selectedVideo} onBack={() => setSelectedVideo(null)} />
-            )}
-        </div>
->>>>>>> 95e9311 (refactored User and fixed parsing issues. Ran some console.log tests)
     );
 }

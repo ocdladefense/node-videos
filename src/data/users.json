@@ -13,6 +13,7 @@
     {
         "userId": 2,
         "userName": "Jane Smith",
-        "purchasedVideos": []
+        "purchasedVideos": [],
+        "previouslyWatched": []
     }
 ]

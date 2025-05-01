@@ -1,19 +1,8 @@
 export default class User {
-<<<<<<< HEAD
-    constructor(userData) {
-        this.userData = userData;
-    }
-
-    getUserId() {
-        return this.userData.userId;
-    }
-
-    getUserName() {
-        return this.userData.userName;
-=======
     userId;
     userName;
     purchasedVideos;
+    previouslyWatched;
 
     constructor(name) {
         this.userName = name;
@@ -24,6 +13,7 @@ export default class User {
         user.userId = data.userId;
         user.userName = data.userName;
         user.purchasedVideos = data.purchasedVideos;
+        user.previouslyWatched = data.previouslyWatched;
         return user;
     }
 
@@ -33,20 +23,41 @@ export default class User {
 
     getUserName() {
         return this.userName;
->>>>>>> 95e9311 (refactored User and fixed parsing issues. Ran some console.log tests)
     }
 
     getUserPurchasedVideos() {
         // return an array
-<<<<<<< HEAD
-        return this.userData.purchasedVideos;
-=======
         if (this.purchasedVideos.length > 1) {
             return this.purchasedVideos;
         } else {
             return this.purchasedVideos[0];
         }
->>>>>>> 95e9311 (refactored User and fixed parsing issues. Ran some console.log tests)
+    }
+
+    getPreviouslyWatchedVideos() {
+        return this.previouslyWatched;
+    }
+
+    getWatchedVideo(videoId) {
+        for(let i = 0; i < this.previouslyWatched.length; i++) {
+            if (this.previouslyWatched[i].resourceId === videoId) {
+                return this.previouslyWatched[i];
+            }
+        }
+        return null;
+    }
+
+    addToWatchedVideos(id) {
+        this.previouslyWatched.push(
+            {
+                "resourceId": id,
+                "timeStamp": 0
+            }
+        )
+    }
+
+    updateTimestamp(id, time) {
+        
     }
 
 }

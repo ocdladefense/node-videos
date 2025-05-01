@@ -27,16 +27,14 @@ console.log(vidData);
 const use = new UserController(users);
 const allUsers = use.getAllUsers();
 console.log(allUsers);
-const filteredUser = use.getUser(1);
-console.log(filteredUser);
-const userName = filteredUser.getUserName();
-console.log(userName);
-
+const user = use.getUser(1);
+console.log(user.getPreviouslyWatchedVideos());
+console.log(user.getWatchedVideo('_4xNa80IP3o'));
 
 const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
-use.addVideoToPurchased(filteredUser, filteredVideo);
-const userVideo = filteredUser.getUserPurchasedVideos();
-console.log(userVideo.getVideoName());
+
+
+console.log(user.get)
 
 
 
@@ -68,3 +66,6 @@ const thumbnailMap = await initThumbs(videos);
 vidData.forEach(video => video.setThumbnail(thumbnailMap[video.resourceId]));
 
 root.render(<div><Home videos={vidData} user={user} /></div>);
+
+
+

@@ -8,7 +8,14 @@ export default function YouTubePlayer({ video, user }) {
         setPlayer(event.target)
     }
 
-    let elapsedTime = user.previouslyWatched[0].timeStamp;
+    if (user.getWatchedVideo(video.resourceId) == null) {
+        user.addToWatchedVideos(video.resourceId);
+    }
+
+    const uservid = user.getWatchedVideo(video.resourceId);
+
+
+    let elapsedTime = uservid.timeStamp;
 
     useEffect(() => {
         window.onYouTubeIframeAPIReady = () => {
