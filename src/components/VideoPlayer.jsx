@@ -26,7 +26,7 @@ export default function YouTubePlayer({ video, user, onBack }) {
         window.ydc.injectScriptElement();
     });
     return (
-        <div className='bg-black' id="videoPlayer">
+        <div className='bg-black min-h-screen' id="videoPlayer">
 
             <div id="player"></div><br />
             <VideoControlBar player={player} setTime={setTimeStamp} />

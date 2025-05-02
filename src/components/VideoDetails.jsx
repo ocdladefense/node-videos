@@ -9,7 +9,7 @@ export default function VideoDetails({ video, onBack, setRoute }) {
 
 
     return (
-        <div className="video-details bg-black">
+        <div className="video-details bg-black min-h-screen">
             <button className="text-white" onClick={onBack}>← Back to List</button>
             <h1 className="text-2xl text-white">{video.getVideoName()}</h1>
             <img
@@ -20,11 +20,11 @@ export default function VideoDetails({ video, onBack, setRoute }) {
             <h2 className="text-2xl text-white">{video.getVideoDescription()}</h2>
 
             <div className="options">
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" > Purchase {video.isFree() ? "Free!" : "$19.99"} </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Resume/Continue </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Start From Beginning </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Play Again </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2" onClick={onPlay}> Play Video </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2"> Purchase {video.isFree() ? "Free!" : "$19.99"} </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2"> Resume/Continue </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2"> Start From Beginning </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2"> Play Again </button>
             </div>
         </div>
     );
