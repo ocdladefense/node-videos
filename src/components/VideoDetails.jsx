@@ -1,11 +1,14 @@
 import React from "react";
 
-export default function VideoDetails({ video, onBack, setRoute }) {
+export default function VideoDetails({ video, onBack, setRoute, user }) {
 
     let onPlay = function() {
         console.log("About to play the video!");
         setRoute("player");
     };
+
+    const prevWatched = user.getWatchedVideo(video.getVideoResourceId());
+
 
 
     return (
@@ -20,11 +23,29 @@ export default function VideoDetails({ video, onBack, setRoute }) {
             <h2 className="text-2xl text-white">{video.getVideoDescription()}</h2>
 
             <div className="options">
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
+                {/* <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
                 <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" > Purchase {video.isFree() ? "Free!" : "$19.99"} </button>
                 <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Resume/Continue </button>
                 <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Start From Beginning </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Play Again </button>
+                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Play Again </button> */}
+
+                {/* Conditional rendering depending on if the video is in the user's previously watched videos */}
+                {/* TODO: Set up purchase button to display if video is not free and video is not in purchased videos 
+                          Set up state so that component rerenders when video is purchased.*/}
+                {
+                    prevWatched === null ?
+                        <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
+                        :
+                        <>
+                            <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Resume/Continue </button>
+                            <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Start From Beginning </button>
+                        </>
+                }
+
+
+
+
+
             </div>
         </div>
     );
