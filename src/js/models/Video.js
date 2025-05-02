@@ -56,6 +56,7 @@ export default class Video {
     isFree() {
         return this.free;
     }
+    
     getVideoPublished() {
         return this.published;
     }
