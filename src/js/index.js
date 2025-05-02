@@ -51,11 +51,7 @@ window.ydc = new YoutubeDisplayController();
 // without this I get an error at runtime.  babel 7 and preset env.
 const regeneratorRuntime = require("regenerator-runtime");
 
-for (let i = 0; i < videos.length; i++) {
-    if (i % 2 === 0) {
-        videos[i].free = true;
-    } else videos[i].free = false;
-}
+
 
 //console.log(JSON.stringify(videos));
 

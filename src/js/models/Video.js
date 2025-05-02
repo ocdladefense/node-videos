@@ -56,6 +56,7 @@ export default class Video {
     isFree() {
         return this.free;
     }
+
     getVideoPublished() {
         return this.published;
     }
@@ -77,18 +78,18 @@ export default class Video {
     }
 
     getMaxResThumb() {
-    const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
+        const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
 
-    if (this.thumbnail) {
-        for (let resolution of resolutionOrder) {
-            if (this.thumbnail[resolution] && this.thumbnail[resolution].url) {
-                return resolution;
+        if (this.thumbnail) {
+            for (let resolution of resolutionOrder) {
+                if (this.thumbnail[resolution] && this.thumbnail[resolution].url) {
+                    return resolution;
+                }
             }
         }
-    }
 
-    return "default";
-}
+        return "default";
+        }
 
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;

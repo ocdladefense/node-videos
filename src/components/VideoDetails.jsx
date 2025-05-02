@@ -13,7 +13,7 @@ export default function VideoDetails({ video, onBack, setRoute }) {
             <button className="text-white" onClick={onBack}>← Back to List</button>
             <h1 className="text-2xl text-white">{video.getVideoName()}</h1>
             <img
-                src={video.getVideoThumbnail()}
+                src={video.getVideoThumbnail(video.getMaxResThumb())}
                 alt={'Thumbnail for ' + video.getVideoName()}
                 style={{ width: '60%', height: '60%' }}
             />
