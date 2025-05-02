@@ -12,7 +12,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                 <img
                     src={video.getVideoThumbnail(video.getMaxResThumb())}
                     alt={'Thumbnail for ' + video.getVideoName()}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{ width: '100%' }}
                 /> <br />
                 <strong className="text-2xl">{video.getVideoName()}</strong> <br />
                 <ul>
