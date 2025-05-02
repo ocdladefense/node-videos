@@ -56,6 +56,7 @@ export default class Video {
     isFree() {
         return this.free;
     }
+
     getVideoPublished() {
         return this.published;
     }
@@ -68,15 +69,29 @@ export default class Video {
         return this.subject;
     }
 
-    getVideoThumbnail() {
-        if (this.thumbnail != null) {
-            return this.thumbnail;
+    getVideoThumbnail(resolution = "default") {
+        if (this.thumbnail && this.thumbnail[resolution]) {
+            return this.thumbnail[resolution].url;
         } else {
-            return "No thumbnail data";
+            return `No thumbnailData for resolution: ${resolution}`;
         }
     }
 
-    setThumbnail(url) {
-        this.thumbnail = url;
+    getMaxResThumb() {
+        const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
+
+        if (this.thumbnail) {
+            for (let resolution of resolutionOrder) {
+                if (this.thumbnail[resolution] && this.thumbnail[resolution].url) {
+                    return resolution;
+                }
+            }
+        }
+
+        return "default";
+        }
+
+    setThumbnail(thumbnailData) {
+        this.thumbnail = thumbnailData;
     }
 }

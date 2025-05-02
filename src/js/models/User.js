@@ -57,7 +57,13 @@ export default class User {
     }
 
     updateTimestamp(id, time) {
-        
+        for(let i = 0; i < this.previouslyWatched.length; i++)
+        {
+            if (this.previouslyWatched[i].resourceId === id)
+            {
+                this.previouslyWatched[i].timeStamp = time;
+            }
+        }
     }
 
 }
