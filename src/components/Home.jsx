@@ -35,7 +35,8 @@ export default function Home({ videos, user }) {
     } else if (route == "player") {
         // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
         console.log()
-        component = <VideoPlayer video={selectedVideo} user={user} />
+        component = <VideoPlayerContainer video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+        //component = <VideoPlayer video={selectedVideo} user={user} />
     }
 
     console.log(user.getPreviouslyWatchedVideos());
