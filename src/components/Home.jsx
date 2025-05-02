@@ -29,9 +29,9 @@ export default function Home({ videos, user }) {
     }, []);
 
     if (route == "list") {
-        component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} />;
+        component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
     } else if (route == "details") {
-        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} />;
+        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} />;
     } else if (route == "player") {
         // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
         console.log()
