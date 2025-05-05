@@ -34,6 +34,15 @@ export default class User {
         }
     }
 
+    getPurchasedVideo(videoId) {
+        for(let i = 0; i < this.purchasedVideos.length; i++) {
+            if (this.purchasedVideos[i].resourceId === videoId) {
+                return this.purchasedVideos[i];
+            }
+        }
+        return null;
+    }
+
     getPreviouslyWatchedVideos() {
         return this.previouslyWatched;
     }
@@ -64,6 +73,10 @@ export default class User {
                 this.previouslyWatched[i].timeStamp = time;
             }
         }
+    }
+
+    addToPurchasedVideos(video) {
+        this.purchasedVideos.push(video);
     }
 
 }
