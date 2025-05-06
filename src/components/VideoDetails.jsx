@@ -4,7 +4,7 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
     const prevWatched = user.getWatchedVideo(video.getVideoResourceId());
     const purchasedVideo = user.getPurchasedVideo(video.getVideoResourceId());
     const [isPlayable, setIsPlayable] = useState(() => purchasedVideo != null || video.isFree() ? true : false);
-    console.log(user.getUserPurchasedVideos());
+    console.log("get purchased vids", user.getUserPurchasedVideos());
     const onPlay = function() {
         console.log("About to play the video!");
         setRoute("player");
