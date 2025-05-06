@@ -63,9 +63,7 @@ const thumbnailMap = await initThumbs(videos);
 
 //lookup depending on the data type returned by initThumbs
 vidData.forEach(video => {
-    const thumbs = thumbnailMap instanceof Map
-        ? thumbnailMap.get(video.resourceId)
-        : thumbnailMap[video.resourceId];
+    const thumbs = thumbnailMap.get(video.resourceId);
     //console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
     video.setThumbnail(thumbs);
 });
