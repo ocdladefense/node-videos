@@ -18,7 +18,6 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
 
     const purchase = function() {
         user.addToPurchasedVideos(video);
-        console.log(user.getUserPurchasedVideos());
         setIsPlayable(true);
     }
 
