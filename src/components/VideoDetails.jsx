@@ -26,43 +26,36 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
 
 
     return (
-        <div className="video-details bg-black min-h-screen">
-            <button className="text-white" onClick={onBack}>← Back to List</button>
-            <h1 className="text-2xl text-white">{video.getVideoName()}</h1>
-            <img
-                src={video.getVideoThumbnail(video.getMaxResThumb())}
-                alt={'Thumbnail for ' + video.getVideoName()}
-                style={{ width: '60%', height: '60%' }}
-            />
-            <h2 className="text-2xl text-white">{video.getVideoDescription()}</h2>
+        <div className="video-details bg-black min-h-screen px-4">
+            <button className="text-white mb-4" onClick={onBack}>← Back to List</button>
 
-            <div className="options">
-                {/* <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" > Purchase {video.isFree() ? "Free!" : "$19.99"} </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Resume/Continue </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Start From Beginning </button>
-                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2"> Play Again </button> */}
-
-                {/* Conditional rendering depending on if the video is in the user's previously watched videos */}
-                {/* TODO: Set up purchase button to display if video is not free and video is not in purchased videos 
-                          Set up state so that component rerenders when video is purchased.*/}
-                {
-                    isPlayable ?
-                        prevWatched === null ?
-                            <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Play Video </button>
-                            :
-                            <>
-                                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Resume/Continue </button>
-                                <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={playFromBeginning}> Start From Beginning </button>
-                            </>
-                        :
-                        <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={purchase}>Purchase $19.99</button>
-                }
-
-
-
-
+            {/* Centered Content */}
+            <div className="video-content max-w-3xl mx-auto text-center">
+                <h1 className="text-2xl text-white">{video.getVideoName()}</h1>
+                <img
+                    src={video.getVideoThumbnail(video.getMaxResThumb())}
+                    alt={'Thumbnail for ' + video.getVideoName()}
+                    className="my-4 mx-auto w-full max-w-5xl"
+                />
+                <h2 className="text-2xl text-white mb-4">{video.getVideoDescription()}</h2>
+                <div className="options space-y-2">
+                    {
+                        isPlayable ? (
+                            prevWatched === null ? (
+                                <button className="text-xl border-2 bg-white rounded-lg px-4 py-2" onClick={onPlay}>Play Video</button>
+                            ) : (
+                                <>
+                                    <button className="text-xl border-2 bg-white rounded-lg px-4 py-2" onClick={onPlay}>Resume/Continue</button>
+                                    <button className="text-xl border-2 bg-white rounded-lg px-4 py-2" onClick={playFromBeginning}>Start From Beginning</button>
+                                </>
+                            )
+                        ) : (
+                            <button className="text-xl border-2 bg-white rounded-lg px-4 py-2" onClick={purchase}>Purchase $19.99</button>
+                        )
+                    }
+                </div>
             </div>
         </div>
+
     );
 }
