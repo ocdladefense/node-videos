@@ -75,7 +75,7 @@ const VideoThumbnails = (function () {
 
 async function initThumbs(videos) {
 
-    let cache = new ThumbnailCache(false);
+    let cache = new ThumbnailCache();
     let thumbnailMap = new Map();
 
     const videoIDs = videos.map(video => video.resourceId);
@@ -101,7 +101,7 @@ async function initThumbs(videos) {
         }
     }
 
-    //console.log("cache:", cache);
+    //console.log("cache:", cache.getCacheContents());
     //console.log("thumbnailMap:", thumbnailMap)
     return cache.isEnabled() ? cache : thumbnailMap;
 }
@@ -158,6 +158,17 @@ class ThumbnailCache {
 
     isEnabled() {
         return this.#enabled;
+    };
+
+    getCacheContents() {
+        let cacheContents = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(ThumbnailCache.PREFIX)) {
+                cacheContents[key] = JSON.parse(localStorage.getItem(key));
+            }
+        }
+        return cacheContents;
     };
 }
 
