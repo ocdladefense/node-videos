@@ -12,9 +12,9 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                 <img
                     src={video.getVideoThumbnail(video.getMaxResThumb())}
                     alt={'Thumbnail for ' + video.getVideoName()}
-                    style={{ width: '100%' }}
+                    className="w-full h-[185px] object-cover"
                 /> <br />
-                <strong className="text-2xl">{video.getVideoName()}</strong> <br />
+                <strong className="text-2xl text-auto text-zinc-100">{video.getVideoName()}</strong> <br />
                 <ul>
                     <li>{video.isFree() ? "Free!" : 'Paid'}</li>
                 </ul>
