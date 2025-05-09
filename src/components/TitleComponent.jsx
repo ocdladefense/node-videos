@@ -9,6 +9,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
         >
             <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
+
                 <img
                     src={video.getVideoThumbnail(video.getMaxResThumb())}
                     alt={'Thumbnail for ' + video.getVideoName()}
@@ -36,3 +37,5 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
         </li>)
 }
 
+// if we set the video size based on media type we can fix the black bar issue. 
+//
