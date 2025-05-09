@@ -27,7 +27,7 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
 
     return (
         <div className="video-details bg-zinc-900 min-h-screen px-4">
-            <button className="text-zinc-100 " onClick={onBack}>← Back to List</button>
+            <button className="text-zinc-100 text-3xl" onClick={onBack}>←</button>
 
             <div className="video-content max-w-3xl mx-auto">
                 <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1>
