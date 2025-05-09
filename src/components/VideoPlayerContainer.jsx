@@ -3,15 +3,22 @@ import React, { useState } from 'react';
 import VideoPlayer from './VideoPlayer';
 import VideoControlBar from './VideoControlBar';
 
-import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, ArrowBackButton } from '../js/videostyles.js';
+import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, ArrowBack, ArrowBackButton } from '../js/videostyles.js';
 import '../css/videostyles.css';
+
+//import ArrowBackIcon from '@mui/icons-material/ArrowBackRounded';
 
 import { ThemeProvider, Tooltip } from '@mui/material';
 
-export default function VideoPlayerContainer({ video, user, onBack }) {
+export default function VideoPlayerContainer({ resetTimestamp, video, user, onBack }) {
     const [player, setPlayer] = useState(null);
 
     let userWatchProgress = user.getWatchedVideo(video.resourceId);
+
+    if (resetTimestamp === 0) {
+        userWatchProgress.timeStamp = 0;
+
+    }
 
     if (!userWatchProgress) {
         user.addToWatchedVideos(video.resourceId);
@@ -34,9 +41,6 @@ export default function VideoPlayerContainer({ video, user, onBack }) {
         <ThemeProvider theme={videoPlayerTheme}>
 
             <TitleContainer>
-                <Tooltip title="Return to Video Details Page" placement="left">
-                    <ArrowBackButton onClick={() => { onBack(); }} />
-                </Tooltip>
                 <h1>{video.getVideoName()}</h1>
             </TitleContainer>
 
@@ -45,6 +49,12 @@ export default function VideoPlayerContainer({ video, user, onBack }) {
             </VideoContainer>
 
             <ControlBarContainer>
+                <Tooltip title="Return to Video Details Page" placement="left">
+                    <ArrowBackButton onClick={() => { onBack(); }} variant="contained">
+                        <ArrowBack />
+                        Return to Details
+                    </ArrowBackButton>
+                </Tooltip>
                 <VideoControlBar user={user} player={player} userWatchProgress={userWatchProgress} handleTimestamp={handleTimestamp} />
             </ControlBarContainer>
 

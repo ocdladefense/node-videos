@@ -2,11 +2,18 @@ import React from "react";
 
 export default function VideoDetails({ video, onBack, setRoute, user }) {
 
-    let onPlay = function() {
+    let onPlay = (e) => {
         console.log("About to play the video!");
-        setRoute("player");
+        const isReset = e.target.getAttribute("reset") === "true";
+        if (isReset) {
+            setRoute("playerReset")
+        }
+        else {
+            setRoute("player");
+        }
     };
 
+    let reset = false;
     const prevWatched = user.getWatchedVideo(video.getVideoResourceId());
 
 
@@ -38,7 +45,7 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
                         :
                         <>
                             <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Resume/Continue </button>
-                            <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" onClick={onPlay}> Start From Beginning </button>
+                            <button className="text-xl border-2 bg-white rounded-lg px-2 py-2" reset="true" onClick={onPlay}> Start From Beginning </button>
                         </>
                 }
 

@@ -1,12 +1,24 @@
 import { createTheme } from '@mui/material/styles';
-import { Container, styled } from '@mui/material';
+import { Container, styled, Button, SvgIcon } from '@mui/material';
 
 import VolumeDownIcon from '@mui/icons-material/VolumeDown';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBackRounded';
 
-export const ArrowBackButton = styled(ArrowBackIcon)(({ theme }) => ({
-    padding: 10,
+export const ArrowBackButton = styled(Button)(({ theme }) => ({
+    display: 'flex',
+    margin: 10,
+}));
+
+export const ArrowBack = styled(ArrowBackIcon)(({ theme }) => ({
+    fontSize: 30,
+    paddingBottom: 0,
+    '&:hover': {
+        color: '#ffffff',
+    },
+    '&:active': {
+        color: '#ffffff',
+    }
 }));
 
 export const VolumeUp = styled(VolumeUpIcon)(({ theme }) => ({
@@ -37,7 +49,7 @@ export const VideoContainer = styled(Container)(({ theme }) => ({
 
 export const ControlBarContainer = styled(Container)(({ theme }) => ({
     borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10
+    borderBottomRightRadius: 10,
 }));
 
 

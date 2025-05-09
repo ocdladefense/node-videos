@@ -8,15 +8,12 @@ export default class YoutubeDisplayController {
             width: '1280',
             videoId: userWatchProgress.resourceId,
             playerVars: {
-                controls: 0,
                 start: userWatchProgress.timeStamp,
-                showinfo: 0,
-                modestbranding: 1,
+                autoplay: 0,
+                modestbranding: 0,
+                controls: 0,
                 rel: 0,
-                fs: 0,
-                disablekb: 1,
-                iv_load_policy: 3,
-                playsinline: 1
+                widget_referrer: "http://localhost"
             },
             events: {
                 onReady: onPlayerReady

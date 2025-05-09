@@ -16,8 +16,17 @@ export default function YouTubePlayer({ userWatchProgress, onReady }) {
         setPlayerReady(true);
         window.ydc.injectScriptElement();
     });
+
+    if (window.YT) {
+        onYouTubeIframeAPIReady();
+    }
+
     return playerReady ? (
-        <div id="player" />
+        <div id="player-wrapper">
+            <div id="player"></div>
+            <div id="blocker"></div>
+        </div>
+
     ) : (
         <Skeleton variant="rectangular" animation="wave" width={1280} height={720} />
     );

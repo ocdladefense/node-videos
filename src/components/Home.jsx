@@ -13,7 +13,7 @@ import VideoPlayer from './VideoPlayer';
 export default function Home({ videos, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const mockIndex = 1;
+    const resetTimestamp = 0;
 
     const [route, setRoute] = useState("list");
     // For now, we need a way to reliably switch to the "player" scene.
@@ -28,6 +28,8 @@ export default function Home({ videos, user }) {
             .catch(err => console.error('Failed to load videos:', err));
     }, []);
 
+
+
     if (route == "list") {
         component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
     } else if (route == "details") {
@@ -36,6 +38,12 @@ export default function Home({ videos, user }) {
         // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
         console.log()
         component = <VideoPlayerContainer video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+        //component = <VideoPlayer video={selectedVideo} user={user} />
+    }
+    else if (route == "playerReset") {
+        // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
+        console.log()
+        component = <VideoPlayerContainer resetTimestamp={resetTimestamp} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
         //component = <VideoPlayer video={selectedVideo} user={user} />
     }
 
