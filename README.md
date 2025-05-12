@@ -1,10 +1,15 @@
 
 
-# Web browser JavaScript project
-Quickly spin up a Babel / Webpack / JavaScript workflow for the web.
+# Video app for OCDLA.
+View and purchase OCDLA videos.
 
-## Description
-Use this GitHub template repository as the basis for other HTML / JavaScript / CSS projects that utilize a Node / Babel / Webpack build.
+## Salesforce
+Parts of this project may require the Salesforce REST API.
+* Install the [Salesforce development tools for VSCode](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide/install).
+  * This includes the VSCode extensions, the Salesforce CLI, and an appropriate version of the Java Development Kit.
+* Connect to org: sf org login web --alias Sandbox__OcdPartial --instance-url https://test.salesforce.com
+* sf org display
+
 
 ## Installation
 _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functionality._
