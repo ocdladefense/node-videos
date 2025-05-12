@@ -104,3 +104,4 @@ typings/
 /dev_modules/@local
 
 .sfdx
+.sf
