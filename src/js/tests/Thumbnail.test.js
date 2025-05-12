@@ -2,7 +2,7 @@
 import Video from '../models/Video';
 import initThumbs from '../controllers/VideoThumbs';
 
-test("testing initThumbs", () => {
+test("testing initThumbs", async () => {
     const localStorageMock = {
         getItem: jest.fn(),
         setItem: jest.fn(),
@@ -11,7 +11,8 @@ test("testing initThumbs", () => {
     };
     global.localStorage = localStorageMock;
 
-    const thumbnailMap = initThumbs([{ resourceId: '_4xNa80IP3o' }]);
+    const thumbnailMap = await initThumbs([{ resourceId: '_4xNa80IP3o' }, {resourceId: 'foobar'}]);
+    console.log("thumbnailMap:", thumbnailMap);
 })
 
 describe("Thumb get/set", () => {
