@@ -10,9 +10,8 @@ import '../css/videostyles.css';
 
 import React, { useState } from 'react';
 
-export default function VideoControlBar({ player, handleTimestamp }) {
+export default function VideoControlBar({ isPlaying, player, setElapsed, handleTimestamp, setIsPlaying, handleToggle, handlePollingTimestamp, setVideoDuration }) {
 
-    const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(50);
 
 
@@ -21,19 +20,10 @@ export default function VideoControlBar({ player, handleTimestamp }) {
         player.setVolume(newValue);
 
     };
-    const handleToggle = () => {
-        if (isPlaying) {
-            player.pauseVideo();
-        } else {
-            player.playVideo();
-        }
-        setIsPlaying(!isPlaying);
-    };
 
     /*
     TODO:
         -Add fullscreen option
-        -Add video playback slider with seekTo enabled
         -Adjust styling based on current needs 
     */
 
@@ -47,48 +37,60 @@ export default function VideoControlBar({ player, handleTimestamp }) {
                             <IconButton onClick={handleToggle}>
                                 {isPlaying ? (
                                     <Tooltip title="Pause Video" placement="bottom">
-                                        <PauseCircleIcon onClick={() => { player.pauseVideo(); handleTimestamp(); }} />
+                                        <PauseCircleIcon
+                                            onClick={() => {
+                                                player.pauseVideo();
+                                                handleTimestamp();
+                                                handlePollingTimestamp(false);
+                                            }}
+                                        />
                                     </Tooltip>
-
                                 ) : (
                                     <Tooltip title="Play Video" placement="bottom">
-                                        <PlayCircleIcon onClick={() => { player.playVideo(); handleTimestamp(); }} />
+                                        <PlayCircleIcon
+                                            onClick={() => {
+                                                player.playVideo();
+                                                handleTimestamp();
+                                                handlePollingTimestamp(true);
+                                            }}
+                                        />
                                     </Tooltip>
-
-                                )};
+                                )}
                             </IconButton>
 
                             <Tooltip title="End Video" placement="bottom">
-                                <StopCircleIcon onClick={() => { player.stopVideo(); handleTimestamp(); setIsPlaying(false); }} />
+                                <StopCircleIcon onClick={() => { player.stopVideo(); handleTimestamp(); setIsPlaying(false); handlePollingTimestamp(false); setElapsed(0); }} />
+                            </Tooltip>
+
+
+                            <Tooltip title="Volume Slider" placement="bottom">
+                                <Box display="flex" >
+                                    <VolumeDown />
+                                    <Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} min={0} max={100} />
+                                    <VolumeUp />
+                                </Box>
+                            </Tooltip>
+
+                            <Tooltip title="Restart Video" placement="bottom">
+                                <RestartAltIcon
+                                    onClick={() => {
+                                        player.seekTo(0, true);
+                                        player.playVideo();
+                                        handleTimestamp();
+                                        setIsPlaying(true);
+                                        handlePollingTimestamp(true);
+                                    }}
+                                />
                             </Tooltip>
                         </Box>
                     </ThemeProvider>
-
-                    <Tooltip title="Volume Slider" placement="bottom">
-                        <Box display="flex" >
-                            <VolumeDown />
-                            <Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} min={0} max={100} />
-                            <VolumeUp />
-                        </Box>
-                    </Tooltip>
-
-                    <Tooltip title="Restart Video" placement="bottom">
-                        <RestartAltIcon
-                            onClick={() => {
-                                player.seekTo(0, true);
-                                player.playVideo();
-                                handleTimestamp();
-                                setIsPlaying(true);
-                            }}
-                        />
-                    </Tooltip>
                 </Box>
             </Container>
         );
     }
-    else {
-        return (
-            <div id="loading">Loading Control Bar...</div>
-        )
-    }
+
+    return (
+        <div id="loading">Loading Control Bar...</div>
+    )
+
 }
