@@ -105,4 +105,6 @@ typings/
 
 .sfdx
 .sf
+.vs
+.sf/config.json
 

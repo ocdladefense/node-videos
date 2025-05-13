@@ -29,6 +29,6 @@ public class VideoAsset {
             this.VideoURL = chapter.VideoURL__c;
         }
 
-
+        //foobar
 
     }
