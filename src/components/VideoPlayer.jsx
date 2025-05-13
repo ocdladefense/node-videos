@@ -1,36 +1,34 @@
-import VideoControlBar from './VideoControlBar.jsx';
 import React, { useEffect, useState } from 'react';
+import '../css/videostyles.css';
 
-export default function YouTubePlayer({ video, user, onBack }) {
-    const [player, setPlayer] = useState(null);
-    const [timeStamp, setTimeStamp] = useState(null);
-    const handlePlayerReady = (event) => {
-        setPlayer(event.target)
-    }
+import { Skeleton } from '@mui/material';
 
-    if (user.getWatchedVideo(video.resourceId) == null) {
-        user.addToWatchedVideos(video.resourceId);
-    }
-
-    const uservid = user.getWatchedVideo(video.resourceId);
-
-
-    let elapsedTime = uservid.timeStamp;
+export default function YouTubePlayer({ userWatchProgress, onReady }) {
+    const [playerReady, setPlayerReady] = useState(false);
 
     useEffect(() => {
         window.onYouTubeIframeAPIReady = () => {
-            const config = window.ydc.configYoutubeDisplay(video, elapsedTime, handlePlayerReady);
-            const newPlayer = new window.YT.Player('player', config);
-            setPlayer(newPlayer);
+            const config = window.ydc.configYoutubeDisplay(userWatchProgress, (event) => {
+                onReady(event.target)
+            });
+            new window.YT.Player('player', config);
         }
+        setPlayerReady(true);
         window.ydc.injectScriptElement();
     });
-    return (
-        <div className='bg-black' id="videoPlayer">
 
-            <div id="player"></div><br />
-            <VideoControlBar player={player} setTime={setTimeStamp} />
+    if (window.YT) {
+        onYouTubeIframeAPIReady();
+    }
+
+    return playerReady ? (
+        <div id="player-wrapper">
+            <div id="player"></div>
+            <div id="blocker"></div>
         </div>
 
+    ) : (
+        <Skeleton variant="rectangular" animation="wave" width={1280} height={720} />
     );
+
 }

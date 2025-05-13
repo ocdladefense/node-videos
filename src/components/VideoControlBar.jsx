@@ -3,47 +3,92 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
-import { createTheme, ThemeProvider } from '@mui/system';
+import { IconButton, ThemeProvider, Container, Slider, Box, Tooltip } from '@mui/material';
 
-import React from 'react';
+import { videoPlayerTheme, VolumeUp, VolumeDown } from '../js/videostyles.js';
+import '../css/videostyles.css';
 
-const controlBarTheme = createTheme({
-    components: {
-        MuiSvgIcon: {
-            styleOverrides: {
-                root: {
-                    fontSize: '60px',
-                    color: '#3c3c3c',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                        color: '#606060',
-                    },
-                    '&:active': {
-                        color: '#818181',
-                    },
-                },
-            },
-        },
-    },
-});
+import React, { useState } from 'react';
 
-export default function VideoControlBar({ player, setTime }) {
-    return (
-        <div id="controlBar">
-            <ThemeProvider theme={controlBarTheme}>
-                <PlayCircleIcon onClick={() => player.playVideo()} />
+export default function VideoControlBar({ player, handleTimestamp }) {
 
-                <PauseCircleIcon onClick={() => player.pauseVideo()} />
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [volume, setVolume] = useState(50);
 
-                <StopCircleIcon onClick={() => player.stopVideo()} />
 
-                <RestartAltIcon onClick={() => {
-                    player.seekTo(0, true);
-                    player.playVideo();
-                }}>
-                </RestartAltIcon>
-            </ThemeProvider>
-        </div>
-    )
+    const handleVolumeChange = (event, newValue) => {
+        setVolume(newValue);
+        player.setVolume(newValue);
+
+    };
+    const handleToggle = () => {
+        if (isPlaying) {
+            player.pauseVideo();
+        } else {
+            player.playVideo();
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    /*
+    TODO:
+        -Add fullscreen option
+        -Add video playback slider with seekTo enabled
+        -Adjust styling based on current needs 
+    */
+
+    if (player) {
+        return (
+            <Container id="control-bar">
+                <Box display="flex" alignItems="center">
+                    <ThemeProvider theme={videoPlayerTheme}>
+                        <Box display="flex" alignItems="center">
+
+                            <IconButton onClick={handleToggle}>
+                                {isPlaying ? (
+                                    <Tooltip title="Pause Video" placement="bottom">
+                                        <PauseCircleIcon onClick={() => { player.pauseVideo(); handleTimestamp(); }} />
+                                    </Tooltip>
+
+                                ) : (
+                                    <Tooltip title="Play Video" placement="bottom">
+                                        <PlayCircleIcon onClick={() => { player.playVideo(); handleTimestamp(); }} />
+                                    </Tooltip>
+
+                                )};
+                            </IconButton>
+
+                            <Tooltip title="End Video" placement="bottom">
+                                <StopCircleIcon onClick={() => { player.stopVideo(); handleTimestamp(); setIsPlaying(false); }} />
+                            </Tooltip>
+                        </Box>
+                    </ThemeProvider>
+
+                    <Tooltip title="Volume Slider" placement="bottom">
+                        <Box display="flex" >
+                            <VolumeDown />
+                            <Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} min={0} max={100} />
+                            <VolumeUp />
+                        </Box>
+                    </Tooltip>
+
+                    <Tooltip title="Restart Video" placement="bottom">
+                        <RestartAltIcon
+                            onClick={() => {
+                                player.seekTo(0, true);
+                                player.playVideo();
+                                handleTimestamp();
+                                setIsPlaying(true);
+                            }}
+                        />
+                    </Tooltip>
+                </Box>
+            </Container>
+        );
+    }
+    else {
+        return (
+            <div id="loading">Loading Control Bar...</div>
+        )
+    }
 }

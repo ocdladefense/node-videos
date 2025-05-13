@@ -18,11 +18,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@100;200;300;400;500&family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 </head>
 
 <body id="root" class="text-sm invisible">
+    <script>
+        function myCallback(myObj) {
+            console.log(myObj);
+        }
+    </script>
+    <script src="https://ocdla--ocdpartial.sandbox.my.site.com/apex/VideoData?callback=myCallback&format=jsonp"></script>
     <script>0</script>
+    <script>function myCallback(data) { console.log("Hello World!"); console.log(JSON.parse(data)); }</script>
+    <script src="https://ocdla--ocdpartial.sandbox.my.site.com/apex/VideoData?callback=myCallback&format=jsonp">
+    </script>
     <style type="text/css">
+        body {
+            background-color: black;
+        }
+
         label {
             display: inline-block;
             padding-left: 5px;
@@ -41,11 +57,11 @@
 
                 <div class="video-container">
 
-                    <div id="player"></div>
+
 
                 </div>
 
-                
+
             </div>
 
         </div><!-- end content -->
@@ -59,7 +75,7 @@
         <div id="picker-content">
 
             <apex:form>
-              
+
                 <apex:selectList size="1" styleClass="subject-picker">
                     <apex:selectOptions value="{!subjects}" />
                 </apex:selectList>

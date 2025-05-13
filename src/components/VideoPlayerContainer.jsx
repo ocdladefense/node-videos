@@ -1,27 +1,64 @@
-import React from 'react';
-/**
- * This component is the CONTAINER for the VideoPlayer component and VideoControls components.
- */
+import React, { useState } from 'react';
 
-export default function VideoPlayerContainer({ video, onBack }) {
-    const youtube = 'https://www.youtube.com/watch?v=';
+import VideoPlayer from './VideoPlayer';
+import VideoControlBar from './VideoControlBar';
+
+import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, ArrowBack, ArrowBackButton } from '../js/videostyles.js';
+import '../css/videostyles.css';
+
+//import ArrowBackIcon from '@mui/icons-material/ArrowBackRounded';
+
+import { ThemeProvider, Tooltip } from '@mui/material';
+
+export default function VideoPlayerContainer({ resetTimestamp, video, user, onBack }) {
+    const [player, setPlayer] = useState(null);
+
+    let userWatchProgress = user.getWatchedVideo(video.resourceId);
+
+    if (resetTimestamp === 0) {
+        userWatchProgress.timeStamp = 0;
+
+    }
+
+    if (!userWatchProgress) {
+        user.addToWatchedVideos(video.resourceId);
+        userWatchProgress = user.getWatchedVideo(video.resourceId);
+    }
+
+    const handleTimestamp = (event) => {
+        let runTime = Math.floor(player.getCurrentTime());
+        user.updateTimestamp(userWatchProgress.resourceId, runTime);
+        console.log(runTime)
+    }
+
+    /*TODO:
+    - get handleTimestamp() to work with onBack, 
+    - figure out work-around to have my component rerender 
+    */
 
     return (
-        <div className="video-details">
-            <button onClick={onBack}>← Back to Details</button>
-            <h2>{video.title}</h2>
-            <img src={video.largeThumbnail} alt={video.title} style={{ maxHeight: '100%', maxWidth: '100%' }} />
-            <p><strong>Title:</strong> {video.getVideoName()}</p>
-            <p><strong>Description:</strong> {video.getVideoDescription()}</p>
-            <p><strong>Published:</strong> {String(video.getVideoPublished())}</p>
 
-            <iframe width="420" height="315"
-                src={youtube + video.getVideoResourceId()}>
-            </iframe>
-            {/* <source src={youtube+video.getVideoResourceId()} type="video/mp4" /> */}
-            {console.log(youtube + video.getVideoResourceId())}
-            Your browser does not support the video tag.
+        <ThemeProvider theme={videoPlayerTheme}>
 
-        </div>
-    );
+            <TitleContainer>
+                <h1>{video.getVideoName()}</h1>
+            </TitleContainer>
+
+            <VideoContainer>
+                <VideoPlayer userWatchProgress={userWatchProgress} onReady={setPlayer} />
+            </VideoContainer>
+
+            <ControlBarContainer>
+                <Tooltip title="Return to Video Details Page" placement="left">
+                    <ArrowBackButton onClick={() => { onBack(); }} variant="contained">
+                        <ArrowBack />
+                        Return to Details
+                    </ArrowBackButton>
+                </Tooltip>
+                <VideoControlBar user={user} player={player} userWatchProgress={userWatchProgress} handleTimestamp={handleTimestamp} />
+            </ControlBarContainer>
+
+        </ThemeProvider>
+
+    )
 }
