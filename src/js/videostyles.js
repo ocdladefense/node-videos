@@ -1,24 +1,15 @@
 import { createTheme } from '@mui/material/styles';
-import { Container, styled, Button, SvgIcon } from '@mui/material';
+import { Container, styled, Button, Box, Slider } from '@mui/material';
 
 import VolumeDownIcon from '@mui/icons-material/VolumeDown';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import ArrowBackIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowBackIcon from '@mui/icons-material/KeyboardReturn';
 
-export const ArrowBackButton = styled(Button)(({ theme }) => ({
+export const ArrowBackButton = styled(ArrowBackIcon)(({ theme }) => ({
     display: 'flex',
     margin: 10,
-}));
-
-export const ArrowBack = styled(ArrowBackIcon)(({ theme }) => ({
-    fontSize: 30,
-    paddingBottom: 0,
-    '&:hover': {
-        color: '#ffffff',
-    },
-    '&:active': {
-        color: '#ffffff',
-    }
+    paddingRight: 10,
+    justifyContent: 'left'
 }));
 
 export const VolumeUp = styled(VolumeUpIcon)(({ theme }) => ({
@@ -37,6 +28,11 @@ export const VolumeDown = styled(VolumeDownIcon)(({ theme }) => ({
     '&:active': { color: 'white' }
 }));
 
+export const ProgressSlider = styled(Slider)(({ theme }) => ({
+    width: '90%',
+    maxWidth: '100%'
+}));
+
 export const TitleContainer = styled(Container)(({ theme }) => ({
     marginTop: 50,
     borderTopLeftRadius: 10,
@@ -47,7 +43,25 @@ export const VideoContainer = styled(Container)(({ theme }) => ({
     padding: 20,
 }));
 
+export const BodyContainer = styled(Container)(({ theme }) => ({
+    width: '100%',
+    backgroundColor: '#121212',
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+export const TimeContainer = styled(Container)(({ theme }) => ({
+    width: '100%',
+    backgroundColor: '#121212',
+    fontSize: 16,
+    display: 'flex',
+    justifyContent: 'center',
+    color: '#dedede',
+    paddingTop: 3
+}));
+
 export const ControlBarContainer = styled(Container)(({ theme }) => ({
+    justifyContent: 'center',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
 }));
@@ -82,6 +96,15 @@ export const videoPlayerTheme = createTheme({
                     '#video-container': {
                         padding: '10px'
                     },
+                },
+            },
+        },
+        MuiBox: {
+            styleOverrides: {
+                root: {
+                    width: '100%',
+                    backgroundColor: '#121212',
+                    display: 'flex',
                 },
             },
         },
