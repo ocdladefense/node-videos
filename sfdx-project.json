@@ -1,0 +1,12 @@
+{
+    "packageDirectories": [
+        {
+            "path": "sfdx",
+            "default": true
+        }
+    ],
+    "name": "OCDLA Videos",
+    "namespace": "",
+    "sfdcLoginUrl": "https://test.salesforce.com",
+    "sourceApiVersion": "59.0"
+}

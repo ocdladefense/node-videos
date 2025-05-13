@@ -23,21 +23,21 @@ window.clearCache = clearThumbCache;
 window.ydc = new YoutubeDisplayController();
 const vdc = new VideoDataController(dataUrl);
 const vidData = vdc.parseVideoData(videos);
-console.log(vidData);
+console.log("vidData", vidData);
 
 window.clearCache = clearThumbCache;
 
 const use = new UserController(users);
 const allUsers = use.getAllUsers();
-console.log(allUsers);
+console.log("all users", allUsers);
 const user = use.getUser(1);
-console.log(user.getPreviouslyWatchedVideos());
-console.log(user.getWatchedVideo('_4xNa80IP3o'));
+console.log("previously watched videos", user.getPreviouslyWatchedVideos());
+console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
 
 const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 
 
-console.log(user.get)
+console.log("user.get", user.get)
 
 
 
@@ -63,9 +63,7 @@ const thumbnailMap = await initThumbs(videos);
 
 //lookup depending on the data type returned by initThumbs
 vidData.forEach(video => {
-    const thumbs = thumbnailMap instanceof Map
-        ? thumbnailMap.get(video.resourceId)
-        : thumbnailMap[video.resourceId];
+    const thumbs = thumbnailMap.get(video.resourceId);
     //console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
     video.setThumbnail(thumbs);
 });

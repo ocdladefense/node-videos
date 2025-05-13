@@ -1,0 +1,9 @@
+<apex:page controller="VideoData"  contentType="application/x-JavaScript; charset=utf-8" showHeader="false" standardStylesheets="false" sidebar="false">
+<apex:outputText value="{0}(''{1}'');" rendered="{!format == 'jsonp'}">
+    <apex:param value="{!callback}" />
+    <apex:param value="{!data}" />
+</apex:outputText>
+<apex:outputText value="{0}" rendered="{!format == 'json'}">
+    <apex:param value="{!data}" />
+</apex:outputText>
+</apex:page>

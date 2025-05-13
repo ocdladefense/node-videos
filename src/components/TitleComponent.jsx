@@ -7,18 +7,35 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
             onClick={() => { setRoute("details"); setSelectedVideo(video); }}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
         >
-            <div>
+            <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
+
                 <img
                     src={video.getVideoThumbnail(video.getMaxResThumb())}
                     alt={'Thumbnail for ' + video.getVideoName()}
-                    style={{ width: '100%', height: '100%' }}
+                    className="w-full h-[185px] object-cover"
                 /> <br />
-                <strong className="text-2xl">{video.getVideoName()}</strong> <br />
+                <strong className="text-2xl text-auto text-zinc-100">{video.getVideoName()}</strong> <br />
                 <ul>
-                    <li>{video.isFree() ? "Free!" : 'Paid'}</li>
+                    {/* <li>{video.isFree() ? "Free!" : 'Paid'}</li> */}
+                    <li className="flex items-center space-x-2">
+                        {video.isFree() ? (
+                            <>
+                                <span className="text-green-500">✔</span>
+                                <span className="text-green-700 font-medium">Free!</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-gray-400">🔒</span>
+                                <span className="text-gray-500">Paid</span>
+                            </>
+                        )}
+                    </li>
+
                 </ul>
             </div>
         </li>)
 }
 
+// if we set the video size based on media type we can fix the black bar issue. 
+//

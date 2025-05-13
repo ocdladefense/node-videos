@@ -47,8 +47,8 @@ export default function Home({ videos, user }) {
         //component = <VideoPlayer video={selectedVideo} user={user} />
     }
 
-    console.log(user.getPreviouslyWatchedVideos());
-    if (selectedVideo) console.log(user.getWatchedVideo(selectedVideo.resourceId));
+    console.log("users previously watched vids", user.getPreviouslyWatchedVideos());
+    if (selectedVideo) console.log("get watched vid by id", user.getWatchedVideo(selectedVideo.resourceId));
     return (
         <div className="app">{component}</div>
     );
