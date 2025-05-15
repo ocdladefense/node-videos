@@ -1,7 +1,7 @@
 import "../css/input.css";
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import videos from '../data/videos.json';
+//import videos from '../data/videos.json';
 import users from '../data/users.json';
 import Home from '../components/Home.jsx';
 import VideoDataController from './controllers/VideoDataController.js';
@@ -18,6 +18,8 @@ const API_KEY = process.env.API_KEY;
 if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
+
+console.log('This is the parsed jsonp', window.videos);
 
 window.clearCache = clearThumbCache;
 window.ydc = new YoutubeDisplayController();
@@ -38,7 +40,6 @@ const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
 
 
 console.log("user.get", user.get)
-
 
 
 window.ydc = new YoutubeDisplayController();
