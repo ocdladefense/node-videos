@@ -6,6 +6,8 @@ package-main.json
 
 /package-orig.json
 
+.vs
+
 ### macOS ###
 *.DS_Store
 .AppleDouble
