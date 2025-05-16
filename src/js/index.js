@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'debug') {
 }
 
 // sample query
-const QUERY = 'SELECT Id, Name, ResourceId__c FROM Media__c';
+const QUERY = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
 
 let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
 
@@ -34,7 +34,7 @@ let response = await api.query(QUERY);
 
 console.log('This was the response from SalesforceRestApi',response.records);
 
-//console.log(JSON.stringify(videos));
+
 
 
 
@@ -43,8 +43,10 @@ console.log('This is the parsed jsonp', window.videos);
 window.clearCache = clearThumbCache;
 window.ydc = new YoutubeDisplayController();
 const vdc = new VideoDataController(dataUrl);
-const vidData = vdc.parseVideoData(videos);
-console.log("vidData", vidData);
+const vidData = vdc.parseVideoData(response.records);
+
+
+console.log('Testing getting seminar name: ', vidData[0].getVideoThumbnail());
 
 window.clearCache = clearThumbCache;
 
@@ -87,7 +89,7 @@ vidData.forEach(video => {
     //console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
     video.setThumbnail(thumbs);
 });
-
+console.log("vidData", vidData);
 root.render(<div><Home videos={vidData} user={user} /></div>);
 
 

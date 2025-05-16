@@ -9,6 +9,7 @@ export default class VideoDataParser {
     }
 
     getVideoData() {
+        console.log(this.videoData[0].Event__r.Name);
         this.videoDataArray = [];
         for (let d in this.videoData) {
            
@@ -21,6 +22,7 @@ export default class VideoDataParser {
         return this.videoDataArray;
     }
 
+    
     
 
 }
