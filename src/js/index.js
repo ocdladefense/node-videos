@@ -9,15 +9,34 @@ import YoutubeDisplayController from './controllers/YoutubeDisplayController.js'
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
+import  SalesforceRestApi  from '@ocdla/salesforce/SalesforceRestApi.js';
+
+
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 const API_KEY = process.env.API_KEY;
+const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 
 //console.log(API_KEY);
 
 if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
+
+// sample query
+const QUERY = 'SELECT Id, Name, ResourceId__c FROM Media__c';
+
+let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+
+let response = await api.query(QUERY);
+
+
+console.log('This was the response from SalesforceRestApi',response.records);
+
+//console.log(JSON.stringify(videos));
+
+
 
 console.log('This is the parsed jsonp', window.videos);
 
