@@ -100,6 +100,6 @@ parser.getVideos().forEach(video => {
     video.setThumbnail(thumbs);
 });
 
-root.render(<div><Home videos={parser.getVideos()} user={user} /></div>);
+root.render(<div><Home parser={parser} user={user} /></div>);
 
 

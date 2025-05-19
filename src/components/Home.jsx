@@ -10,7 +10,7 @@ import VideoPlayer from './VideoPlayer';
 - app (second componet);
 */
 
-export default function Home({ videos, user }) {
+export default function Home({ parser, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const resetTimestamp = 0;
@@ -21,17 +21,10 @@ export default function Home({ videos, user }) {
 
     let component = null;
 
-    useEffect(() => {
-        fetch('/data/videos.json')
-            .then(res => res.json())
-            .then(data => { console.log("Fetched videos:", data); setVideos(data); })
-            .catch(err => console.error('Failed to load videos:', err));
-    }, []);
-
 
 
     if (route == "list") {
-        component = <VideoList videos={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
+        component = <VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
     } else if (route == "details") {
         component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} />;
     } else if (route == "player") {
