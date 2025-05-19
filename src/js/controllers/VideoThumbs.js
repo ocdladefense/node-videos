@@ -75,7 +75,7 @@ const VideoThumbnails = (function () {
 
 async function initThumbs(videos) {
 
-    let cache = new ThumbnailCache(false);
+    let cache = new ThumbnailCache(true);
     let thumbnailMap = new Map();
 
     const videoIDs = videos.map(video => video.resourceId);

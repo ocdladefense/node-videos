@@ -9,6 +9,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
             key={video.id || index}
             onClick={() => { setRoute("details"); setSelectedVideo(video); }}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
+            data-video-id={video.getVideoResourceId()}
         >
             <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
