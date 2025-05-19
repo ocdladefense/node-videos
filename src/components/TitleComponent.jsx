@@ -9,7 +9,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
         >
             <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
-
+                <h3 className='text-blue-500'>{video.getSeminarName()}</h3>
                 <img
                     src={video.getVideoThumbnail(video.getMaxResThumb())}
                     alt={'Thumbnail for ' + video.getVideoName()}

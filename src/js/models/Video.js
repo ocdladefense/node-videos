@@ -76,7 +76,19 @@ export default class Video {
     }
 
     getSeminarName() {
+        if (this.seminar == null) {
+            return "No seminar data";
+        }
+        //console.log(
+        //    `getSeminarName: ${)
         return this.seminar.Name;
+    }
+
+    getSeminarDate() {
+        if (this.seminar == null) {
+            return "No seminar data";
+        }
+        return this.seminar.Start_Date__c;
     }
 
     isFree() {

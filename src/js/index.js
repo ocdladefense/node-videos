@@ -1,7 +1,7 @@
 import "../css/input.css";
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-//import videos from '../data/videos.json';
+import videos from '../data/videos.json';
 import users from '../data/users.json';
 import Home from '../components/Home.jsx';
 import VideoDataController from './controllers/VideoDataController.js';
@@ -9,7 +9,7 @@ import YoutubeDisplayController from './controllers/YoutubeDisplayController.js'
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
-import  SalesforceRestApi  from '@ocdla/salesforce/SalesforceRestApi.js';
+import SalesforceRestApi  from '@ocdla/salesforce/SalesforceRestApi.js';
 
 
 
@@ -24,16 +24,19 @@ if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)
 }
 
+const ANOTHER_QUERY = 'SELECT Timestamp__c FROM Watched_Video__c';
 // sample query
-const QUERY = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
+const QUERY = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
 
 let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
 
 let response = await api.query(QUERY);
 
+let anotherResponse = await api.query(ANOTHER_QUERY);
 
 console.log('This was the response from SalesforceRestApi',response.records);
 
+console.log(anotherResponse.records);
 
 
 
@@ -46,7 +49,10 @@ const vdc = new VideoDataController(dataUrl);
 const vidData = vdc.parseVideoData(response.records);
 
 
-console.log('Testing getting seminar name: ', vidData[0].getVideoThumbnail());
+vidData.sort((a, b) => Date.parse(b.getSeminarDate()) - Date.parse(a.getSeminarDate()));
+console.log('Testing sorting by seminar date', vidData);
+
+console.log('Testing getting seminar name: ', vidData[0].getSeminarDate());
 
 window.clearCache = clearThumbCache;
 
