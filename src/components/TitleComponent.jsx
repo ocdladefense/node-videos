@@ -1,6 +1,9 @@
 import React from 'react';
 
-export default function TitleComponent({ video, index, setSelectedVideo, setRoute }) {
+export default function TitleComponent({ video, index, setSelectedVideo, setRoute, user }) {
+    const hasAccess = video.isFree() || user.getPurchasedVideo(video.getVideoResourceId());
+
+
     return (
         <li
             key={video.id || index}
@@ -10,12 +13,22 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
             <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
                 <h3 className='text-blue-500'>{video.getSeminarName()}</h3>
-                <img
-                    src={video.getVideoThumbnail(video.getMaxResThumb())}
-                    alt={'Thumbnail for ' + video.getVideoName()}
-                    className="w-full h-[185px] object-cover"
-                /> <br />
+                <div className="relative w-full h-[185px]">
+                    <img
+                        src={video.getVideoThumbnail(video.getMaxResThumb())}
+                        alt={'Thumbnail for ' + video.getVideoName()}
+                        className="w-full h-full object-cover"
+                    />
+                    {!hasAccess && (
+                        <div className="absolute inset-0 bg-zinc-800 bg-opacity-60 flex items-center justify-center">
+                            <span className="text-white text-sm font-bold">Purchase</span>
+                        </div>
+                    )}
+                </div>
+                <br />
                 <strong className="text-2xl text-auto text-zinc-100">{video.getVideoName()}</strong> <br />
+                {/* <p className="text-xl text-zinc-100">{video.getLocation()}</p>
+                <p className="text-zinc-400 text-sm">{new Date(video.getDate()).toLocaleDateString()}</p> */}
                 <ul>
                     {/* <li>{video.isFree() ? "Free!" : 'Paid'}</li> */}
                     <li className="flex items-center space-x-2">
@@ -37,5 +50,5 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
         </li>)
 }
 
-// if we set the video size based on media type we can fix the black bar issue. 
+// if we set the video size based on media type we can fix the black bar issue.
 //
