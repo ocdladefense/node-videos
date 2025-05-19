@@ -24,7 +24,10 @@ export default function Home({ videos, user }) {
     useEffect(() => {
         fetch('/data/videos.json')
             .then(res => res.json())
-            .then(data => { console.log("Fetched videos:", data); setVideos(data); })
+            .then(data => {
+                // const sorted = data.sort((a, b) => new StartDate(b.date) - new StartDate(a.date));
+                console.log("Fetched videos:", data); setVideos(data);
+            })
             .catch(err => console.error('Failed to load videos:', err));
     }, []);
 
