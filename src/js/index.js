@@ -10,6 +10,7 @@ import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
 import SalesforceRestApi  from '@ocdla/salesforce/SalesforceRestApi.js';
+import VideoDataParser from "./controllers/VideoDataParser.js";
 
 
 
@@ -45,14 +46,17 @@ console.log('This is the parsed jsonp', window.videos);
 
 window.clearCache = clearThumbCache;
 window.ydc = new YoutubeDisplayController();
-const vdc = new VideoDataController(dataUrl);
-const vidData = vdc.parseVideoData(response.records);
+
+//const vdc = new VideoDataController(dataUrl);
+
+const parser = VideoDataParser.parse(response.records);
 
 
-vidData.sort((a, b) => Date.parse(b.getSeminarDate()) - Date.parse(a.getSeminarDate()));
-console.log('Testing sorting by seminar date', vidData);
+// vidData.sort((a, b) => Date.parse(b.getSeminarDate()) - Date.parse(a.getSeminarDate()));
 
-console.log('Testing getting seminar name: ', vidData[0].getSeminarDate());
+
+
+
 
 window.clearCache = clearThumbCache;
 
@@ -63,7 +67,7 @@ const user = use.getUser(1);
 console.log("previously watched videos", user.getPreviouslyWatchedVideos());
 console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
 
-const filteredVideo = vdc.getVideoById("a2A0a000009QUh4EAG", vidData);
+
 
 
 console.log("user.get", user.get)
@@ -90,12 +94,12 @@ const root = createRoot($root);
 const thumbnailMap = await initThumbs(videos);
 
 //lookup depending on the data type returned by initThumbs
-vidData.forEach(video => {
+parser.getVideos().forEach(video => {
     const thumbs = thumbnailMap.get(video.resourceId);
     //console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
     video.setThumbnail(thumbs);
 });
-console.log("vidData", vidData);
-root.render(<div><Home videos={vidData} user={user} /></div>);
+
+root.render(<div><Home videos={parser.getVideos()} user={user} /></div>);
 
 
