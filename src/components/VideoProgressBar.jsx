@@ -34,10 +34,10 @@ export default function VideoProgressBar({ player, isPolling, handleSliderChange
         return (
             <Box>
                 <BodyContainer>
-                    <ProgressSlider value={elapsed} min={0} max={videoDuration} onChange={handleSliderChange} valueLabelDisplay="auto" valueLabelFormat={(value) => ydc.getFormattedTime(value)} />
+                    <ProgressSlider value={elapsed} min={0} max={videoDuration} onChange={handleSliderChange} valueLabelDisplay="auto" valueLabelFormat={(value) => player.getFormattedTime(value)} />
                 </BodyContainer>
                 <TimeContainer>
-                    {ydc.getFormattedTime(elapsed)} / {ydc.getFormattedTime(player.getDuration())}
+                    {player.getFormattedTime(elapsed)} / {player.getFormattedTime(player.getDuration())}
                 </TimeContainer>
             </Box>
         )

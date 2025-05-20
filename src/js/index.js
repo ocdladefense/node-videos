@@ -5,7 +5,6 @@ import videos from '../data/videos.json';
 import users from '../data/users.json';
 import Home from '../components/Home.jsx';
 import VideoDataController from './controllers/VideoDataController.js';
-import YoutubeDisplayController from './controllers/YoutubeDisplayController.js';
 import YouTubePlayer from '../js/player/YoutubePlayer';
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
@@ -58,7 +57,6 @@ console.log(anotherResponse.records);
 console.log('This is the parsed jsonp', window.videos);
 
 window.clearCache = clearThumbCache;
-window.ydc = new YoutubeDisplayController();
 
 //const vdc = new VideoDataController(dataUrl);
 
@@ -84,9 +82,6 @@ console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
 
 
 console.log("user.get", user.get)
-
-
-window.ydc = new YoutubeDisplayController();
 
 
 const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';

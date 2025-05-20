@@ -6,6 +6,7 @@ export default class VideoPlayer {
     isPolling;
     isPlaying;
     state;
+    mediaEvent;
 
     constructor(containerRef, userWatchProgress, onReady, onStateChange) {
         this.player = null;
@@ -43,4 +44,10 @@ export default class VideoPlayer {
 
     getCurrentTime() { }
 
+    getMediaPlayerEvent(resourceId, timestamp) {
+        return this.mediaEvent = new CustomEvent('mediastatechange', {
+            detail: {timestamp: timestamp, resourceId: resourceId},
+            bubbles: true
+        });
+    }
 }

@@ -5,20 +5,21 @@ class VideoEventController {
     }
 
     initEventListeners() {
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            this.pauseVideo();
+        document.getElementById('backBtn').addEventListener('click', () => {
+            this.preserveVideoTimestamp();
         })
     }
 
-    pauseVideo() {
-        this.video.pause();
+    preserveVideoTimestamp() {
+        //this.video.pause();
         const elapsedTime = this.video.elapsedTime;
+        const resourceID = this.video.resourceID;
         
-        const pauseEvent = new CustomEvent('video paused', {
+        const mediaEvent = new CustomEvent('MediaEvent.', {
             detail: {timestamp: elapsedTime, resourceId: resourceId}
         })
 
-        document.dispatchEvent(pauseEvent);
+        document.dispatchEvent(mediaEvent);
 
         this.updateTimestamp(elapsedTime);
     }

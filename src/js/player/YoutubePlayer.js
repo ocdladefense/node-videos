@@ -1,4 +1,5 @@
 import VideoPlayer from './VideoPlayer';
+import Time from '../models/Time.js';
 
 export default class YouTubePlayer extends VideoPlayer {
     constructor() {
@@ -13,7 +14,46 @@ export default class YouTubePlayer extends VideoPlayer {
         this.playVideo;
     }
 
-    loadPlayer(containerRef, userWatchProgress, onReady, onStateChange, handleTimestamp, setElapsed, setIsPlaying, setIsPolling) {
+    configYoutubeDisplay(userWatchProgress, onReady) {
+        return {
+            height: '720',
+            width: '1280',
+            videoId: userWatchProgress.resourceId,
+            playerVars: {
+                start: userWatchProgress.timeStamp,
+                autoplay: 0,
+                modestbranding: 0,
+                controls: 0,
+                rel: 0,
+            },
+            events: {
+                onReady: onReady,
+            }
+        };
+    }
+    injectScriptElement() {
+        let tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+
+        let firstScriptTag = document.getElementsByTagName('script')[0];
+        if (firstScriptTag == null) {
+            (document.body || document.head).appendChild(tag);
+        }
+        else {
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+    }
+
+    getFormattedTime(duration) {
+        let formattedTime;
+        return (formattedTime = Time.parseTime(duration));
+    }
+
+    isInitialized() {
+        return false;
+    }
+
+    loadPlayer(containerRef, userWatchProgress, onReady=null, onInitialized, onStateChange, handleTimestamp, setElapsed, setIsPlaying, setIsPolling) {
         this.onStateChangeCallback = onStateChange;
 
         this.handleTimestamp = handleTimestamp;
@@ -21,10 +61,11 @@ export default class YouTubePlayer extends VideoPlayer {
         this.setIsPlaying = setIsPlaying;
         this.setIsPolling = setIsPolling;
 
-        window.ydc.injectScriptElement();
+        this.injectScriptElement();
 
         const onYouTubeIframeAPIReady = () => {
-            const config = window.ydc.configYoutubeDisplay(
+            onInitialized(true);
+            const config = this.configYoutubeDisplay(
                 userWatchProgress,
                 (event) => {
                     this.player = event.target;
@@ -48,6 +89,10 @@ export default class YouTubePlayer extends VideoPlayer {
         }
     }
 
+    loadVideo() {
+
+    }
+
     playVideo() {
         const p = this.player.playVideo();
         this.handleTimestamp();
@@ -61,6 +106,14 @@ export default class YouTubePlayer extends VideoPlayer {
         this.setIsPlaying(false);
         this.setIsPolling(false);
         this.player.pauseVideo();
+
+        //let resourceID = this.userWatchProgress.resourceId;
+        let mediaEvent = this.getMediaPlayerEvent('foodbar', 1000);
+
+        let myElement = document.querySelector('#player');
+
+        myElement.dispatchEvent(mediaEvent);
+        console.log('foobar');
     }
 
     restartVideo(time) {
@@ -84,8 +137,8 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
     getDuration() {
-        const p = this.player.getDuration();
-        return p;
+        //const p = this.player.getDuration();
+        return 100;
     }
 
     getCurrentTime() {

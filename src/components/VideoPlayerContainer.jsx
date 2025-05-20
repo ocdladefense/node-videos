@@ -8,10 +8,14 @@ import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, 
 import '../css/videostyles.css';
 
 import { ThemeProvider, Tooltip, Box, Skeleton } from '@mui/material';
+import { Skeleton as PlayerPlaceholder } from '@mui/material';
+import YouTubePlayer from '../js/player/YoutubePlayer.js';
+
+let sourceType = 'youtube';
 
 export default function VideoPlayerContainer({ resetTimestamp, video, user, onBack }) {
     const [videoDuration, setVideoDuration] = useState(0);
-    const [player, setPlayer] = useState(null);
+    //const [player, setPlayer] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [elapsed, setElapsed] = useState(0);
@@ -87,6 +91,45 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
 
     }
 
+    const [playerReady, setPlayerReady] = useState(false);
+    let player = new YouTubePlayer();
+
+    useEffect(() => {
+
+        player.loadVideo(video);
+
+        player.loadPlayer(
+            'player',
+            userWatchProgress,
+            //onReady,
+            setPlayerReady,
+            onStateChange,
+            handleTimestamp,
+            setElapsed,
+            setIsPlaying,
+            setIsPolling,
+        );
+    }, []);
+
+    // useEffect(() => {
+    //     // const PlayerClass = window.playerMap[sourceType];
+    //     // const instance = new PlayerClass();
+    //     let player = new YouTubePlayer();
+
+    //     player.loadPlayer(
+    //         'player',
+    //         userWatchProgress,
+    //         onReady,
+    //         onStateChange,
+    //         handleTimestamp,
+    //         setElapsed,
+    //         setIsPlaying,
+    //         setIsPolling,
+    //     );
+
+    //     setIsInit(true);
+    // }, [player, isInit]);
+
     /*TODO:
     - get handleTimestamp() to work with onBack, 
         */
@@ -96,7 +139,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
         <ThemeProvider theme={videoPlayerTheme}>
 
             <TitleContainer>
-                {!player ? (
+                {!playerReady ? (
                     <h1>Loading Video Title...</h1>
                 ) : (
                     <h1>{video.getVideoName()}</h1>
@@ -104,7 +147,15 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
             </TitleContainer>
 
             <VideoContainer>
-                <VideoPlayer userWatchProgress={userWatchProgress} onReady={setPlayer} onStateChange={onStateChange} player={player} handleTimestamp={handleTimestamp} handlePollingTimestamp={handlePollingTimestamp} setElapsed={setElapsed} setIsPlaying={setIsPlaying} setIsPolling={setIsPolling} />
+                {playerReady ? (
+                    <div id="player-wrapper">
+                        <div id="player"></div>
+                        <div id="blocker"></div>
+                    </div>
+                ) : (
+                    <PlayerPlaceholder variant="rectangular" animation="wave" width={1280} height={720} />
+                )}
+                {/* <VideoPlayer userWatchProgress={userWatchProgress} onReady={setPlayer} onStateChange={onStateChange} player={player} handleTimestamp={handleTimestamp} handlePollingTimestamp={handlePollingTimestamp} setElapsed={setElapsed} setIsPlaying={setIsPlaying} setIsPolling={setIsPolling} /> */}
             </VideoContainer>
 
             <VideoProgressBar player={player} isPolling={isPolling} handleSliderChange={handleSliderChange} handleTimestamp={handleTimestamp} setElapsed={setElapsed} elapsed={elapsed} setVideoDuration={setVideoDuration} videoDuration={videoDuration} intervalRef={intervalRef} />
