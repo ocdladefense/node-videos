@@ -47,10 +47,10 @@ console.log("user.get", user.get)
 window.ydc = new YoutubeDisplayController();
 
 
-const watchedVideosQuery = 'SELECT Timestamp__c FROM Watched_Video__c';
+const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';
 let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
 let response = await sfrAPI.query(watchedVideosQuery);
-console.log("watched video query response", response);
+console.log("watched video query response", response.records);
 
 
 // without this I get an error at runtime.  babel 7 and preset env.
