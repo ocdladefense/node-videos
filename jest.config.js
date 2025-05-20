@@ -1,4 +1,11 @@
 module.exports = {
+
+    testEnvironment: 'jsdom',
+    testEnvironmentOptions: {
+        url: 'http://localhost',
+        userAgent: 'Custom User Agent',
+    },
+
     moduleFileExtensions: ['js', 'jsx'],
     moduleDirectories: ['node_modules', 'bower_components', 'shared'],
 

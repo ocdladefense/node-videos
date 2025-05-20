@@ -7,32 +7,19 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
 
     console.log("get purchased vids", user.getUserPurchasedVideos());
 
-    const onPlay = function() {
+    const playVideo = function() {
         console.log("About to play the video!");
-        const isReset = e.target.getAttribute("reset") === "true";
-        if (isReset) {
-            setRoute("playerReset")
-        }
-        else {
-            setRoute("player");
-        }
-    };
-
-    let reset = false;
-
-    const playFromBeginning = function() {
-        prevWatched.timeStamp = 0;
-        console.log(prevWatched.timeStamp);
         setRoute("player");
+    }
+
+    const playVideoFromBeginning = function() {
+        setRoute("resetPlayer");
     }
 
     const purchase = function() {
         user.addToPurchasedVideos(video);
         setIsPlayable(true);
     }
-
-
-
 
     return (
         <div className="video-details bg-zinc-900 min-h-screen px-4">
@@ -50,11 +37,15 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
                     {
                         isPlayable ? (
                             prevWatched === null ? (
-                                <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={onPlay}>Play Video</button>
+                                <p>
+                                    <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideo}>Play Video</button>
+                                </p>
+
+
                             ) : (
                                 <>
-                                    <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={onPlay}>Resume/Continue</button>
-                                    <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playFromBeginning}>Start From Beginning</button>
+                                    <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={playVideo}>Resume/Continue</button>
+                                    <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideoFromBeginning}>Start From Beginning</button>
                                 </>
                             )
                         ) : (
@@ -66,4 +57,4 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
         </div>
 
     );
-}
+};

@@ -1,31 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ProgressSlider, BodyContainer, TimeContainer } from '../js/videostyles.js';
 import { Box, Skeleton } from '@mui/material';
 import '../css/videostyles.css';
 
 
-export default function VideoProgressBar({ player, isPolling, handleSliderChange, handleTimestamp, setElapsed, elapsed, setVideoDuration, videoDuration }) {
+export default function VideoProgressBar({ player, isPolling, handleSliderChange, handleTimestamp, setElapsed, elapsed, setVideoDuration, videoDuration, intervalRef }) {
+
 
     useEffect(() => {
-        let intervalId;
+        if (!player) return;
+        let rawDuration = player.getDuration();
+        setVideoDuration(rawDuration);
+    }, [player, setVideoDuration, setElapsed]);
 
-        if (player) {
+    useEffect(() => {
 
-            const rawDuration = ydc.getVideoDuration(player)
-            setVideoDuration(rawDuration);
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
 
-            if (isPolling) {
-                intervalId = setInterval(() => {
-                    const currentTime = Math.floor(player.getCurrentTime());
-                    setElapsed(currentTime);
-                }, 1000);
-            }
+        if (isPolling) {
+            intervalRef.current = setInterval(() => {
+                setElapsed(prev => prev + 1);
+            }, 1000);
         }
 
         return () => {
-            if (intervalId) clearInterval(intervalId);
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
         };
-    }, [player, isPolling, setElapsed]);
+    }, [isPolling]);
 
     if (player) {
         return (

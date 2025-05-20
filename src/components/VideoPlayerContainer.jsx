@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import VideoPlayer from './VideoPlayer';
 import VideoControlBar from './VideoControlBar';
@@ -15,7 +15,9 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
     const [isPlaying, setIsPlaying] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [elapsed, setElapsed] = useState(0);
-
+    const [state, setState] = useState(0);
+    const intervalRef = useRef(null);
+    window.playerStatus = logPlayerStatus;
 
     let userWatchProgress = user.getWatchedVideo(video.resourceId);
 
@@ -35,38 +37,55 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
         userWatchProgress = user.getWatchedVideo(video.resourceId);
     }
 
+    const onStateChange = (event) => {
+        setState(event.data);
+    }
+
     const handleTimestamp = (event) => {
-        let runTime = Math.floor(player.getCurrentTime());
-        console.log('Runtime:', runTime);
+        let runTime = elapsed;
         user.updateTimestamp(userWatchProgress.resourceId, runTime);
     };
 
-    const handleToggle = () => {
-        if (isPlaying) {
-            player.pauseVideo();
-        } else {
-            player.playVideo();
-        }
-        setIsPlaying(!isPlaying);
-    };
 
     const handlePollingTimestamp = (event) => {
-        if (resetTimestamp === 0) {
-            setElapsed(0);
-        } else {
-            setElapsed(userWatchProgress.timeStamp);
-        }
-
         setIsPolling(event);
     };
 
     const handleSliderChange = (event, newValue) => {
         player.seekTo(newValue);
+        setIsPolling(false);
         player.pauseVideo();
         setIsPlaying(false);
         setElapsed(newValue);
 
     };
+
+    function logPlayerStatus() {
+        let sourceType = 'YouTube'
+
+        console.groupCollapsed("=== Debug Info ===");
+
+        console.groupCollapsed("=== Player Class Info ===")
+        console.log("Player Instance:", player);
+        console.log("Subclass Called: ", sourceType, "Subclass");
+        console.groupEnd("=========================");
+
+        console.groupCollapsed("=== Player State ===");
+        console.log("Player State: ", window.playerState[state])
+        console.log("The video is playing? ", isPlaying)
+        console.log("Video elapsement is being tracked? ", isPolling)
+        console.groupEnd("=========================");
+
+        console.groupCollapsed("=== Video Metadata ===");
+        console.log("Video Title: ", video.getVideoName())
+        console.groupCollapsed("Video Description:")
+        console.log(video.getVideoDescription())
+        console.groupEnd(" === === ");
+        console.log("Elapsed Video Length: ", ydc.getFormattedTime(elapsed));
+        console.log("Video Length: ", ydc.getFormattedTime(player.getDuration()));
+        console.groupEnd("=========================");
+
+    }
 
     /*TODO:
     - get handleTimestamp() to work with onBack, 
@@ -85,10 +104,10 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
             </TitleContainer>
 
             <VideoContainer>
-                <VideoPlayer userWatchProgress={userWatchProgress} onReady={setPlayer} />
+                <VideoPlayer userWatchProgress={userWatchProgress} onReady={setPlayer} onStateChange={onStateChange} player={player} handleTimestamp={handleTimestamp} handlePollingTimestamp={handlePollingTimestamp} setElapsed={setElapsed} setIsPlaying={setIsPlaying} setIsPolling={setIsPolling} />
             </VideoContainer>
 
-            <VideoProgressBar player={player} isPolling={isPolling} handleSliderChange={handleSliderChange} handleTimestamp={handleTimestamp} setElapsed={setElapsed} elapsed={elapsed} setVideoDuration={setVideoDuration} videoDuration={videoDuration} />
+            <VideoProgressBar player={player} isPolling={isPolling} handleSliderChange={handleSliderChange} handleTimestamp={handleTimestamp} setElapsed={setElapsed} elapsed={elapsed} setVideoDuration={setVideoDuration} videoDuration={videoDuration} intervalRef={intervalRef} />
 
             <ControlBarContainer>
                 {!player ? (
@@ -105,7 +124,6 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
                         setElapsed={setElapsed}
                         handleTimestamp={handleTimestamp}
                         setIsPlaying={setIsPlaying}
-                        handleToggle={handleToggle}
                         handlePollingTimestamp={handlePollingTimestamp}
                         setVideoDuration={setVideoDuration}
                     />

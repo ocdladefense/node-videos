@@ -6,6 +6,7 @@ import users from '../data/users.json';
 import Home from '../components/Home.jsx';
 import VideoDataController from './controllers/VideoDataController.js';
 import YoutubeDisplayController from './controllers/YoutubeDisplayController.js';
+import YouTubePlayer from '../js/player/YoutubePlayer';
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
@@ -14,6 +15,18 @@ const dataUrl = "https://ocdla.my.site.com/VideoData";
 const API_KEY = process.env.API_KEY;
 
 //console.log(API_KEY);
+
+window.playerMap = {
+    youtube: YouTubePlayer,
+};
+window.playerState = {
+    '-1': 'Video is Unstarted',
+    0: 'Video is Ended',
+    1: 'Video is Playing',
+    2: 'Video is Paused',
+    3: 'Video is Buffering',
+    5: 'Video is Cued'
+};
 
 if (process.env.NODE_ENV === 'debug') {
     setDebugLevel(1)

@@ -10,10 +10,9 @@ import '../css/videostyles.css';
 
 import React, { useState } from 'react';
 
-export default function VideoControlBar({ isPlaying, player, setElapsed, handleTimestamp, setIsPlaying, handleToggle, handlePollingTimestamp, setVideoDuration }) {
+export default function VideoControlBar({ isPlaying, player }) {
 
     const [volume, setVolume] = useState(50);
-
 
     const handleVolumeChange = (event, newValue) => {
         setVolume(newValue);
@@ -34,14 +33,13 @@ export default function VideoControlBar({ isPlaying, player, setElapsed, handleT
                     <ThemeProvider theme={videoPlayerTheme}>
                         <Box display="flex" alignItems="center">
 
-                            <IconButton onClick={handleToggle}>
+                            <IconButton>
                                 {isPlaying ? (
                                     <Tooltip title="Pause Video" placement="bottom">
                                         <PauseCircleIcon
                                             onClick={() => {
                                                 player.pauseVideo();
-                                                handleTimestamp();
-                                                handlePollingTimestamp(false);
+
                                             }}
                                         />
                                     </Tooltip>
@@ -50,8 +48,7 @@ export default function VideoControlBar({ isPlaying, player, setElapsed, handleT
                                         <PlayCircleIcon
                                             onClick={() => {
                                                 player.playVideo();
-                                                handleTimestamp();
-                                                handlePollingTimestamp(true);
+
                                             }}
                                         />
                                     </Tooltip>
@@ -59,7 +56,7 @@ export default function VideoControlBar({ isPlaying, player, setElapsed, handleT
                             </IconButton>
 
                             <Tooltip title="End Video" placement="bottom">
-                                <StopCircleIcon onClick={() => { player.stopVideo(); handleTimestamp(); setIsPlaying(false); handlePollingTimestamp(false); setElapsed(0); }} />
+                                <StopCircleIcon onClick={() => { player.stopVideo(); }} />
                             </Tooltip>
 
 
@@ -74,11 +71,7 @@ export default function VideoControlBar({ isPlaying, player, setElapsed, handleT
                             <Tooltip title="Restart Video" placement="bottom">
                                 <RestartAltIcon
                                     onClick={() => {
-                                        player.seekTo(0, true);
-                                        player.playVideo();
-                                        handleTimestamp();
-                                        setIsPlaying(true);
-                                        handlePollingTimestamp(true);
+                                        player.restartVideo();
                                     }}
                                 />
                             </Tooltip>
