@@ -1,34 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import '../css/videostyles.css';
 
-import { Skeleton } from '@mui/material';
 
-export default function YouTubePlayer({ userWatchProgress, onReady }) {
-    const [playerReady, setPlayerReady] = useState(false);
+import { Skeleton as PlayerPlaceholder } from '@mui/material';
+
+let sourceType = 'youtube'
+
+
+export default function VideoPlayer({ userWatchProgress, onReady, onStateChange, player, handleTimestamp, setElapsed, setIsPlaying, setIsPolling }) {
+    const [isInit, setIsInit] = useState(false);
 
     useEffect(() => {
-        window.onYouTubeIframeAPIReady = () => {
-            const config = window.ydc.configYoutubeDisplay(userWatchProgress, (event) => {
-                onReady(event.target)
-            });
-            new window.YT.Player('player', config);
-        }
-        setPlayerReady(true);
-        window.ydc.injectScriptElement();
-    });
+        const PlayerClass = window.playerMap[sourceType];
+        const instance = new PlayerClass();
 
-    if (window.YT) {
-        onYouTubeIframeAPIReady();
-    }
+        instance.loadPlayer(
+            'player',
+            userWatchProgress,
+            onReady,
+            onStateChange,
+            handleTimestamp,
+            setElapsed,
+            setIsPlaying,
+            setIsPolling,
+        );
 
-    return playerReady ? (
+        setIsInit(true);
+    }, [player, isInit]);
+
+    return isInit ? (
         <div id="player-wrapper">
             <div id="player"></div>
             <div id="blocker"></div>
         </div>
-
     ) : (
-        <Skeleton variant="rectangular" animation="wave" width={1280} height={720} />
+        <PlayerPlaceholder variant="rectangular" animation="wave" width={1280} height={720} />
     );
-
 }

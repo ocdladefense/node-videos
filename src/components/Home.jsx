@@ -28,17 +28,12 @@ export default function Home({ parser, user }) {
     } else if (route == "details") {
         component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} />;
     } else if (route == "player") {
-        // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
-        console.log()
         component = <VideoPlayerContainer video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
-        //component = <VideoPlayer video={selectedVideo} user={user} />
     }
-    else if (route == "playerReset") {
-        // component = <VideoPlayerContainer video={selectedVideo} index={mockIndex} />;
-        console.log()
+    else if (route == "resetPlayer") {
         component = <VideoPlayerContainer resetTimestamp={resetTimestamp} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
-        //component = <VideoPlayer video={selectedVideo} user={user} />
     }
+
 
     console.log("users previously watched vids", user.getPreviouslyWatchedVideos());
     if (selectedVideo) console.log("get watched vid by id", user.getWatchedVideo(selectedVideo.resourceId));

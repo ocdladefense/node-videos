@@ -1,8 +1,11 @@
-const iframeURL = "https://www.youtube.com/iframe_api";
+import Time from '../models/Time.js';
+
+let formattedTime;
+let videoDuration;
 
 export default class YoutubeDisplayController {
 
-    configYoutubeDisplay(userWatchProgress, onPlayerReady) {
+    configYoutubeDisplay(userWatchProgress, onReady) {
         return {
             height: '720',
             width: '1280',
@@ -13,18 +16,28 @@ export default class YoutubeDisplayController {
                 modestbranding: 0,
                 controls: 0,
                 rel: 0,
-                widget_referrer: "http://localhost"
             },
             events: {
-                onReady: onPlayerReady
+                onReady: onReady,
             }
         };
     }
     injectScriptElement() {
         let tag = document.createElement('script');
-        tag.src = iframeURL
+        tag.src = "https://www.youtube.com/iframe_api";
 
         let firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        if (firstScriptTag == null) {
+            (document.body || document.head).appendChild(tag);
+        }
+        else {
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
     }
+
+
+    getFormattedTime(duration) {
+        return (formattedTime = Time.parseTime(duration));
+    }
+
 }
