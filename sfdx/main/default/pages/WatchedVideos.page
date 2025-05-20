@@ -1,0 +1,15 @@
+<apex:page controller="WatchedVideoController"></apex:page>
+    <apex:pageBlock title="Watched Videos">
+        <apex:pageBlockTable value="{!watchedVideos}" var="video">
+            <apex:column headerValue="User ID">
+                <apex:outputText value="{!video.UserID__c}" />
+            </apex:column>
+            <apex:column headerValue="Resource ID">
+                <apex:outputText value="{!video.ResourceID__c}" />
+            </apex:column>
+            <apex:column headerValue="Timestamp">
+                <apex:outputText value="{!video.Timestamp__c}" />
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

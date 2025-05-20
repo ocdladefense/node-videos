@@ -9,9 +9,12 @@ import YoutubeDisplayController from './controllers/YoutubeDisplayController.js'
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
+import SalesforceRestAPI from '@ocdla/salesforce/SalesforceRestApi.js';
 
 const dataUrl = "https://ocdla.my.site.com/VideoData";
 const API_KEY = process.env.API_KEY;
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const INSTANCE_URL = process.env.INSTANCE_URL;
 
 //console.log(API_KEY);
 
@@ -44,8 +47,9 @@ console.log("user.get", user.get)
 window.ydc = new YoutubeDisplayController();
 
 
-
-
+const watchedVidQuery = '';
+let sfAPI = new SalesforceRestAPI(INSTANCE_URL, ACCESS_TOKEN);
+let response = 0; //await salesforce CRUD operation
 
 
 // without this I get an error at runtime.  babel 7 and preset env.

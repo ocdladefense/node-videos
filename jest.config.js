@@ -10,4 +10,11 @@ module.exports = {
     transform: {
         "^.+\\.js$": "babel-jest",
     },
+
+    //added configs for jsdom environment
+    testEnvironment: 'jsdom',
+    testEnvironmentOptions: {
+    url: 'http://localhost',
+    userAgent: 'Custom User Agent',
+  },
 };
