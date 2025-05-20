@@ -32,7 +32,7 @@ export default function VideoDetails({ video, onBack, setRoute, user }) {
                     alt={'Thumbnail for ' + video.getVideoName()}
                     className="my-4 mx-auto w-full max-w-5xl"
                 />
-                <h2 className="text-2xl text-zinc-100 mb-4">{video.getVideoDescription()}</h2>
+                <p className="text-2xl text-zinc-100 mb-4">{video.getVideoDescription()}</p>
                 <div className="options space-y-2">
                     {
                         isPlayable ? (

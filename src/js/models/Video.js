@@ -4,12 +4,14 @@ export default class Video {
     resourceId;
     name;
     description;
-    originalDate;
+    date;
     published;
+    public;
     speakers;
-    subject;
+    eventId;
+    seminar;
     free;
-    
+    thumbnail;
 
 
     constructor(title) {
@@ -17,20 +19,24 @@ export default class Video {
     }
 
     static fromApiData(data) {
-        let video = new Video(data.name);
-        video.id = data.id;
-        video.resourceId = data.resourceId;
-        video.name = data.name;
-        video.description = data.description;
-        video.originalDate = data.originalDate;
-        video.published = data.published;
-        video.speakers = data.speakers;
-        video.subject = data.subject;
-        video.free = data.free;
+        let video = new Video(data.Name);
+        video.id = data.Id;
+        video.resourceId = data.ResourceId__c;
+        video.name = data.Name;
+        video.description = data.Description__c;
+        video.date = data.Date;
+        video.published = data.Published__c;
+        video.public = data.IsPublic__c;
+        video.speakers = data.Speakers__c;
+        video.eventId = data.Event__c;
+        video.seminar = data.Event__r;
+        video.free = true;
 
         return video;
     }
 
+
+    // ------------------- Get all the data fields ------------------- //
     getVideoId() {
         return this.id;
     }
@@ -49,25 +55,48 @@ export default class Video {
         } else return "No description given."
     }
 
-    getVideoOriginalDate() {
-        return this.originalDate;
-    }
-
-    isFree() {
-        return this.free;
+    getVideoDate() {
+        return this.date;
     }
 
     getVideoPublished() {
         return this.published;
     }
 
+    getVideoPublic() {
+        return this.public;
+    }
+
     getVideoSpeakers() {
         return this.speakers;
     }
 
-    getVideoSubject() {
-        return this.subject;
+    getSeminarId() {
+        return this.eventId;
     }
+
+    getSeminarName() {
+        if (this.seminar == null) {
+            return "No seminar data";
+        }
+        //console.log(
+        //    `getSeminarName: ${)
+        return this.seminar.Name;
+    }
+
+    getSeminarDate() {
+        if (this.seminar == null) {
+            return "No seminar data";
+        }
+        return this.seminar.Start_Date__c;
+    }
+
+    isFree() {
+        return this.free;
+    }
+
+    
+    // ------------------- Video Thumbnails ------------------- //
 
     getVideoThumbnail(resolution = "default") {
         if (this.thumbnail && this.thumbnail[resolution]) {
@@ -94,4 +123,5 @@ export default class Video {
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;
     }
+
 }

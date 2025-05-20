@@ -26,6 +26,12 @@ export default class VideoDataController {
         return data;
     }
 
+    groupVideoData(videoData) {
+        let parser = new VideoDataParser(videoData);
+        let data = parser.videoDataGroupBy();
+        return data;
+    }
+
     getVideoById(videoId, videoData) {
         
         let filter = videoData.filter(video => video.id === videoId )
