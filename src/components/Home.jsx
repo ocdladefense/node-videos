@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './VideoPlayerContainer';
-import VideoPlayer from './VideoPlayer';
+
 
 /*
 /// Components:

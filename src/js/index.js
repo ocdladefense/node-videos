@@ -4,12 +4,11 @@ import { createRoot } from 'react-dom/client';
 import videos from '../data/videos.json';
 import users from '../data/users.json';
 import Home from '../components/Home.jsx';
-import VideoDataController from './controllers/VideoDataController.js';
-import YouTubePlayer from '../js/player/YoutubePlayer';
+import YouTubePlayer from '../js/player/YouTubePlayer';
 import UserController from './controllers/UserController.js';
 import initThumbs from './controllers/VideoThumbs';
 import { clearThumbCache } from './controllers/VideoThumbs';
-import SalesforceRestApi  from '@ocdla/salesforce/SalesforceRestApi.js';
+import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import VideoDataParser from "./controllers/VideoDataParser.js";
 
 
@@ -47,7 +46,7 @@ let response = await api.query(QUERY);
 
 let anotherResponse = await api.query(ANOTHER_QUERY);
 
-console.log('This was the response from SalesforceRestApi',response.records);
+console.log('This was the response from SalesforceRestApi', response.records);
 
 console.log(anotherResponse.records);
 

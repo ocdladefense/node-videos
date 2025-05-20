@@ -45,6 +45,10 @@ export default class Video {
         return this.resourceId;
     }
 
+    getResourceId() {
+        return this.resourceId;
+    }
+
     getVideoName() {
         return this.name;
     }
@@ -95,7 +99,7 @@ export default class Video {
         return this.free;
     }
 
-    
+
     // ------------------- Video Thumbnails ------------------- //
 
     getVideoThumbnail(resolution = "default") {
@@ -118,7 +122,7 @@ export default class Video {
         }
 
         return "default";
-        }
+    }
 
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;
