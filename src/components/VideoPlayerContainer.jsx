@@ -78,6 +78,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
 
     // Initialize the player.
     // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
+    // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
         player.loadPlayer(
             'player',
@@ -121,6 +122,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
                 </Tooltip>
 
                 <Box>
+                    {/* Shouldn't need to pass these setters; let the player do the work */}
                     <VideoControlBar
                         playerstate={playerInitialized}
                         isPlaying={isPlaying}
