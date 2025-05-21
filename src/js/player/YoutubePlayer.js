@@ -7,7 +7,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #player;
 
     // The video currently assigned to this player.
-    // Note this doesn't necessarily have a video loaded into it.
+    // Note: a value here doesn't necessarily mean that the video is playing.
     #video;
 
     // Whether the player and its dependencies have loaded and are ready for use.
@@ -16,6 +16,10 @@ export default class YouTubePlayer extends VideoPlayer {
     // The id of an window-bound broadcaster.
     // The broadcaster executes an onStateChange method at intervals.
     #broadcastId;
+
+
+    // The function to call when the player's state changes.
+    #broadcastCallback;
 
 
 
@@ -34,6 +38,13 @@ export default class YouTubePlayer extends VideoPlayer {
         return this.#initialized;
     }
 
+    stopBroadcasting() {
+        clearInterval(this.#broadcastId);
+        console.log("Stopped broadcasting.");
+    }
+
+
+
 
     /**
      * Initialize and load the YouTube iframe player to the specified element.
@@ -49,7 +60,8 @@ export default class YouTubePlayer extends VideoPlayer {
                 setPlayerInitialized(true);
                 this.#initialized = true;
                 console.log("YouTube Player is initialized.");
-                this.broadcast(onStateChange);
+                this.#broadcastCallback = onStateChange;
+                this.broadcast();
             });
 
             config.events.onStateChange = (event) => {
@@ -190,10 +202,10 @@ export default class YouTubePlayer extends VideoPlayer {
         });
     }
 
-    broadcast(setPlayerState) {
+    broadcast() {
         this.#broadcastId = setInterval(() => {
             console.log("Player state is: ", this.serialize());
-            setPlayerState(this.serialize())
+            this.#broadcastCallback(this.serialize())
         }, 1000);
     }
 }
