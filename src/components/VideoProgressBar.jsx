@@ -4,40 +4,17 @@ import { Box, Skeleton } from '@mui/material';
 import '../css/videostyles.css';
 
 
-export default function VideoProgressBar({ player, isPolling, handleSliderChange, handleTimestamp, setElapsed, elapsed, setVideoDuration, videoDuration, intervalRef }) {
+export default function VideoProgressBar({ player }) {
 
 
-    useEffect(() => {
-        if (!player) return;
-        let rawDuration = player.getDuration();
-        setVideoDuration(rawDuration);
-    }, [player, setVideoDuration, setElapsed]);
-
-    useEffect(() => {
-
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-
-        if (isPolling) {
-            intervalRef.current = setInterval(() => {
-                setElapsed(prev => prev + 1);
-            }, 1000);
-        }
-
-        return () => {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        };
-    }, [isPolling]);
-
-    if (player) {
+    if (player.isInitialized()) {
         return (
             <Box>
                 <BodyContainer>
-                    <ProgressSlider value={elapsed} min={0} max={videoDuration} onChange={handleSliderChange} valueLabelDisplay="auto" valueLabelFormat={(value) => player.getFormattedTime(value)} />
+                    <ProgressSlider value={player.getElapsedTime()} min={0} max={player.getDuration()} onChange={(value) => player.seekTo(value)} valueLabelDisplay="auto" valueLabelFormat={(value) => player.getFormattedTime(value)} />
                 </BodyContainer>
                 <TimeContainer>
-                    {player.getFormattedTime(elapsed)} / {player.getFormattedTime(player.getDuration())}
+                    {player.getFormattedTime(player.getElapsedTime())} / {player.getFormattedTime(player.getDuration())}
                 </TimeContainer>
             </Box>
         )

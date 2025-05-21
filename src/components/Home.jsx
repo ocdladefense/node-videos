@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './VideoPlayerContainer';
-
+import YouTubePlayer from '../js/player/YouTubePlayer.js';
 
 /*
 /// Components:
@@ -25,11 +25,21 @@ export default function Home({ parser, user }) {
 
     if (route == "list") {
         component = <VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
+
     } else if (route == "details") {
         component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} />;
+
     } else if (route == "player") {
-        component = <VideoPlayerContainer video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+
+        // Only needs to be instantiated once during the player lifecycle.
+        let player = new YouTubePlayer();
+        // let user = {}; //getCurrentUser();
+        // player.queueVideo(video);
+        // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));
+        component = <VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+
     }
+
     else if (route == "resetPlayer") {
         component = <VideoPlayerContainer resetTimestamp={resetTimestamp} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
     }

@@ -20,7 +20,7 @@ export default function VideoControlBar({ player, isPlaying = false }) {
         player.setVolume(newValue);
     };
 
-    console.log(player);
+
     /*
     TODO:
         -Add fullscreen option

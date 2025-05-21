@@ -10,19 +10,14 @@ export default class YouTubePlayer extends VideoPlayer {
     // Note this doesn't necessarily have a video loaded into it.
     #video;
 
-    // Whether the player and it's dependencies have loaded and are ready for use.
+    // Whether the player and its dependencies have loaded and are ready for use.
     #initialized;
 
+    // The id of an window-bound broadcaster.
+    // The broadcaster executes an onStateChange method at intervals.
+    #broadcastId;
 
-    onStateChangeCallback = null;
 
-    handleTimestamp;
-
-    setElapsed;
-
-    setIsPlaying;
-
-    setIsPolling;
 
 
 
@@ -31,20 +26,31 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
 
+    /**
+     * When the player is initialized it has loaded all required scripts and is ready to be used.
+     * @returns {boolean} Whether the player has been initialized.
+     */
     isInitialized() {
         return this.#initialized;
     }
 
-    loadPlayer(containerRef, setPlayerInitialized, onReady, userWatchProgress, onStateChange, handleTimestamp, setElapsed, setIsPlaying, setIsPolling) {
-        this.onStateChangeCallback = onStateChange;
-        this.handleTimestamp = handleTimestamp;
-        this.setElapsed = setElapsed;
-        this.setIsPlaying = setIsPlaying;
-        this.setIsPolling = setIsPolling;
+
+    /**
+     * Initialize and load the YouTube iframe player to the specified element.
+     * @param {string} elem 
+     * @param {function} setPlayerInitialized 
+     * @param {function} onStateChange 
+     */
+    loadPlayer(elem, setPlayerInitialized, onStateChange) {
 
         const onYouTubeIframeAPIReady = () => {
 
-            const config = this.configYoutubeDisplay();
+            const config = this.configYoutubeDisplay(() => {
+                setPlayerInitialized(true);
+                this.#initialized = true;
+                console.log("YouTube Player is initialized.");
+                this.broadcast(onStateChange);
+            });
 
             config.events.onStateChange = (event) => {
                 if (this.onStateChangeCallback) {
@@ -52,10 +58,7 @@ export default class YouTubePlayer extends VideoPlayer {
                 }
             };
 
-            this.#player = new YT.Player(containerRef, config);
-            setPlayerInitialized(true);
-            this.#initialized = true;
-            console.log("YouTube Player is initialized.");
+            this.#player = new YT.Player(elem, config);
         };
 
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
@@ -71,17 +74,10 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
     playVideo() {
-        const p = this.#player.playVideo();
-        this.handleTimestamp();
-        this.setIsPlaying(true);
-        this.setIsPolling(true);
-        return p;
+        this.#player.playVideo();
     }
 
     pauseVideo() {
-        this.handleTimestamp();
-        this.setIsPlaying(false);
-        this.setIsPolling(false);
         this.#player.pauseVideo();
 
         //let resourceID = this.userWatchProgress.resourceId;
@@ -95,42 +91,36 @@ export default class YouTubePlayer extends VideoPlayer {
 
     restartVideo(time) {
         this.#player.seekTo(time, true);
-        this.setElapsed(0);
         this.playVideo();
     }
 
     stopVideo() {
-        const p = this.#player.stopVideo();
-        this.handleTimestamp();
-        this.setIsPlaying(false);
-        this.setIsPolling(false);
-        this.setElapsed(0);
-        return p;
+        this.#player.stopVideo();
     }
 
     seekTo(time) {
-        const p = this.#player.seekTo(time, true);
-        return p;
+        this.#player.seekTo(time, true);
     }
 
     getDuration() {
-        //const p = this.player.getDuration();
-        return 100;
+        return this.#player.getDuration();
     }
 
     getCurrentTime() {
-        const p = this.#player.getCurrentTime();
-        return p;
+        return this.#player.getCurrentTime();
+    }
+
+    getElapsedTime() {
+        return this.#initialized ? this.#player.getCurrentTime() : 0;
     }
 
     getPlayerState() {
-        const p = this.#player.getPlayerState();
-        return p;
+        return this.#player.getPlayerState();
     }
 
 
 
-    configYoutubeDisplay() {
+    configYoutubeDisplay(onReady) {
         return {
             height: '720',
             width: '1280',
@@ -142,7 +132,9 @@ export default class YouTubePlayer extends VideoPlayer {
                 controls: 0,
                 rel: 0,
             },
-            events: {}
+            events: {
+                onReady: onReady
+            }
         };
     }
 
@@ -188,5 +180,20 @@ export default class YouTubePlayer extends VideoPlayer {
         var match = url.match(regExp);
 
         return (match && match[1].length >= 11) ? match[1] : false;
+    }
+
+
+    serialize() {
+        return JSON.stringify({
+            videoId: this.#video ? this.#video.getResourceId() : null,
+            timestamp: this.getElapsedTime()
+        });
+    }
+
+    broadcast(setPlayerState) {
+        this.#broadcastId = setInterval(() => {
+            console.log("Player state is: ", this.serialize());
+            setPlayerState(this.serialize())
+        }, 1000);
     }
 }
