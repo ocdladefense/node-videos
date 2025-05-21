@@ -11,34 +11,20 @@ import { Skeleton as PlayerPlaceholder } from '@mui/material';
 export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // Player initialization defaults to false.
+    // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
+    // I.e., playerState > -1 == initialized.
     const [playerInitialized, setPlayerInitialized] = useState(false);
 
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
     // The player "broadcasts" its state using the setPlayerState function, below.
+    // Instead, this should probably use pub/sub terminology where we stop listening for broadcasts.
     const [playerState, setPlayerState] = useState(player.serialize());
 
     // All of these values should be gotten from the player
     // and serialized as part of the YouTubePlayer.serialize() method.
-
-    const [isPlaying, setIsPlaying] = useState(false);
-
-
-
-
-    // We do need something that does this.
-    // In the VideoControlBar itself though.
-    const handleSliderChange = (event, newValue) => {
-        player.seekTo(newValue);
-        setIsPolling(false);
-        player.pauseVideo();
-        setIsPlaying(false);
-        setElapsed(newValue);
-    };
-
-
-
-
+    // Below, this is a throw-away line.
+    const isPlaying = false;
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
@@ -50,7 +36,8 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
     // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
-        player.loadPlayer('player', setPlayerInitialized, setPlayerState);
+        player.addListener(setPlayerState);
+        player.loadPlayer("player", setPlayerInitialized);
     }, []);
 
 

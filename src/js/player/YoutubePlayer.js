@@ -18,8 +18,9 @@ export default class YouTubePlayer extends VideoPlayer {
     #broadcastId;
 
 
-    // The function to call when the player's state changes.
-    #broadcastCallback;
+    // Functions to call when the player's state changes.
+    // Other processes can use the addListener() method to subscribe to state changes.
+    #broadcastCallbacks = [];
 
 
 
@@ -44,6 +45,9 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
 
+    addListener(listener) {
+        this.#broadcastCallbacks.push(listener);
+    }
 
 
     /**
@@ -52,26 +56,26 @@ export default class YouTubePlayer extends VideoPlayer {
      * @param {function} setPlayerInitialized 
      * @param {function} onStateChange 
      */
-    loadPlayer(elem, setPlayerInitialized, onStateChange) {
+    loadPlayer(elem, setPlayerInitialized) {
+
+        // We will only start emitting player statuses if the user indicates they want to load and interact* with the player.
+        // we should do the reverse when we want to tear down this instance.
+        this.broadcast();
+
+        // Executes when the player instance is actually ready to interact with.
+        // Technically this happens after initialization.
+        const onReady = () => {
+            this.#initialized = true;
+            setPlayerInitialized(true);
+            console.log("YouTube Player is initialized.");
+        };
+
 
         const onYouTubeIframeAPIReady = () => {
-
-            const config = this.configYoutubeDisplay(() => {
-                setPlayerInitialized(true);
-                this.#initialized = true;
-                console.log("YouTube Player is initialized.");
-                this.#broadcastCallback = onStateChange;
-                this.broadcast();
-            });
-
-            config.events.onStateChange = (event) => {
-                if (this.onStateChangeCallback) {
-                    this.onStateChangeCallback(event);
-                }
-            };
-
+            const config = this.makeConfig(onReady);
             this.#player = new YT.Player(elem, config);
         };
+
 
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
@@ -132,7 +136,9 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
 
-    configYoutubeDisplay(onReady) {
+    makeConfig(onReady) {
+
+
         return {
             height: '720',
             width: '1280',
@@ -197,6 +203,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     serialize() {
         return JSON.stringify({
+            playerState: -1,
             videoId: this.#video ? this.#video.getResourceId() : null,
             timestamp: this.getElapsedTime()
         });
@@ -205,7 +212,7 @@ export default class YouTubePlayer extends VideoPlayer {
     broadcast() {
         this.#broadcastId = setInterval(() => {
             console.log("Player state is: ", this.serialize());
-            this.#broadcastCallback(this.serialize())
+            this.#broadcastCallbacks.forEach((fn) => fn(this.serialize()));
         }, 1000);
     }
 }
