@@ -3,9 +3,16 @@ import Time from '../models/Time.js';
 
 export default class YouTubePlayer extends VideoPlayer {
 
+    // Internal reference to this wrapper class's video player.
     #player;
 
+    // The video currently assigned to this player.
+    // Note this doesn't necessarily have a video loaded into it.
     #video;
+
+    // Whether the player and it's dependencies have loaded and are ready for use.
+    #initialized;
+
 
     onStateChangeCallback = null;
 
@@ -25,7 +32,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     isInitialized() {
-        return false;
+        return this.#initialized;
     }
 
     loadPlayer(containerRef, setPlayerInitialized, onReady, userWatchProgress, onStateChange, handleTimestamp, setElapsed, setIsPlaying, setIsPolling) {
@@ -47,7 +54,8 @@ export default class YouTubePlayer extends VideoPlayer {
 
             this.#player = new YT.Player(containerRef, config);
             setPlayerInitialized(true);
-            console.log("Player initialized is true.");
+            this.#initialized = true;
+            console.log("YouTube Player is initialized.");
         };
 
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
@@ -160,12 +168,22 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
 
+
     /**
      * 
-     * @param {string} url 
-     * @returns 
+     * @returns {string} The videoId of any currently queued or playing video.
      */
-    static parseUrl(url) {
+    getVideoId() {
+        return YouTubePlayer.parseId(this.#player.getVideoUrl());
+    }
+
+
+    /**
+     * Parse the YouTube resourceId from the given url.
+     * @param {string} url 
+     * @returns {string|boolean}
+     */
+    static parseId(url) {
         var regExp = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
         var match = url.match(regExp);
 

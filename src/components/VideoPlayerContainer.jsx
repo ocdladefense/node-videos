@@ -22,8 +22,6 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
     const [isPlaying, setIsPlaying] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [elapsed, setElapsed] = useState(0);
-
-    // ?
     const intervalRef = useRef(null);
 
 
@@ -48,7 +46,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
 
     const onStateChange = (event) => {
         setState(event.data);
-    }
+    };
 
     const handleTimestamp = (event) => {
         let runTime = elapsed;
@@ -86,7 +84,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
             setPlayerInitialized,
             function() { console.log("Player is ready!") },
             userWatchProgress,
-            onStateChange,
+            function() { console.log("State changed!") },
             handleTimestamp,
             setElapsed,
             setIsPlaying,
