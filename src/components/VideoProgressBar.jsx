@@ -2,25 +2,42 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ProgressSlider, BodyContainer, TimeContainer } from '../js/videostyles.js';
 import { Box, Skeleton } from '@mui/material';
 import '../css/videostyles.css';
+import waitUntil from '../js/utils.js';
 
 
-export default function VideoProgressBar({ player }) {
 
 
+
+
+export default function VideoProgressBar({ player, sensitivity = 200 }) {
+
+    // Gets set initially to the player's elapsed time.
     const [sliderValue, setSliderValue] = useState(player.getElapsedTime());
 
+    // Gets set initially to the player's elapsed time.
+    const [timerValue, setTimerValue] = useState(player.getElapsedTime());
 
-    // Needs a debouncer.
+    // While the user is interacting with the proegress bar slider, don't attempt to refresh the component.
+    const [userInteracting, setUserInteracting] = useState(false);
+
+    // When the user slides, seek the player within the limits of `sensitivity`.
+    const onSliderMoving = waitUntil(function(player, newValue) { player.seekTo(newValue); }, sensitivity);
+
     const handleSliderChange = (event, newValue) => {
-        console.log(newValue);
-        player.stopBroadcasting();
-        player.seekTo(newValue);
+        setUserInteracting(true);
         setSliderValue(newValue);
+        setTimerValue(newValue);
+        onSliderMoving(player, newValue);
     };
 
+
+
+    // Prompt a syncing of this component to the player's elapsed time.
+    // also uses state to effectively force a rerender of this component every second.
     useEffect(() => {
-        setSliderValue(player.getElapsedTime());
-    });
+        !userInteracting && setSliderValue(player.getElapsedTime());
+        setTimerValue(player.getElapsedTime());
+    }, [player.getElapsedTime()]);
 
 
     if (player.isInitialized()) {
@@ -32,13 +49,14 @@ export default function VideoProgressBar({ player }) {
                         min={0}
                         max={player.getDuration()}
                         onChange={handleSliderChange}
-                        onMouseUp={() => player.broadcast()}
+                        onMouseDown={() => setUserInteracting(true)}
+                        onMouseUp={() => setUserInteracting(false)}
                         valueLabelDisplay="auto"
                         valueLabelFormat={(value) => player.getFormattedTime(sliderValue)}
                     />
                 </BodyContainer>
                 <TimeContainer>
-                    {player.getFormattedTime(player.getElapsedTime())} / {player.getFormattedTime(player.getDuration())}
+                    {player.getFormattedTime(timerValue)} / {player.getFormattedTime(player.getDuration())}
                 </TimeContainer>
             </Box>
         )

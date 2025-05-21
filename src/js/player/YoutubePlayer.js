@@ -123,7 +123,7 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
     getElapsedTime() {
-        return this.#initialized ? this.#player.getCurrentTime() : 0;
+        return this.#initialized ? Math.round(this.#player.getCurrentTime()) : 0;
     }
 
     getPlayerState() {
