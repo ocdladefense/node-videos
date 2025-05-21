@@ -158,4 +158,17 @@ export default class YouTubePlayer extends VideoPlayer {
         let formattedTime;
         return (formattedTime = Time.parseTime(duration));
     }
+
+
+    /**
+     * 
+     * @param {string} url 
+     * @returns 
+     */
+    static parseUrl(url) {
+        var regExp = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+
+        return (match && match[1].length >= 11) ? match[1] : false;
+    }
 }

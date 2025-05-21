@@ -11,14 +11,21 @@ let sourceType = 'youtube';
 
 export default function VideoPlayerContainer({ resetTimestamp, video, user, onBack }) {
 
+    // Only needs to be instantiated once during the player lifecycle.
     const [player, updatePlayer] = useState(new YouTubePlayer());
+
+    // Player initialization defaults to false.
+    const [playerInitialized, setPlayerInitialized] = useState(false);
+
+    // All of these values should be gotten from the player.
     const [videoDuration, setVideoDuration] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [elapsed, setElapsed] = useState(0);
-    const [state, setState] = useState(0);
+
+    // ?
     const intervalRef = useRef(null);
-    const [playerInitialized, setPlayerInitialized] = useState(false);
+
 
 
     let userWatchProgress = user.getWatchedVideo(video.resourceId);
@@ -63,7 +70,7 @@ export default function VideoPlayerContainer({ resetTimestamp, video, user, onBa
 
 
 
-    // Only needs to be instantiated once during the player lifecycle.
+
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
