@@ -22,12 +22,15 @@ export default class YouTubePlayer extends VideoPlayer {
     // Internal reference to this wrapper class's video player.
     #player;
 
+
+    #scriptsReady = false;
+
     // The video currently assigned to this player.
     // Note: a value here doesn't necessarily mean that the video is playing.
     #video;
 
     // Whether the player and its dependencies have loaded and are ready for use.
-    #initialized;
+    #initialized = false;
 
     // The state of the player.
     #state = -1;
@@ -56,7 +59,7 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean} Whether the player has been initialized.
      */
     isInitialized() {
-        return this.#initialized;
+        return this.#initialized === true;
     }
 
 
@@ -89,6 +92,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
         const onYouTubeIframeAPIReady = () => {
+            this.#scriptsReady = true;
             const config = this.makeConfig(onReady);
             this.#player = new YT.Player(elemId, config);
         };
@@ -96,7 +100,11 @@ export default class YouTubePlayer extends VideoPlayer {
 
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-        injectScriptElement("https://www.youtube.com/iframe_api");
+        if (!this.#scriptsReady) {
+            injectScriptElement("https://www.youtube.com/iframe_api");
+        } else {
+            onYouTubeIframeAPIReady();
+        }
     }
 
 
@@ -106,13 +114,19 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean}
      */
     destroy() {
-
-        return true;
+        this.#state = -1;
+        this.removeListeners();
+        this.stopPublishing();
+        this.#player.destroy();
+        this.#player = null;
+        this.#video = null;
+        console.log("YouTube Player is destroyed.");
+        this.#initialized = false;
     }
 
 
-
-    queueVideo(video) {
+    // "Cue" refers to a signal or prompt that indicates a specific action or change.
+    cue(video) {
         this.#video = video;
     }
 
@@ -206,7 +220,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     /**
      * 
-     * @returns {string} The videoId of any currently queued or playing video.
+     * @returns {string} The videoId of any currently cued or playing video.
      */
     getVideoId() {
         return YouTubePlayer.parseId(this.#player.getVideoUrl());
@@ -245,5 +259,9 @@ export default class YouTubePlayer extends VideoPlayer {
     stopPublishing() {
         clearInterval(this.#broadcastId);
         console.log("Stopped broadcasting.");
+    }
+
+    removeListeners() {
+        this.#subscribers = [];
     }
 }

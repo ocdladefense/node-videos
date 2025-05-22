@@ -10,7 +10,8 @@ window.playerMap = {
     youtube: YouTubePlayer,
 };
 
-
+// Player instance used throughout the application lifecycle.
+let player = new YouTubePlayer();
 
 
 export default function Home({ parser, user }) {
@@ -33,7 +34,7 @@ export default function Home({ parser, user }) {
     else if (route == "player") {
 
         // Only needs to be instantiated once during the player lifecycle.
-        let player = new YouTubePlayer();
+
         // let user = {}; //getCurrentUser();
         // player.queueVideo(video);
         // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));

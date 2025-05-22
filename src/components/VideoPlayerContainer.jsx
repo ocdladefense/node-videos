@@ -23,18 +23,20 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
-        player.queueVideo(video);
-    }, [video]);
+        player.cue(video);
+    });
 
 
     // Initialize the player.
     // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
-        player.addListener(setPlayerState);
-        // player.init(setPlayerInitialized);
-        player.load("player", setPlayerInitialized);
-    }, []);
+        if (!player.isInitialized()) {
+            player.addListener(setPlayerState);
+            // player.init(setPlayerInitialized);
+            player.load("player", setPlayerInitialized);
+        }
+    }, [player.isInitialized()]);
 
 
 
@@ -60,7 +62,7 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
             <ControlBarContainer playerstate={playerInitialized}>
 
                 <Tooltip title="Return to Video Details Page" placement="left">
-                    <ArrowBackButton onClick={onBack} variant="contained" />
+                    <ArrowBackButton onClick={() => { player.destroy(); onBack(); }} variant="contained" />
                 </Tooltip>
 
                 <Box>
