@@ -12,7 +12,7 @@ window.playerMap = {
 
 // Player instance used throughout the application lifecycle.
 let player = new YouTubePlayer();
-
+// let user = {}; //getCurrentUser();
 
 export default function Home({ parser, user }) {
 
@@ -32,21 +32,10 @@ export default function Home({ parser, user }) {
 
     }
     else if (route == "player") {
-
-        // Only needs to be instantiated once during the player lifecycle.
-
-        // let user = {}; //getCurrentUser();
-        // player.queueVideo(video);
+        // player.cueVideo(video);
         // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));
         component = <VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
     }
-
-    /*
-    else if (route == "resetPlayer") {
-        component = <VideoPlayerContainer resetTimestamp={resetTimestamp} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
-    }
-    */
-
 
     return (
         <div className="app">{component}</div>
