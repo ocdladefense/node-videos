@@ -41,7 +41,11 @@ export default class VideoDataParser {
 
 */
     sortAlpha() {
-
+        return this.videos.toSorted((a, b) => {
+            let textA = a.getVideoName();
+            let textB = b.getVideoName();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
     }
 
     sortSeminar() {
@@ -53,7 +57,19 @@ export default class VideoDataParser {
     }
 
     groupBySeminar() {
-        
+        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
+        const keys = Object.keys(grouped);
+        const reversedKeys = keys.reverse();
+        const reversedGroupedObj = {};
+
+        reversedKeys.forEach(key => {
+            reversedGroupedObj[key] = grouped[key];
+        });
+
+        return reversedGroupedObj;
+    }
+
+    sortByOldestSeminar() {
         return Object.groupBy(this.videos, (video) => video.getSeminarName());
     }
 

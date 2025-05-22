@@ -96,7 +96,7 @@ export default class Video {
     }
 
     isFree() {
-        return this.free;
+        return this.public;
     }
 
 
