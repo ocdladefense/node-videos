@@ -16,6 +16,9 @@ window.playerMap = {
 };
 
 
+let parser;
+
+
 export default function Home({ parser, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);
@@ -30,7 +33,7 @@ export default function Home({ parser, user }) {
 
 
     if (route == "list") {
-        component = <VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
+        component = <VideoList setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
 
     } else if (route == "details") {
         component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} parser={parser} setSelectedVideo={setSelectedVideo} />;

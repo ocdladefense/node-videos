@@ -1,9 +1,61 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react';
+import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
+import initThumbs from '../js/controllers/VideoThumbs';
+import VideoDataParser from "../js/controllers/VideoDataParser.js";
+
+
+
+
+
+// Top-level reference to the "parser" that can return various lists of videos.
+let parser;
+
+const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
+
+// @jbernal - previously in index.js
+// Retrieve video data and related thumbnail data.
+async function getVideoParser() {
+
+    const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+    const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+
+    let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+    let resp = await api.query(query);
+    const parser = VideoDataParser.parse(resp.records);
+
+    let videos = parser.getVideos();
+
+    const thumbnailMap = await initThumbs(videos);
+
+    parser.getVideos().forEach(video => {
+        const thumbs = thumbnailMap.get(video.resourceId);
+        // console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
+        video.setThumbnail(thumbs);
+    });
+
+    return parser;
+}
+
+
+
+
 
 export default function VideoDetails({ video, onBack, setRoute, user, parser, setSelectedVideo }) {
+
+
+    const [grouped, setGrouped] = useState([]);
     const prevWatched = user.getWatchedVideo(video.getVideoResourceId());
     const purchasedVideo = user.getPurchasedVideo(video.getVideoResourceId());
     const [isPlayable, setIsPlayable] = useState(() => purchasedVideo != null || video.isFree());
+
+
+    // Retrieve data from the server only once during lifecycle.
+    useEffect(() => {
+        async function fn() { parser = await getVideoParser(); setGrouped(parser.groupBySeminar()); }
+        fn();
+    }, []);
+
+
 
     console.log("get purchased vids", user.getUserPurchasedVideos());
 
@@ -21,7 +73,7 @@ export default function VideoDetails({ video, onBack, setRoute, user, parser, se
         setIsPlayable(true);
     }
 
-    const grouped = parser.groupBySeminar();
+
 
     let currentSeminar = null;
     for (const seminar in grouped) {
