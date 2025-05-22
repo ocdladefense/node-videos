@@ -22,26 +22,14 @@ if (process.env.NODE_ENV === 'debug') {
 
 
 
-const ANOTHER_QUERY = 'SELECT Timestamp__c FROM Watched_Video__c';
-let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-let anotherResponse = await api.query(ANOTHER_QUERY);
-
-
-
-
 
 
 const use = new UserController(users);
 const allUsers = use.getAllUsers();
-console.log("all users", allUsers);
 const user = use.getUser(1);
 console.log("previously watched videos", user.getPreviouslyWatchedVideos());
 console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
 
-
-
-
-console.log("user.get", user.get)
 
 
 const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';
@@ -50,16 +38,10 @@ let watchedResponse = await sfrAPI.query(watchedVideosQuery);
 console.log("watched video query watchedResponse", watchedResponse.records);
 
 
-// without this I get an error at runtime.  babel 7 and preset env.
 
 
 const $root = document.getElementById("app");
 const root = createRoot($root);
-
-
-
-
-
 root.render(<Home user={user} />);
 
 

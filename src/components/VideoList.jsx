@@ -9,6 +9,11 @@ window.clearCache = clearThumbCache;
 
 
 
+
+// Previously from home but this is really a type of list.
+// console.log("users previously watched vids", user.getPreviouslyWatchedVideos());
+// if (selectedVideo) console.log("get watched vid by id", user.getWatchedVideo(selectedVideo.resourceId));
+
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser;
 
