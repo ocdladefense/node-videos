@@ -13,3 +13,32 @@ export default function waitUntil(func, wait) {
         }, wait);
     };
 }
+
+
+export function injectScriptElement(src) {
+    let tag = document.createElement('script');
+    tag.src = src;
+
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    if (firstScriptTag == null) {
+        (document.body || document.head).appendChild(tag);
+    }
+    else {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+}
+
+export function formatTime(duration) {
+    const Hr = Math.floor(duration / 3600);
+    const Min = Math.floor((duration % 3600) / 60);
+    const Sec = Math.floor(duration % 60);
+
+    const paddedMin = Min.toString().padStart(2, '0');
+    const paddedSec = Sec.toString().padStart(2, '0');
+
+    if (Hr > 0) {
+        return `${Hr}:${paddedMin}:${paddedSec}`;
+    } else {
+        return `${Min}:${paddedSec}`;
+    }
+}

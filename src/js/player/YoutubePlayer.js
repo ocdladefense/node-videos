@@ -1,5 +1,5 @@
 import VideoPlayer from './VideoPlayer.js';
-import Time from '../models/Time.js';
+import { injectScriptElement } from '../utils.js';
 
 
 
@@ -40,7 +40,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     // Functions to call when the player's state changes.
     // Other processes can use the addListener() method to subscribe to state changes.
-    #broadcastCallbacks = [];
+    #subscribers = [];
 
 
 
@@ -63,7 +63,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     addListener(listener) {
-        this.#broadcastCallbacks.push(listener);
+        this.#subscribers.push(listener);
     }
 
 
@@ -96,9 +96,19 @@ export default class YouTubePlayer extends VideoPlayer {
 
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-        YouTubePlayer.injectScriptElement();
+        injectScriptElement("https://www.youtube.com/iframe_api");
     }
 
+
+    /**
+     * The destroy() method should remove event listeners and free up any other resources used by the player.
+     * 
+     * @returns {boolean}
+     */
+    destroy() {
+
+        return true;
+    }
 
 
 
@@ -129,6 +139,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     stop() {
         this.#player.stopVideo();
+        this.#player.seekTo(0);
     }
 
     seekTo(time) {
@@ -184,33 +195,11 @@ export default class YouTubePlayer extends VideoPlayer {
             events: {
                 onReady: onReady,
                 onStateChange: (event) => {
-                    console.log("YT Event:", event);
+                    // console.log("YT Event:", event);
                     this.#state = event.data;
-                    console.log(event.data);
                 }
             }
         };
-    }
-
-
-
-    static injectScriptElement() {
-        let tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-
-        let firstScriptTag = document.getElementsByTagName('script')[0];
-        if (firstScriptTag == null) {
-            (document.body || document.head).appendChild(tag);
-        }
-        else {
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
-    }
-
-
-    getFormattedTime(duration) {
-        let formattedTime;
-        return (formattedTime = Time.parseTime(duration));
     }
 
 
@@ -247,8 +236,8 @@ export default class YouTubePlayer extends VideoPlayer {
 
     startPublishing() {
         this.#broadcastId = setInterval(() => {
-            console.log("Player state is: ", this.serialize());
-            this.#broadcastCallbacks.forEach((fn) => fn(this.serialize()));
+            // console.log("Player state is: ", this.serialize());
+            this.#subscribers.forEach((fn) => fn(this.serialize()));
         }, 1000);
     }
 

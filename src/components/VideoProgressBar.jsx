@@ -3,6 +3,7 @@ import { ProgressSlider, BodyContainer, TimeContainer } from '../js/videostyles.
 import { Box, Skeleton } from '@mui/material';
 import '../css/videostyles.css';
 import waitUntil from '../js/utils.js';
+import { formatTime } from '../js/utils.js';
 
 
 
@@ -52,11 +53,11 @@ export default function VideoProgressBar({ player, sensitivity = 200 }) {
                         onMouseDown={() => setUserInteracting(true)}
                         onMouseUp={() => setUserInteracting(false)}
                         valueLabelDisplay="auto"
-                        valueLabelFormat={(value) => player.getFormattedTime(sliderValue)}
+                        valueLabelFormat={(value) => formatTime(sliderValue)}
                     />
                 </BodyContainer>
                 <TimeContainer>
-                    {player.getFormattedTime(timerValue)} / {player.getFormattedTime(player.getDuration())}
+                    {formatTime(timerValue)} / {formatTime(player.getDuration())}
                 </TimeContainer>
             </Box>
         )

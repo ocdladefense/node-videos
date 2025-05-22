@@ -7,7 +7,6 @@ import { ThemeProvider, Tooltip, Box, Skeleton } from '@mui/material';
 import { Skeleton as PlayerPlaceholder } from '@mui/material';
 
 
-
 export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // Player initialization defaults to false.
@@ -17,7 +16,7 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
-    // The player "publishes" its state and this component subscribes to these events with the listen() method.
+    // The player "publishes" its state and this component subscribes to these events with its addListener() method.
     const [playerState, setPlayerState] = useState(player.serialize());
 
 
