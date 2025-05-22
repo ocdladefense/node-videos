@@ -10,8 +10,7 @@ module.exports = env => {
     return {
         mode: "development",
         entry: {
-            app: path.resolve(__dirname, "./src/js/index.js"),
-            thumbs: path.resolve(__dirname, './src/js/thumbs.js')
+            app: path.resolve(__dirname, "./src/js/index.js")
             // init_head: path.resolve(__dirname, "src/js/custom-elements.js")
         },
         snapshot: {

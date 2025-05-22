@@ -10,6 +10,12 @@ import YouTubePlayer from '../js/player/YouTubePlayer.js';
 - app (second componet);
 */
 
+
+window.playerMap = {
+    youtube: YouTubePlayer,
+};
+
+
 export default function Home({ parser, user }) {
     const [videosState, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState(null);

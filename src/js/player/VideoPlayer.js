@@ -1,40 +1,29 @@
 export default class VideoPlayer {
-    player;
-    videoLength;
-    url;
-    elapsedTime;
-    isPolling;
-    isPlaying;
-    state;
-    mediaEvent;
 
-    constructor(containerRef, userWatchProgress, onReady, onStateChange) {
-        this.player = null;
+
+
+
+    constructor() {
+
     }
 
-    init(containerRef, userWatchProgress, onReady, onStateChange) {
-        this.player = 'ready';
-        this.state = 'unstarted';
-        this.elapsedTime = 0;
-        this.isPolling = false;
-        this.isPlaying = false;
+    init() {
+
     }
 
-    loadVideo(url, attrs) {
-        this.videoLength = attrs.length;
+    load() {
+
     }
 
-    playVideo() {
-        isPlaying = true;
-        isPolling = true;
-        state = 'playing';
+    play() {
+
     }
 
-    restartVideo() { }
+    restart() { }
 
-    pauseVideo() { }
+    pause() { }
 
-    stopVideo() { }
+    stop() { }
 
     seekTo() { }
 
@@ -46,7 +35,7 @@ export default class VideoPlayer {
 
     getMediaPlayerEvent(resourceId, timestamp) {
         return this.mediaEvent = new CustomEvent('mediastatechange', {
-            detail: {timestamp: timestamp, resourceId: resourceId},
+            detail: { timestamp: timestamp, resourceId: resourceId },
             bubbles: true
         });
     }

@@ -17,13 +17,10 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
-    // The player "publishes" its state using the setPlayerState function, below.
+    // The player "publishes" its state and this component subscribes to these events with the listen() method.
     const [playerState, setPlayerState] = useState(player.serialize());
 
-    // All of these values should be gotten from the player
-    // and serialized as part of the YouTubePlayer.serialize() method.
-    // Below, this is a throw-away line.
-    const isPlaying = false;
+
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
@@ -64,15 +61,11 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
             <ControlBarContainer playerstate={playerInitialized}>
 
                 <Tooltip title="Return to Video Details Page" placement="left">
-                    <ArrowBackButton onClick={() => onBack()} variant="contained" />
+                    <ArrowBackButton onClick={onBack} variant="contained" />
                 </Tooltip>
 
                 <Box>
-                    {/* Shouldn't need to pass these setters; let the player do the work */}
-                    <VideoControlBar
-                        isPlaying={isPlaying}
-                        player={player}
-                    />
+                    <VideoControlBar player={player} />
                 </Box>
             </ControlBarContainer>
 

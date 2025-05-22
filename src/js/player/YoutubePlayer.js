@@ -1,6 +1,22 @@
 import VideoPlayer from './VideoPlayer.js';
 import Time from '../models/Time.js';
 
+
+
+const UNSTARTED = -1;
+
+const ENDED = 0;
+
+const PLAYING = 1;
+
+const PAUSED = 2;
+
+const BUFFERING = 3;
+
+const VIDEO_CUED = 5;
+
+
+
 export default class YouTubePlayer extends VideoPlayer {
 
     // Internal reference to this wrapper class's video player.
@@ -12,6 +28,10 @@ export default class YouTubePlayer extends VideoPlayer {
 
     // Whether the player and its dependencies have loaded and are ready for use.
     #initialized;
+
+    // The state of the player.
+    #state = -1;
+
 
     // The id of an window-bound broadcaster.
     // The broadcaster executes an onStateChange method at intervals.
@@ -128,10 +148,23 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
     getPlayerState() {
-        return this.#player.getPlayerState();
+        return this.#state;
     }
 
 
+    isPlaying() {
+        return this.#state === PLAYING;
+    }
+
+
+
+    getVolume() {
+        return this.#player ? this.#player.getVolume() : 0;
+    }
+
+    setVolume(volume) {
+        this.#player.setVolume(volume);
+    }
 
     makeConfig(onReady) {
 
@@ -146,9 +179,15 @@ export default class YouTubePlayer extends VideoPlayer {
                 modestbranding: 0,
                 controls: 0,
                 rel: 0,
+                enablejsapi: 1
             },
             events: {
-                onReady: onReady
+                onReady: onReady,
+                onStateChange: (event) => {
+                    console.log("YT Event:", event);
+                    this.#state = event.data;
+                    console.log(event.data);
+                }
             }
         };
     }
@@ -200,7 +239,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     serialize() {
         return JSON.stringify({
-            playerState: -1,
+            playerState: this.#state,
             videoId: this.#video ? this.#video.getResourceId() : null,
             timestamp: this.getElapsedTime()
         });

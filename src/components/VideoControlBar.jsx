@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -11,21 +11,23 @@ import '../css/videostyles.css';
 
 
 
-export default function VideoControlBar({ player, isPlaying = false }) {
+export default function VideoControlBar({ player }) {
 
-    const [volume, setVolume] = useState(50);
 
+    const [volume, setVolume] = useState(player.getVolume());
+    const [isPlaying, setIsPlaying] = useState(player.isPlaying());
     const handleVolumeChange = (event, newValue) => {
         setVolume(newValue);
         player.setVolume(newValue);
     };
 
+    // The controls can be alternately rendered based on the player's state.
+    useEffect(() => {
+        setIsPlaying(player.isPlaying());
+    }, [player.isPlaying()]);
 
-    /*
-    TODO:
-        -Add fullscreen option
-        -Adjust styling based on current needs 
-    */
+
+
 
 
     return (
