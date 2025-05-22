@@ -39,10 +39,7 @@ export default class YouTubePlayer extends VideoPlayer {
         return this.#initialized;
     }
 
-    stopBroadcasting() {
-        clearInterval(this.#broadcastId);
-        console.log("Stopped broadcasting.");
-    }
+
 
 
     addListener(listener) {
@@ -56,11 +53,11 @@ export default class YouTubePlayer extends VideoPlayer {
      * @param {function} setPlayerInitialized 
      * @param {function} onStateChange 
      */
-    loadPlayer(elem, setPlayerInitialized) {
+    load(elem, setPlayerInitialized) {
 
         // We will only start emitting player statuses if the user indicates they want to load and interact* with the player.
         // we should do the reverse when we want to tear down this instance.
-        this.broadcast();
+        this.startPublishing();
 
         // Executes when the player instance is actually ready to interact with.
         // Technically this happens after initialization.
@@ -89,11 +86,11 @@ export default class YouTubePlayer extends VideoPlayer {
         this.#video = video;
     }
 
-    playVideo() {
+    play() {
         this.#player.playVideo();
     }
 
-    pauseVideo() {
+    pause() {
         this.#player.pauseVideo();
 
         //let resourceID = this.userWatchProgress.resourceId;
@@ -105,12 +102,12 @@ export default class YouTubePlayer extends VideoPlayer {
         console.log('foobar');
     }
 
-    restartVideo(time) {
+    restart(time) {
         this.#player.seekTo(time, true);
         this.playVideo();
     }
 
-    stopVideo() {
+    stop() {
         this.#player.stopVideo();
     }
 
@@ -209,10 +206,16 @@ export default class YouTubePlayer extends VideoPlayer {
         });
     }
 
-    broadcast() {
+    startPublishing() {
         this.#broadcastId = setInterval(() => {
             console.log("Player state is: ", this.serialize());
             this.#broadcastCallbacks.forEach((fn) => fn(this.serialize()));
         }, 1000);
+    }
+
+
+    stopPublishing() {
+        clearInterval(this.#broadcastId);
+        console.log("Stopped broadcasting.");
     }
 }

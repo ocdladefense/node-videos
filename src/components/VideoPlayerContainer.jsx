@@ -17,8 +17,7 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
 
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
-    // The player "broadcasts" its state using the setPlayerState function, below.
-    // Instead, this should probably use pub/sub terminology where we stop listening for broadcasts.
+    // The player "publishes" its state using the setPlayerState function, below.
     const [playerState, setPlayerState] = useState(player.serialize());
 
     // All of these values should be gotten from the player
@@ -37,7 +36,8 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
         player.addListener(setPlayerState);
-        player.loadPlayer("player", setPlayerInitialized);
+        // player.init(setPlayerInitialized);
+        player.load("player", setPlayerInitialized);
     }, []);
 
 

@@ -39,7 +39,7 @@ export default function VideoControlBar({ player, isPlaying = false }) {
                                 <Tooltip title="Pause Video" placement="bottom">
                                     <PauseCircleIcon
                                         onClick={() => {
-                                            player.pauseVideo();
+                                            player.pause();
                                         }}
                                     />
                                 </Tooltip>
@@ -47,7 +47,7 @@ export default function VideoControlBar({ player, isPlaying = false }) {
                                 <Tooltip title="Play Video" placement="bottom">
                                     <PlayCircleIcon
                                         onClick={() => {
-                                            player.playVideo();
+                                            player.play();
                                         }}
                                     />
                                 </Tooltip>
@@ -55,7 +55,7 @@ export default function VideoControlBar({ player, isPlaying = false }) {
                         </IconButton>
 
                         <Tooltip title="End Video" placement="bottom">
-                            <StopCircleIcon onClick={() => { player.stopVideo(); }} />
+                            <StopCircleIcon onClick={() => { player.stop(); }} />
                         </Tooltip>
 
 
@@ -70,7 +70,7 @@ export default function VideoControlBar({ player, isPlaying = false }) {
                         <Tooltip title="Restart Video" placement="bottom">
                             <RestartAltIcon
                                 onClick={() => {
-                                    player.restartVideo();
+                                    player.restart();
                                 }}
                             />
                         </Tooltip>
