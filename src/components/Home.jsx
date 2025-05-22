@@ -33,7 +33,7 @@ export default function Home({ parser, user }) {
         component = <VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
 
     } else if (route == "details") {
-        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} />;
+        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); setSelectedVideo(null); }} user={user} parser={parser} setSelectedVideo={setSelectedVideo} />;
 
     } else if (route == "player") {
 
