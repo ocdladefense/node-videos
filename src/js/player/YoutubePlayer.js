@@ -68,12 +68,12 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     /**
-     * Initialize and load the YouTube iframe player to the specified element.
-     * @param {string} elem 
+     * Initialize and load the YouTube iframe player to the element with the specified id.
+     * @param {string} elemId 
      * @param {function} setPlayerInitialized 
      * @param {function} onStateChange 
      */
-    load(elem, setPlayerInitialized) {
+    load(elemId, setPlayerInitialized) {
 
         // We will only start emitting player statuses if the user indicates they want to load and interact* with the player.
         // we should do the reverse when we want to tear down this instance.
@@ -90,7 +90,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
         const onYouTubeIframeAPIReady = () => {
             const config = this.makeConfig(onReady);
-            this.#player = new YT.Player(elem, config);
+            this.#player = new YT.Player(elemId, config);
         };
 
 
