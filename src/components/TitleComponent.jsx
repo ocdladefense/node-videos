@@ -13,7 +13,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
         >
             <div className="text-zinc-100">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
-                <h3 className='text-blue-500'>{video.getSeminarName()}</h3>
+
                 <div className="relative w-full h-[185px]">
                     <img
                         src={video.getVideoThumbnail(video.getMaxResThumb())}
@@ -27,7 +27,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                     )}
                 </div>
                 <br />
-                <strong className="text-2xl text-auto text-zinc-100">{video.getVideoName()}</strong> <br />
+                <strong className="text-lg text-auto text-zinc-100">{video.getVideoName()}</strong> <br />
                 {/* <p className="text-xl text-zinc-100">{video.getLocation()}</p>
                 <p className="text-zinc-400 text-sm">{new Date(video.getDate()).toLocaleDateString()}</p> */}
                 <ul>
