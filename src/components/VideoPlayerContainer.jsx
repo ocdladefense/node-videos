@@ -6,6 +6,8 @@ import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, 
 import { ThemeProvider, Tooltip, Box, Skeleton } from '@mui/material';
 import { Skeleton as PlayerPlaceholder } from '@mui/material';
 
+const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 
 export default function VideoPlayerContainer({ player, video, onBack, pip = false }) {
 
@@ -68,7 +70,42 @@ export default function VideoPlayerContainer({ player, video, onBack, pip = fals
 
     function updateUserTimestamp(resourceId, timestamp) {
         console.log("updating user timestamp data", resourceId, timestamp);
+
+        const watchedVideoRecordId = getWatchedVideoRecordIdForResource(resourceId);
+
+        if (!watchedVideoRecordId) {
+            console.error("No watched video record found for resource", resourceId);
+            // maybe make a new record if existing no existing WatchedVideo for resource
+            return;
+        }
+
+        const payload = { Timestamp__c: timestamp };
+        const url = `${SF_INSTANCE_URL}/services/data/v57.0/sobjects/Watched_Video__c/${watchedVideoRecordId}`;
+
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SF_ACCESS_TOKEN}`
+            },
+            body: JSON.stringify(payload)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`Record update failed: ${response.statusText}`);
+            }
+            return response.json();
+        }).then(data => {
+            console.log('Watched video record updated successfully:', data);
+        }).catch(error => {
+            console.error('Error updating record:', error);
+        });
     }
+
+    function getWatchedVideoRecordIdForResource(resourceId) {
+        // this should be a salesforce query for a WatchedVideo id
+        return "1";
+    }
+
 
     return (
 
