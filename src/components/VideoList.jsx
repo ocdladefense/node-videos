@@ -16,7 +16,9 @@ window.clearCache = clearThumbCache;
 
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser;
-
+let seminars = [];
+let groupedVideos;
+const filterBySeminar = () => { };
 const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
 
 // @jbernal - previously in index.js
@@ -40,8 +42,13 @@ async function getVideoParser() {
         video.setThumbnail(thumbs);
     });
 
+    groupedVideos = parser.groupBySeminar();
+
+
+
     return parser;
 }
+
 
 
 
@@ -52,26 +59,44 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     const [filter, setFilter] = useState([]);
     const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
     const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
+    const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar))
 
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
-        async function fn() { parser = await getVideoParser(); setFilter(parser.groupBySeminar()); }
+        async function fn() {
+            parser = await getVideoParser(); setFilter(parser.groupBySeminar());
+            seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
+            for (const key in groupedVideos) {
+                console.log(key);
+                seminars.push({ title: key, action: () => filterBySeminar(key) })
+            }
+        }
         fn();
     }, []);
 
 
+
+    console.log(seminars);
     return (
+
         <div className="p-8 bg-zinc-900 min-h-screen">
-            <div className='inline-flex justify-between w-full h-[100px]'>
+
+            <div className='inline-flex w-full h-[100px] justify-between'>
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
-                <DropdownMenu
-                    buttonLabel="Order By"
-                    items={[
-                        { title: "Most Recent", action: sortByNewestSeminar },
-                        { title: "Oldest", action: sortByOldestSeminar }
-                    ]}
-                />
+                <div className="inline-flex">
+                    <DropdownMenu
+                        buttonLabel="Order By"
+                        items={[
+                            { title: "Most Recent", action: sortByNewestSeminar },
+                            { title: "Oldest", action: sortByOldestSeminar }
+                        ]}
+                    />
+                    <DropdownMenu
+                        buttonLabel="Filter Seminar"
+                        items={seminars}
+                    />
+                </div>
             </div>
 
             <ul>
