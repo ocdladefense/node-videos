@@ -3,6 +3,10 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 
+
+
+
+
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser;
 
@@ -31,6 +35,10 @@ async function getVideoParser() {
 
     return parser;
 }
+
+
+
+
 
 export default function VideoDetails({ video, onBack, setRoute, user, parser, setSelectedVideo }) {
 
