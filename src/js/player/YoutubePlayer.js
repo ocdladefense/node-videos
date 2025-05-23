@@ -150,13 +150,10 @@ export default class YouTubePlayer extends VideoPlayer {
     pause() {
         this.#player.pauseVideo();
 
-        //let resourceID = this.userWatchProgress.resourceId;
-        let mediaEvent = this.getMediaPlayerEvent('foodbar', 1000);
+        let mediaEvent = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
 
-        let myElement = document.querySelector('#player');
-
-        myElement.dispatchEvent(mediaEvent);
-        console.log('foobar');
+        let playerElement = document.querySelector('#player');
+        playerElement.dispatchEvent(mediaEvent);
     }
 
     restart(time) {
