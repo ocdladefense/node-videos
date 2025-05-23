@@ -10,7 +10,7 @@ export default class WatchedVideoService {
         console.log("updating user timestamp data", videoId, timestamp);
     }
 
-    initListener() {
+    listen() {
         document.addEventListener('mediastatechange', this.handleMediaStateChange);
     }
 

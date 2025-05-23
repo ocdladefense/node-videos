@@ -113,7 +113,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
                     <div className="options space-y-2">
                         {
-                            hasAccess ? (
+                            true ? (
                                 hasWatched ? (
                                     <p>
                                         <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideo}>Play Video</button>

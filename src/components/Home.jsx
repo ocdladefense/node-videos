@@ -3,6 +3,8 @@ import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './VideoPlayerContainer';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
+import UserService from '../js/services/UserService.js';
+import WatchedVideoService from '../js/services/WatchedVideoService.js'
 
 
 
@@ -23,6 +25,14 @@ export default function Home({ parser, user }) {
     const hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
     const purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
     const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
+
+    useEffect(() => {
+        let s1 = new UserService(user);
+        s1.listen();
+
+        let s2 = new WatchedVideoService();
+        s2.listen()
+    }, [])
 
 
     // Component to be returned as part of our rudimentary router, below.
