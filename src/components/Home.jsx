@@ -14,6 +14,7 @@ window.playerMap = {
 let player = new YouTubePlayer();
 // let user = {}; //getCurrentUser();
 
+
 export default function Home({ parser, user }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);

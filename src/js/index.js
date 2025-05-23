@@ -40,6 +40,7 @@ console.log("watched video query watchedResponse", watchedResponse.records);
 
 
 
+
 const $root = document.getElementById("app");
 const root = createRoot($root);
 root.render(<Home user={user} />);

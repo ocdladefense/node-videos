@@ -11,6 +11,7 @@ import '../css/videostyles.css';
 
 
 
+
 export default function VideoControlBar({ player }) {
 
 

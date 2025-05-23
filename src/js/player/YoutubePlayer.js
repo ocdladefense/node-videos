@@ -191,6 +191,7 @@ export default class YouTubePlayer extends VideoPlayer {
         this.#player.setVolume(volume);
     }
 
+
     makeConfig(onReady) {
 
 
