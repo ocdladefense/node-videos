@@ -55,7 +55,7 @@ module.exports = env => {
                                     "@babel/preset-react",
                                     {
                                         throwIfNamespace: false, // defaults to true
-                                        runtime: "classic", // defaults to classic
+                                        runtime: "automatic", // defaults to classic
                                         targets: {
                                             chrome: "120"
                                         }
