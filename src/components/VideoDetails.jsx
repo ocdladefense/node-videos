@@ -40,13 +40,11 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, user, parser, setSelectedVideo }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, parser, setSelectedVideo }) {
 
 
     const [grouped, setGrouped] = useState([]);
-    const prevWatched = user.getWatchedVideo(video.getVideoResourceId());
-    const purchasedVideo = user.getPurchasedVideo(video.getVideoResourceId());
-    const [isPlayable, setIsPlayable] = useState(() => purchasedVideo != null || video.isFree());
+
 
 
     // Retrieve data from the server only once during lifecycle.
@@ -57,10 +55,9 @@ export default function VideoDetails({ video, onBack, setRoute, user, parser, se
 
 
 
-    console.log("get purchased vids", user.getUserPurchasedVideos());
-
     const playVideo = function() {
         console.log("About to play the video!");
+
         setRoute("player");
     }
 
@@ -69,11 +66,12 @@ export default function VideoDetails({ video, onBack, setRoute, user, parser, se
     }
 
     const purchase = function() {
-        user.addToPurchasedVideos(video);
-        setIsPlayable(true);
+
+        //setIsPlayable(true);
     }
 
-
+    // display remaining time if video has been watched
+    // data: has been purchased, has been watched, if has been watched, show time remaining
 
     let currentSeminar = null;
     for (const seminar in grouped) {
@@ -115,8 +113,8 @@ export default function VideoDetails({ video, onBack, setRoute, user, parser, se
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
                     <div className="options space-y-2">
                         {
-                            isPlayable ? (
-                                prevWatched === null ? (
+                            hasAccess ? (
+                                hasWatched ? (
                                     <p>
                                         <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideo}>Play Video</button>
                                     </p>
@@ -124,6 +122,7 @@ export default function VideoDetails({ video, onBack, setRoute, user, parser, se
 
                                 ) : (
                                     <>
+                                        {/* TODO: display remaining time */}
                                         <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={playVideo}>Resume/Continue</button>
                                         <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideoFromBeginning}>Start From Beginning</button>
                                     </>

@@ -66,6 +66,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     useEffect(() => {
         async function fn() {
             parser = await getVideoParser(); setFilter(parser.groupBySeminar());
+
             seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
             for (const key in groupedVideos) {
                 console.log(key);
@@ -89,7 +90,11 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
                         buttonLabel="Order By"
                         items={[
                             { title: "Most Recent", action: sortByNewestSeminar },
-                            { title: "Oldest", action: sortByOldestSeminar }
+                            { title: "Oldest", action: sortByOldestSeminar },
+                            { title: "My List", action: sortByOldestSeminar },
+                            { title: "Favorites", action: sortByOldestSeminar },
+                            { title: "Continue Watching", action: sortByOldestSeminar },
+                            { title: "Popular", action: sortByOldestSeminar },
                         ]}
                     />
                     <DropdownMenu
