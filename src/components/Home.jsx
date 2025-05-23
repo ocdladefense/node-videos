@@ -13,7 +13,7 @@ window.playerMap = {
 };
 
 // Player instance used throughout the application lifecycle.
-let player = new YouTubePlayer();
+const player = new YouTubePlayer();
 // let user = {}; //getCurrentUser();
 
 
