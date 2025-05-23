@@ -20,6 +20,11 @@ export default function Home({ parser, user }) {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
 
+    const hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
+    const purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
+    const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
+
+
     // Component to be returned as part of our rudimentary router, below.
     let component = null;
 
@@ -29,8 +34,8 @@ export default function Home({ parser, user }) {
 
     }
     else if (route == "details") {
-        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); }} user={user} parser={parser} setSelectedVideo={setSelectedVideo} />;
 
+        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); }} parser={parser} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} />;
     }
     else if (route == "player") {
         // player.cueVideo(video);

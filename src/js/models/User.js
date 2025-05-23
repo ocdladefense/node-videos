@@ -56,11 +56,11 @@ export default class User {
         return null;
     }
 
-    addToWatchedVideos(id) {
+    addToWatchedVideos(id, timestamp = 0) {
         this.previouslyWatched.push(
             {
                 "resourceId": id,
-                "timeStamp": 0
+                "timeStamp": timestamp
             }
         )
     }
