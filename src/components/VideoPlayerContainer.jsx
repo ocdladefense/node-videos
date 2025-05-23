@@ -38,7 +38,33 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
         }
     }, [player.isInitialized()]);
 
+    useEffect(() => {
+        //define handler
+        const handleMediaStateChange = (event) => {
+            const { resourceId, timestamp } = event.detail;
+            console.log("recieved mediastatechange event", resourceId, timestamp);
 
+            updateUserTimestamp(resourceId, timestamp);
+        }
+
+        //attach listener
+        const playerElement = document.getElementById('player');
+        if (playerElement) {
+            playerElement.addEventListener('mediastatechange', handleMediaStateChange);
+        }
+
+        //cleanup on reinitialize
+        return () => {
+            if (playerElement) {
+                playerElement.removeEventListener('mediastatechange', handleMediaStateChange);
+            }
+        }
+
+    }, [playerInitialized]);
+
+    function updateUserTimestamp(resourceId, timestamp) {
+        console.log("updating user timestamp data", resourceId, timestamp);
+    }
 
     return (
 
