@@ -44,7 +44,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
 
 
     const [grouped, setGrouped] = useState([]);
-
+    const [hasAccess2, setHasAccess2] = useState(hasAccess);
 
 
     // Retrieve data from the server only once during lifecycle.
@@ -65,11 +65,21 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         setRoute("resetPlayer");
     }
 
-    const purchase = function() {
+    const purchase = async function() {
 
         //setIsPlayable(true);
-    }
+        //Display a credicard moodle create a react moodle and setresult of purchase 1> charge=success 2> decline=false 
+        let resultOfPurchase = await Promise.resolve(true);//we are repersenting of the success purchase
+        let e = new CustomEvent('mediapurchased', {
+            detail: { resourceId: video.resourceId, rental: false, device: "moble", method: "invoice", ordernumber: 1 },
+            bubbles: false
+        });
+        if (resultOfPurchase == true) {
+            document.dispatchEvent(e);
+            setHasAccess2(true);
+        }
 
+    };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
 
@@ -113,7 +123,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
                     <div className="options space-y-2">
                         {
-                            true ? (
+                            hasAccess ? (
                                 hasWatched ? (
                                     <p>
                                         <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2" onClick={playVideo}>Play Video</button>
