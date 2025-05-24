@@ -21,9 +21,13 @@ export default function Home({ parser, user }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
+    let hasWatched;
+    let purchasedVideo;
 
-    const hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
-    const purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
+    if (selectedVideo != null) {
+        hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
+        purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
+    }
     const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
 
     useEffect(() => {

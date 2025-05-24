@@ -14,7 +14,7 @@ export default class UserService {
 
     addToPurchased(event) {
         let videoId = event.detail.videoId;
-        this.user.addToPurchasedVideos(videoId);
+        // this.user.addToPurchasedVideos(videoId);
         console.log('added to purchased video')
     }
 
