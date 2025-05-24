@@ -48,6 +48,7 @@ export default class VideoPlayer {
 
     getCurrentTime() { }
 
+
     getMediaPlayerEvent(resourceId, timestamp) {
         return this.mediaEvent = new CustomEvent('mediastatechange', {
             detail: { timestamp: timestamp, resourceId: resourceId },

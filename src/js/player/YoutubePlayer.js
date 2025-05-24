@@ -148,7 +148,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     restart(time) {
         this.#player.seekTo(time, true);
-        this.playVideo();
+        this.play();
     }
 
     stop() {
@@ -172,9 +172,7 @@ export default class YouTubePlayer extends VideoPlayer {
         return this.#initialized ? Math.round(this.#player.getCurrentTime()) : 0;
     }
 
-    getPlayerState() {
-        return this.#state;
-    }
+
 
 
     isPlaying() {
@@ -190,6 +188,7 @@ export default class YouTubePlayer extends VideoPlayer {
     setVolume(volume) {
         this.#player.setVolume(volume);
     }
+
 
     makeConfig(onReady) {
 
@@ -240,17 +239,22 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
 
-    serialize() {
-        return JSON.stringify({
+    getPlayerState() {
+        return {
             playerState: this.#state,
             videoId: this.#video ? this.#video.getResourceId() : null,
-            timestamp: this.getElapsedTime()
-        });
+            timestamp: this.getElapsedTime(),
+            elapsedTime: this.getElapsedTime()
+        };
+    }
+
+
+    serialize() {
+        return JSON.stringify(this.getPlayerState());
     }
 
     startPublishing() {
         this.#broadcastId = setInterval(() => {
-            // console.log("Player state is: ", this.serialize());
             this.#subscribers.forEach((fn) => fn(this.serialize()));
         }, 1000);
     }
