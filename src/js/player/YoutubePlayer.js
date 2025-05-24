@@ -182,7 +182,11 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     getVolume() {
-        return this.#player ? this.#player.getVolume() : 0;
+        if (!this.#player || !this.#player.getVolume || typeof this.#player.getVolume != "function") {
+            return 0;
+        }
+
+        return this.#player.getVolume();
     }
 
     setVolume(volume) {
@@ -210,6 +214,8 @@ export default class YouTubePlayer extends VideoPlayer {
                 onStateChange: (event) => {
                     // console.log("YT Event:", event);
                     this.#state = event.data;
+                    let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
+                    this.#player.getIframe().dispatchEvent(e);
                 }
             }
         };
