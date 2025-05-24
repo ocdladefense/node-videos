@@ -49,24 +49,34 @@ async function getVideoParser() {
     return parser;
 }
 
+const avaliableLists = [
 
+    { title: "Most Recent", action: sortByNewestSeminar },
+    { title: "Oldest", action: sortByOldestSeminar },
+    { title: "My List", action: sortByOldestSeminar },
+    { title: "Favorites", action: sortByOldestSeminar },
+    { title: "Continue Watching", action: sortByOldestSeminar },
+    { title: "All", action: function parser.sortByOldestSeminar },
+];
 
-
+// const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
+// const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
+// const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar))
 
 export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
+    //user.getfavorite, user.continewatching.
+    const [filter, setFilter] = useState("unorder");
 
-    const [filter, setFilter] = useState([]);
-    const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
-    const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
-    const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar))
 
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
         async function fn() {
-            parser = await getVideoParser(); setFilter(parser.groupBySeminar());
+            parser = await getVideoParser();
+            setFilter("default");
 
+            //needs to make it a components
             seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
             for (const key in groupedVideos) {
                 console.log(key);
