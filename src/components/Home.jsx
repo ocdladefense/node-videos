@@ -21,8 +21,9 @@ export default function Home({ parser, user }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
-    let hasWatched;
-    let purchasedVideo;
+    let component, hasWatched, purchasedVideo;
+
+
 
     if (selectedVideo != null) {
         hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
@@ -39,8 +40,7 @@ export default function Home({ parser, user }) {
     }, [])
 
 
-    // Component to be returned as part of our rudimentary router, below.
-    let component = null;
+
 
 
     if (route == "list") {
