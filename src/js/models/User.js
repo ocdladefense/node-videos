@@ -1,8 +1,16 @@
 export default class User {
+
+
     userId;
+
+
     userName;
-    purchasedVideos;
-    previouslyWatched;
+
+
+    purchased;
+
+
+    watched;
 
     constructor(name) {
         this.userName = name;
@@ -14,6 +22,7 @@ export default class User {
         user.userName = data.userName;
         user.purchasedVideos = data.purchasedVideos;
         user.previouslyWatched = data.previouslyWatched;
+
         return user;
     }
 
@@ -35,8 +44,8 @@ export default class User {
     }
 
     getPurchasedVideo(videoId) {
-        for(let i = 0; i < this.purchasedVideos.length; i++) {
-            if (this.purchasedVideos[i].resourceId === videoId) {
+        for (let i = 0; i < this.purchasedVideos.length; i++) {
+            if (this.purchasedVideos[i] === videoId) {
                 return this.purchasedVideos[i];
             }
         }
@@ -48,7 +57,7 @@ export default class User {
     }
 
     getWatchedVideo(videoId) {
-        for(let i = 0; i < this.previouslyWatched.length; i++) {
+        for (let i = 0; i < this.previouslyWatched.length; i++) {
             if (this.previouslyWatched[i].resourceId === videoId) {
                 return this.previouslyWatched[i];
             }
@@ -60,23 +69,23 @@ export default class User {
         this.previouslyWatched.push(
             {
                 "resourceId": id,
-                "timeStamp": timestamp
+                "timestamp": timestamp
             }
         )
     }
 
     updateTimestamp(id, time) {
-        for(let i = 0; i < this.previouslyWatched.length; i++)
-        {
-            if (this.previouslyWatched[i].resourceId === id)
-            {
+        for (let i = 0; i < this.previouslyWatched.length; i++) {
+            if (this.previouslyWatched[i].resourceId === id) {
                 this.previouslyWatched[i].timeStamp = time;
             }
         }
     }
 
-    addToPurchasedVideos(video) {
-        this.purchasedVideos.push(video);
+    addToPurchasedVideos(resourceId) {
+        if (!this.purchasedVideos.includes(resourceId)) {
+            this.purchasedVideos.push(resourceId);
+        }
     }
 
 }

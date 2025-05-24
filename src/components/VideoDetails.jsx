@@ -62,7 +62,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     }
 
     const playVideoFromBeginning = function() {
-        setRoute("resetPlayer");
+        setRoute("player");
     }
 
     const purchase = async function() {
