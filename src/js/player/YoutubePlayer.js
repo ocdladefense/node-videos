@@ -15,6 +15,12 @@ const BUFFERING = 3;
 
 const VIDEO_CUED = 5;
 
+// Width of the player, but can be overriden.
+const DEFAULT_PLAYER_WIDTH = 1200;
+
+// Height of the player, but can be overriden.
+const DEFAULT_PLAYER_HEIGHT = 720;
+
 
 
 export default class YouTubePlayer extends VideoPlayer {
@@ -33,7 +39,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #initialized = false;
 
     // The state of the player.
-    #state = -1;
+    #_state = -1;
 
 
     // The id of an window-bound broadcaster.
@@ -46,6 +52,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #subscribers = [];
 
 
+    #config = {};
 
 
 
@@ -62,7 +69,10 @@ export default class YouTubePlayer extends VideoPlayer {
         return this.#initialized === true;
     }
 
-
+    setSize(width, height) {
+        this.#config.width = width;
+        this.#config.height = height;
+    }
 
 
     addListener(listener) {
@@ -114,7 +124,7 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean}
      */
     destroy() {
-        this.#state = -1;
+        this.#_state = -1;
         this.removeListeners();
         this.stopPublishing();
         this.#player.destroy();
@@ -176,7 +186,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     isPlaying() {
-        return this.#state === PLAYING;
+        return this.#_state === PLAYING;
     }
 
 
@@ -198,12 +208,12 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
         return {
-            height: '720',
-            width: '1280',
+            width: this.#config.width || DEFAULT_PLAYER_WIDTH,
+            height: this.#config.height || DEFAULT_PLAYER_HEIGHT,
             videoId: this.#video.getResourceId(),
             playerVars: {
                 start: 0,
-                autoplay: 0,
+                autoplay: 1,
                 modestbranding: 0,
                 controls: 0,
                 rel: 0,
@@ -211,9 +221,10 @@ export default class YouTubePlayer extends VideoPlayer {
             },
             events: {
                 onReady: onReady,
+                onError: function(e) { console.error(e); },
                 onStateChange: (event) => {
                     // console.log("YT Event:", event);
-                    this.#state = event.data;
+                    this.#_state = event.data;
                     let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
                     this.#player.getIframe().dispatchEvent(e);
                 }
@@ -247,9 +258,9 @@ export default class YouTubePlayer extends VideoPlayer {
 
     getPlayerState() {
         return {
-            playerState: this.#state,
+            playerState: this.#_state,
             videoId: this.#video ? this.#video.getResourceId() : null,
-            timestamp: this.getElapsedTime(),
+            timestamp: this.getElapsedTime(), // Kept here temporarily for backwards-compatibility for other listeners.
             elapsedTime: this.getElapsedTime()
         };
     }
