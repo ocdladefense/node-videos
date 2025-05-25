@@ -5,7 +5,7 @@ import VideoPlayerContainer from './VideoPlayerContainer';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
 import UserService from '../js/services/UserService.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
-
+import Video from '../js/models/Video.js';
 
 
 window.playerMap = {
@@ -17,7 +17,7 @@ const player = new YouTubePlayer();
 // let user = {}; //getCurrentUser();
 
 
-export default function Home({ parser, user }) {
+export default function Home({ parser, user, pip = false }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
@@ -58,6 +58,6 @@ export default function Home({ parser, user }) {
     }
 
     return (
-        <div className="app">{component}</div>
+        <div className="app">{component}{pip ? <VideoPlayerContainer video={Video.fromApiData({ ResourceId__c: "TrAxgnfHjIo" })} player={player} onBack={() => { setRoute("details"); }} layout="pip" /> : ''}</div>
     );
 }
