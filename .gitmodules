@@ -2,15 +2,7 @@
 	path = dev_modules/@ocdla/lib-http
 	url = https://github.com/ocdladefense/node-lib-http
     branch = development
-[submodule "dev_modules/@ocdla/global-components"]
-	path = dev_modules/@ocdla/global-components
-	url = https://github.com/ocdladefense/global-components
-	branch = main
 [submodule "dev_modules/@ocdla/view"]
 	path = dev_modules/@ocdla/view
 	url = https://github.com/ocdladefense/node-view
 	branch = for-template
-[submodule "dev_modules/@ocdla/ors"]
-	path = dev_modules/@ocdla/ors
-	url = https://github.com/ocdladefense/node-ors.git
-	branch = parser-update

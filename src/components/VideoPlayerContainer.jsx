@@ -7,7 +7,7 @@ import { ThemeProvider, Tooltip, Box, Skeleton } from '@mui/material';
 import { Skeleton as PlayerPlaceholder } from '@mui/material';
 
 
-export default function VideoPlayerContainer({ player, video, onBack }) {
+export default function VideoPlayerContainer({ player, video, onBack, pip = false }) {
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
@@ -24,7 +24,11 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
         player.cue(video);
+        if (pip) {
+            player.setSize(400, 250);
+        }
     });
+
 
 
     // Initialize the player.
@@ -49,7 +53,7 @@ export default function VideoPlayerContainer({ player, video, onBack }) {
             </TitleContainer>
 
             <VideoContainer>
-                <div id="player-wrapper">
+                <div id="player-wrapper" style={pip ? { position: "fixed", top: "0px", right: "0px" } : {}} >
                     <div id="player">
                         <PlayerPlaceholder variant="rectangular" animation="wave" width={1280} height={720} />
                     </div>
