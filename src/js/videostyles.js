@@ -45,14 +45,14 @@ export const VideoContainer = styled(Container)(({ theme }) => ({
 
 export const BodyContainer = styled(Container)(({ theme }) => ({
     width: '100%',
-    backgroundColor: '#121212',
+    backgroundColor: 'transparent',
     display: 'flex',
     justifyContent: 'center',
 }));
 
 export const TimeContainer = styled(Container)(({ theme }) => ({
     width: '100%',
-    backgroundColor: '#121212',
+    backgroundColor: 'transparent',
     fontSize: 16,
     display: 'flex',
     justifyContent: 'center',
@@ -90,7 +90,7 @@ export const videoPlayerTheme = createTheme({
             styleOverrides: {
                 root: {
                     width: '100%',
-                    backgroundColor: '#121212',
+                    backgroundColor: 'transparent',
                     display: 'flex',
                     justifyContent: 'center',
                     '#video-container': {
@@ -103,7 +103,7 @@ export const videoPlayerTheme = createTheme({
             styleOverrides: {
                 root: {
                     width: '100%',
-                    backgroundColor: '#121212',
+                    backgroundColor: 'transparent',
                     display: 'flex',
                 },
             },

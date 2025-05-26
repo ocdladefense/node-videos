@@ -3,6 +3,8 @@ import StopCircleIcon from '@mui/icons-material/StopCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import PictureInPictureIcon from '@mui/icons-material/PictureInPicture';
+import PhotoCameraBackIcon from '@mui/icons-material/PhotoCameraBack';
 import { IconButton, ThemeProvider, Container, Slider, Box, Tooltip } from '@mui/material';
 import { videoPlayerTheme, VolumeUp, VolumeDown } from '../js/videostyles.js';
 import '../css/videostyles.css';
@@ -11,8 +13,12 @@ import '../css/videostyles.css';
 
 
 
-
-export default function VideoControlBar({ player }) {
+/**
+ * 
+ * Additional MUI icons can be found at:
+ * https://mui.com/material-ui/material-icons/?query=picture+in+picture&selected=PhotoCameraBack
+ */
+export default function VideoControlBar({ player, layout = "standard", setLayout }) {
 
 
     const [volume, setVolume] = useState(player.getVolume());
@@ -77,6 +83,10 @@ export default function VideoControlBar({ player }) {
                                 }}
                             />
                         </Tooltip>
+
+                        {layout == "standard" ? (<Tooltip title="Picture in Picture" placement="bottom">
+                            <PictureInPictureIcon onClick={() => { setLayout("pip"); }} /> </Tooltip>) : (<Tooltip title="Standard" placement="bottom"><PhotoCameraBackIcon onClick={() => { setLayout("standard"); }} /> </Tooltip>)}
+
                     </Box>
                 </ThemeProvider>
             </Box>
