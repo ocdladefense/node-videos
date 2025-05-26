@@ -1,12 +1,12 @@
-import Navbar from "@ocdla/global-components/src/Navbar";
+import Header from "./Header";
+import Footer from "./Footer";
 import Home from "./Home";
-import Footer from "@ocdla/global-components/src/Footer";
 
 
 // https://nextjs.org/docs/app/guides/migrating/from-create-react-app
 
 
-export default function App({ user }) {
+export function App2({ user }) {
 
 
     return (
@@ -24,5 +24,21 @@ export default function App({ user }) {
                 useGoogleMapsIFrame={true}
             />
         </div>
+    );
+}
+
+
+export default function App({ user }) {
+
+
+    return (
+        <>
+            <Header />
+            {/* typeof HeaderTwo === "function" ? <HeaderTwo /> : <></> */}
+            <div class="container mx-auto">
+                <Home user={user} />
+            </div>
+            <Footer />
+        </>
     );
 }
