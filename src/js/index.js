@@ -2,7 +2,7 @@ import "../css/input.css";
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import users from '../data/users.json';
-import Home from '../components/Home.jsx';
+import App from '../components/App';
 import UserController from './controllers/UserController.js';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 
@@ -43,6 +43,6 @@ console.log("watched video query watchedResponse", watchedResponse.records);
 
 const $root = document.getElementById("app");
 const root = createRoot($root);
-root.render(<Home user={user} />);
+root.render(<App user={user} />);
 
 

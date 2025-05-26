@@ -26,37 +26,33 @@ export default function Footer() {
 */}
 
             <div className="container text-slate-200 text-center text-4xl mb-20" style={{ lineHeight: "1.0rem" }}>
-                <span className="font-smoothy-cursive text-slate-300 inline-block">Slow</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">cider</span>
-                <span className="pl-8 font-smoothy-cursive text-slate-300 inline-block">Made</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">dry</span>
+                <span className="font-smoothy-cursive text-slate-300 inline-block">Video</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">app</span>
+                <span className="pl-8 font-smoothy-cursive text-slate-300 inline-block">Video</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">app</span>
             </div>
 
             <div className="container tablet:grid tablet:grid-cols-6">
 
                 <div className="col-start-1 pb-8">
                     <a href='/'>
-                        <img src="../images/logos/logo.svg" />
+                        <img src="../images/logos/logo.png" />
                     </a>
                 </div>
 
                 <div className="col-start-3 pb-8">
                     <h3 className="text-wb-red text-lg">Contact</h3>
                     <ul className="text-slate-400">
-                        <li>George Waldbusser</li>
-                        <li><a href="http://ciderworks.ocdla.org/" className="hover:text-wb-lime">waldbusserciderworks.com</a></li>
+                        <li>OCDLA</li>
+                        <li><a href="http://ciderworks.ocdla.org/" className="hover:text-wb-lime">info@ocdla.org</a></li>
                         <li><a href="tel:+14106101726" className="hover:text-wb-lime">(410) 610-1726</a></li>
-                        <li><a href="mailto:info@waldbusserciderworks.com" className="hover:text-wb-lime">info@waldbusserciderworks.com</a></li>
+                        <li><a href="mailto:info@ocdla.org" className="hover:text-wb-lime">info@ocdla.org</a></li>
                     </ul>
                     <Social instagram="waldbusserciderworks" />
                 </div>
 
                 <Sitemap classNames="col-start-5 text-nowrap text-stone-400 pb-8" style={{ fontWeight: 200 }}>
-                    <SitemapCategory title="Waldbusser Ciderworks" path="/" classNames="hover:text-stone-500"
+                    <SitemapCategory title="OCDLA" path="/" classNames="hover:text-stone-500"
                         Home="/"
                         About="/about"
-                        How_Its_Made="/how-its-made"
-                        Growers="/growers"
-                        Where_To_Buy="/where-to-buy"
-                        Order_Progress="/order-progress"
                         Contact_Us="/contact"
                     />
                 </Sitemap>

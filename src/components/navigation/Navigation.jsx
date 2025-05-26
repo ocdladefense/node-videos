@@ -9,23 +9,18 @@ export default function Navigation() {
             label: "home"
         },
         {
-            url: "/ciders",
-            label: "ciders"
+            url: "/videos",
+            label: "videos"
         },
         {
-            url: "/growers",
-            label: "growers",
+            url: "/audio",
+            label: "audio",
             hidden: true
         },
         {
-            url: "/drink",
-            label: "drink",
+            url: "/materials",
+            label: "materials",
             hidden: false
-        },
-        {
-            url: "/how-its-made",
-            label: "how it's made",
-            hidden: true
         },
         {
             url: "/about",
@@ -33,13 +28,8 @@ export default function Navigation() {
             hidden: true
         },
         {
-            url: "/contact",
-            label: "contact us",
-            hidden: true
-        },
-        {
-            url: "/order-progress",
-            label: "orders",
+            url: "/settings",
+            label: "settings",
             hidden: true
         }
     ];
@@ -50,7 +40,7 @@ export default function Navigation() {
         return (
             <li class={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
                 <a href={item.url}>
-                    <button class={`font-marketing text-base subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
+                    <button class={`font-marketing text-white subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
                 </a>
             </li>
         );
@@ -62,7 +52,7 @@ export default function Navigation() {
         return (
             <li className="p-3 text-center laptop:px-4">
                 <a href={item.url}>
-                    <button className="text-center font-marketing text-base subpixel-antialiased hover:text-wb-cordovan">{item.label}</button>
+                    <button className="text-center font-marketing text-white subpixel-antialiased hover:text-wb-cordovan">{item.label}</button>
                 </a>
             </li>
         );
@@ -72,27 +62,32 @@ export default function Navigation() {
         <nav className="tablet:px-8">
 
 
-            <ul className="inline-block">
+            <ul className="inline-block" style={{ width: "100%" }}>
 
                 <li style={{ verticalAlign: "middle" }} className="inline-block p-3 laptop:px-4">
                     <a href="/">
-                        <img className="w-[30px] h-[30px] laptop:w-[48px] laptop:h-[48px]" style={{ display: "inline-block", verticalAlign: "middle" }} src="../images/logos/logo.svg" />
+                        <img className="w-[130px] h-[50px] laptop:w-[148px] laptop:h-[42px]" style={{ display: "inline-block", verticalAlign: "middle" }} src="../images/logos/logo.png" />
                     </a>
                 </li>
 
                 {top}
 
+                <li style={{ float: "right" }} class={`hidden phone:hidden tablet:inline-block`}>
+                    <Hamburger />
+                </li>
             </ul>
 
 
 
-            <Hamburger />
 
 
-            <ul id="mobile-menu" className="block hidden min-h-[100vh] pt-[15vh]">
+
+            <ul id="mobile-menu" className="text-slate-50 block hidden min-h-[100vh] pt-[15vh]">
 
 
                 {all}
+
+
 
             </ul>
 
