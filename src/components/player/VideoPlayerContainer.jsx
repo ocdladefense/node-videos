@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import '../css/videostyles.css';
 import MediaControls from './MediaControls';
 import MediaControlsFloating from './MediaControlsFloating';
-import { videoPlayerTheme, VideoContainer, TitleContainer } from '../js/videostyles.js';
+import { videoPlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
 import { Skeleton as PlayerPlaceholder } from '@mui/material';
 

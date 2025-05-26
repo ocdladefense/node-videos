@@ -1,6 +1,6 @@
 import VideoControlBar from './VideoControlBar';
 import VideoProgressBar from './VideoProgressBar';
-import { ControlBarContainer, ArrowBackButton } from '../js/videostyles.js';
+import { ControlBarContainer, ArrowBackButton } from '../../js/videostyles.js';
 import { Tooltip, Box } from '@mui/material';
 
 
