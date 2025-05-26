@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
-import PurchaseModal from './PurchaseModal.jsx';
+import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
 
@@ -49,7 +49,6 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
-
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
@@ -127,7 +126,9 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                 <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} />
             )}
             {showModal && (
-                <PurchaseModal setShowModal={setShowModal} confirmPurchase={confirmPurchase} />
+                <Modal setShowModal={setShowModal} confirmAction={confirmPurchase}>
+                    <p className="mb-6">Would you like to purchase this video for <strong>$19.99</strong>?</p>
+                </Modal>
             )}
 
         </div>
