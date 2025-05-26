@@ -10,17 +10,13 @@ export default class VideoDataParser {
 
 
     static parse(apiData) {
-        console.log(apiData[0].Event__r.Name);
+        apiData = apiData || [];
+
         let videos = [];
         for (let d in apiData) {
-           
             let vd = apiData[d];
-
             videos.push(Video.fromApiData(vd));
-            //console.log(this.videoDataArray);
         }
-        
-
 
         return new VideoDataParser(videos);
     }
@@ -49,7 +45,7 @@ export default class VideoDataParser {
     }
 
     sortSeminar() {
-        
+
     }
 
     getVideos() {
@@ -73,7 +69,18 @@ export default class VideoDataParser {
         return Object.groupBy(this.videos, (video) => video.getSeminarName());
     }
 
-    
-    
+    filterBySeminar(seminar) {
+        console.log(seminar);
+        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
+        return Object.keys(grouped).reduce((acc, key) => {
+            if (seminar.includes(key)) {
+                acc[key] = grouped[key];
+            }
+            return acc;
+        }, {});
+    }
+
+
+
 
 }

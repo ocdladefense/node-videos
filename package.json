@@ -30,7 +30,6 @@
         "@ocdla/lib-routing": "^1.1.0",
         "@ocdla/view": "~2.5.0",
         "@ocdla/salesforce": "~0.4",
-        "@themes/active": "file:./dev_modules/@themes/default",
         "autoprefixer": "^10.4.19",
         "dotenv": "^16.4.5",
         "globals": "^15.6.0",
@@ -42,6 +41,7 @@
         "tailwindcss": "^3.4.6"
     },
     "devDependencies": {
+        "@ocdla/global-components": "file:./dev_modules/@local/global-components",
         "@babel/cli": "^7.18.10",
         "@babel/core": "^7.27.1",
         "@babel/preset-env": "^7.27.2",
