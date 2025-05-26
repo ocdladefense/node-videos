@@ -72,6 +72,9 @@ export default class YouTubePlayer extends VideoPlayer {
     setSize(width, height) {
         this.#config.width = width;
         this.#config.height = height;
+        if (this.#player && this.#player.setSize && typeof this.#player.setSize === "function") {
+            this.#player.setSize(width, height);
+        }
     }
 
 
