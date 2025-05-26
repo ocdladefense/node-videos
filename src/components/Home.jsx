@@ -17,7 +17,7 @@ const player = new YouTubePlayer();
 // let user = {}; //getCurrentUser();
 
 
-export default function Home({ parser, user, pip = false }) {
+export default function Home({ parser, user }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
@@ -57,7 +57,5 @@ export default function Home({ parser, user, pip = false }) {
         component = <VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
     }
 
-    return (
-        <div className="app">{component}{pip ? <VideoPlayerContainer video={Video.fromApiData({ ResourceId__c: "TrAxgnfHjIo" })} player={player} onBack={() => { setRoute("details"); }} layout="pip" /> : ''}</div>
-    );
+    return component;
 }
