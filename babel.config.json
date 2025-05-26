@@ -10,7 +10,7 @@
         "pragma": "vNode", // default pragma is React.createElement (only in classic runtime)
         "pragmaFrag": "Fragment", // default is React.Fragment (only in classic runtime)
         "throwIfNamespace": false, // defaults to true
-        "runtime": "classic", // defaults to classic
+        "runtime": "automatic", // defaults to classic
         "targets": {
           "chrome": "120"
         }
@@ -20,3 +20,5 @@
   ],
   "sourceMaps": true
 }
+
+

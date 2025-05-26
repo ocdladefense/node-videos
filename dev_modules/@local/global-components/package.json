@@ -1,0 +1,13 @@
+{
+    "name": "@ocdla/global-components",
+    "homepage": "https://ocdla.org",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ocdladefense/global-components"
+    },
+    "version": "0.1.0",
+    "description": "A library of reusable, JSX components, that can be incorporated into any Node project.",
+    "author": "Trung Nguyen, Katelyn Sullivan",
+    "license": "ISC",
+    "main": "/src/**"
+}

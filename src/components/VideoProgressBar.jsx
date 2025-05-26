@@ -62,6 +62,7 @@ export default function VideoProgressBar({ player, sensitivity = 200 }) {
             </Box>
         )
     }
+
     else {
         return (
             <Box>

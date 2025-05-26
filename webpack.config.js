@@ -55,7 +55,7 @@ module.exports = env => {
                                     "@babel/preset-react",
                                     {
                                         throwIfNamespace: false, // defaults to true
-                                        runtime: "classic", // defaults to classic
+                                        runtime: "automatic", // defaults to classic
                                         targets: {
                                             chrome: "120"
                                         }
@@ -112,10 +112,6 @@ module.exports = env => {
                 patterns: [
                     {
                         from: path.resolve(__dirname, "src/images"),
-                        to: path.resolve(__dirname, "dist/images")
-                    },
-                    {
-                        from: "node_modules/@themes/active/images",
                         to: path.resolve(__dirname, "dist/images")
                     },
                     "src/.nojekyll",
