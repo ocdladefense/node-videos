@@ -7,7 +7,7 @@ import PictureInPictureIcon from '@mui/icons-material/PictureInPicture';
 import PhotoCameraBackIcon from '@mui/icons-material/PhotoCameraBack';
 import { IconButton, ThemeProvider, Container, Slider, Box, Tooltip } from '@mui/material';
 import { videoPlayerTheme, VolumeUp, VolumeDown } from '../../js/videostyles.js';
-import '../css/videostyles.css';
+import '../../css/videostyles.css';
 
 
 

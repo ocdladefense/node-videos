@@ -9,23 +9,18 @@ export default function Navigation() {
             label: "home"
         },
         {
-            url: "/ciders",
+            url: "/videos",
             label: "ciders"
         },
         {
-            url: "/growers",
+            url: "/audio",
             label: "growers",
             hidden: true
         },
         {
-            url: "/drink",
+            url: "/materials",
             label: "drink",
             hidden: false
-        },
-        {
-            url: "/how-its-made",
-            label: "how it's made",
-            hidden: true
         },
         {
             url: "/about",
@@ -33,13 +28,8 @@ export default function Navigation() {
             hidden: true
         },
         {
-            url: "/contact",
+            url: "/settings",
             label: "contact us",
-            hidden: true
-        },
-        {
-            url: "/order-progress",
-            label: "orders",
             hidden: true
         }
     ];
@@ -48,9 +38,9 @@ export default function Navigation() {
     let top = items.map(item => {
         let phoneDisplay = !!item.hidden ? "hidden phone:hidden tablet:inline-block" : "phone:inline-block";
         return (
-            <li class={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
+            <li className={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
                 <a href={item.url}>
-                    <button class={`font-marketing text-base subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
+                    <button className={`font-marketing text-base subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
                 </a>
             </li>
         );

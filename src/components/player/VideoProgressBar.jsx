@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ProgressSlider, BodyContainer, TimeContainer } from '../../js/videostyles.js';
 import { Box, Skeleton } from '@mui/material';
-import '../css/videostyles.css';
+import '../../css/videostyles.css';
 import waitUntil from '../../js/utils.js';
 import { formatTime } from '../../js/utils.js';
 
