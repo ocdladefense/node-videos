@@ -5,7 +5,7 @@ export default class WatchedVideoService {
 
     handleMediaStateChange = (event) => {
         const { playerState, videoId, timestamp } = event.detail;
-        console.log("recieved mediastatechange event", videoId, timestamp, playerState);
+        //console.log("recieved mediastatechange event", videoId, timestamp, playerState);
         this.updateUserTimestamp(videoId, timestamp);
     }
 
