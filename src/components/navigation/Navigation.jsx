@@ -18,13 +18,8 @@ export default function Navigation() {
             hidden: true
         },
         {
-            url: "/materials",
-            label: "materials",
-            hidden: false
-        },
-        {
-            url: "/about",
-            label: "about",
+            url: "/login",
+            label: "login",
             hidden: true
         },
         {
