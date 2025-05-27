@@ -10,68 +10,92 @@ const VideoThumbnails = (function () {
     async function getThumbs(ids) {
         ids = ids.join(",");
         let url = endpoint + "?part=" + parts + "&id=" + ids + "&key=" + apiKey;
+        let statusCode;
+        let ok;
 
         return fetch(url)
-            .then((response) => {
-                if(response.status == 400) {
-                    return response.json().then((json) => {
-                        if(json.error && json.error.errors && json.error.errors.length > 0) {
-                            const errorReason = json.error.errors[0].reason || "";
-
-                            console.log("400 error in fetch", errorReason);
-
-                            if(errorReason == "missingRequiredParameter") {
-                                throw new Error("Missing Required Parameter");
-                            }
-                        }
-                        else {
-                            throw new Error("Youtube API fetch error occured (400): " + response.status);
-                        }
-                    });
+            .then((resp) => {
+                statusCode = resp.status;
+                ok = resp.ok;
+                return resp.json();
+            })
+            .then((json) => {
+                if(ok) {
+                    return ifOkay(json);
                 }
-                if(response.status == 403) {
-                    return response.json().then((json) => {
-                        if(json.error && json.error.errors && json.error.errors.length > 0) {
-                            const errorReason = json.error.errors[0].reason || "";
+                const errorReason = statusCode + ok + json.error.errors[0].reason;
+                throw new Error(errorReason);
+            })
+            .finally(() => {
+                statusCode = null;
+                ok = null;
+            });
+    }
 
-                            console.log("403 error in fetch", errorReason);
+    function ifOkay(json) {
+        return json.items.map(function (item) {
+                var obj = {};
+                obj["id"] = item.id;
+                // Store all 5 resolutions for the thumbnail.
+                obj["thumbs"] = {
+                  default: item.snippet.thumbnails.default,
+                  high: item.snippet.thumbnails.high,
+                  maxres: item.snippet.thumbnails.maxres,
+                  medium: item.snippet.thumbnails.medium,
+                  standard: item.snippet.thumbnails.standard,
+                };
+                //console.log("Thumbnail object:", obj);
+                return obj;
+        });
+    }
 
-                            if(errorReason == "quotaExceeded") {
-                                throw new Error("Youtube API quota exceeded");
-                            }
-                            if(errorReason == "forbidden") {
-                                throw new Error("Authorization failed, access is forbidden");
-                            }
+    function formatErrorMessage(error) {
+        console.log("Error: ", error);
+        console.log("Error Message:", error.message);
+
+        
+
+            if(json.status == 400) {
+                return (json) => {
+                    if(json.error && json.error.errors && json.error.errors.length > 0) {
+                        const errorReason = json.error.errors[0].reason || "";
+
+                        console.log("400 error in fetch", errorReason);
+
+                        if(errorReason == "missingRequiredParameter") {
+                            throw new Error("Missing Required Parameter");
                         }
-                        else {
-                            throw new Error("Youtube API fetch error occured (403): " + response.status);
-                        }
-                    });
-                }
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
+                    }
+                    else {
+                        throw new Error("Youtube API fetch error occured (400): " + response.status);
+                    }
+                };
+            }
 
-                  return response.json();
-            }).then((json) => {
-                    return json.items.map(function (item) {
-                        var obj = {};
-                        obj["id"] = item.id;
-                        // Store all 5 resolutions for the thumbnail.
-                        obj["thumbs"] = {
-                          default: item.snippet.thumbnails.default,
-                          high: item.snippet.thumbnails.high,
-                          maxres: item.snippet.thumbnails.maxres,
-                          medium: item.snippet.thumbnails.medium,
-                          standard: item.snippet.thumbnails.standard,
-                        };
-                        //console.log("Thumbnail object:", obj);
-                        return obj;
-                      });
-                    }).catch((error) => {
-                        console.error("Error fetching thumbnails:", error);
-                        throw error;
-                    });
+            if(response.status == 403) {
+                return response.json().then((json) => {
+                    if(json.error && json.error.errors && json.error.errors.length > 0) {
+                        const errorReason = json.error.errors[0].reason || "";
+
+                        console.log("403 error in fetch", errorReason);
+
+                        if(errorReason == "quotaExceeded") {
+                            throw new Error("Youtube API quota exceeded");
+                        }
+                        if(errorReason == "forbidden") {
+                            throw new Error("Authorization failed, access is forbidden");
+                        }
+                    }
+                    else {
+                        throw new Error("Youtube API fetch error occured (403): " + response.status);
+                    }
+                });
+            }
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            return response.json();
     }
 
     function getThumbById(thumbs, id) {
@@ -120,18 +144,20 @@ async function initThumbs(videos) {
     const uncollectedThumbs = chunkArray(uncachedIDs, 50);
 
     for (const batch of uncollectedThumbs) {
+        let data;
         try {
             //fetch for thumb data
-            const data = await VideoThumbnails.getThumbs(batch);
+            data = await VideoThumbnails.getThumbs(batch);
+        } catch (error) {
+            console.error("Error fetching thumbs", batch, error);
+            continue;
+        }
 
             //cache thumb data
             data.forEach(thumbData => {
                 cache.set(thumbData.id, thumbData.thumbs);
                 thumbnailMap.set(thumbData.id, thumbData.thumbs);
             });
-        } catch (error) {
-            console.error("Error fetching thumbs", batch, error);
-        }
     }
 
     //console.log("cache:", cache.getCacheContents());
