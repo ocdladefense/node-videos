@@ -12,6 +12,8 @@ export default class Video {
     seminar;
     free;
     thumbnail;
+    
+    static defaultThumbNail;
 
 
     constructor(title) {
@@ -103,6 +105,8 @@ export default class Video {
     // ------------------- Video Thumbnails ------------------- //
 
     getVideoThumbnail(resolution = "default") {
+        //if no thumb, return default
+
         if (this.thumbnail && this.thumbnail[resolution]) {
             return this.thumbnail[resolution].url;
         } else {
@@ -126,6 +130,10 @@ export default class Video {
 
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;
+    }
+
+    static setDefaultThumbnail(url) {
+        Video.defaultThumbNail = url;
     }
 
 }

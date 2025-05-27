@@ -6,6 +6,8 @@ import { videoPlayerTheme, VideoContainer, TitleContainer, ControlBarContainer, 
 import { ThemeProvider, Tooltip, Box, Skeleton } from '@mui/material';
 import { Skeleton as PlayerPlaceholder } from '@mui/material';
 
+const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 
 export default function VideoPlayerContainer({ player, video, onBack, pip = false }) {
 
@@ -41,8 +43,6 @@ export default function VideoPlayerContainer({ player, video, onBack, pip = fals
             player.load("player", setPlayerInitialized);
         }
     }, [player.isInitialized()]);
-
-
 
     return (
 

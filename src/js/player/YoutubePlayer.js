@@ -149,14 +149,6 @@ export default class YouTubePlayer extends VideoPlayer {
 
     pause() {
         this.#player.pauseVideo();
-
-        //let resourceID = this.userWatchProgress.resourceId;
-        let mediaEvent = this.getMediaPlayerEvent('foodbar', 1000);
-
-        let myElement = document.querySelector('#player');
-
-        myElement.dispatchEvent(mediaEvent);
-        console.log('foobar');
     }
 
     restart(time) {
@@ -228,6 +220,7 @@ export default class YouTubePlayer extends VideoPlayer {
                 onStateChange: (event) => {
                     // console.log("YT Event:", event);
                     this.#_state = event.data;
+                    console.log(event);
                     let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
                     this.#player.getIframe().dispatchEvent(e);
                 }

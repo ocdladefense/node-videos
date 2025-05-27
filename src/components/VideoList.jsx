@@ -5,6 +5,7 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import { clearThumbCache } from '../js/controllers/VideoThumbs';
+import Video from '../js/models/Video.js';
 window.clearCache = clearThumbCache;
 
 
@@ -33,6 +34,9 @@ async function getVideoParser() {
     const parser = VideoDataParser.parse(resp.records);
 
     let videos = parser.getVideos();
+
+    //default thumb in case of unavailable image
+    Video.setDefaultThumbnail('http:/foobar');
 
     const thumbnailMap = await initThumbs(videos);
 
@@ -69,7 +73,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
             seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
             for (const key in groupedVideos) {
-                console.log(key);
+                //console.log(key);
                 seminars.push({ title: key, action: () => filterBySeminar(key) })
             }
         }
@@ -78,7 +82,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-    console.log(seminars);
+    //console.log(seminars);
     return (
 
         <div className="p-8 bg-zinc-900 min-h-screen">
