@@ -27,15 +27,15 @@ if (process.env.NODE_ENV === 'debug') {
 const use = new UserController(users);
 const allUsers = use.getAllUsers();
 const user = use.getUser(1);
-console.log("previously watched videos", user.getPreviouslyWatchedVideos());
-console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
+//console.log("previously watched videos", user.getPreviouslyWatchedVideos());
+//console.log("timestap of watched video", user.getWatchedVideo('_4xNa80IP3o'));
 
 
 
 const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';
 let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
 let watchedResponse = await sfrAPI.query(watchedVideosQuery);
-console.log("watched video query watchedResponse", watchedResponse.records);
+//console.log("watched video query watchedResponse", watchedResponse.records);
 
 
 

@@ -69,7 +69,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
             seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
             for (const key in groupedVideos) {
-                console.log(key);
+                //console.log(key);
                 seminars.push({ title: key, action: () => filterBySeminar(key) })
             }
         }
@@ -78,7 +78,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-    console.log(seminars);
+    //console.log(seminars);
     return (
 
         <div className="p-8 bg-zinc-900 min-h-screen">
