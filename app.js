@@ -1,3 +1,10 @@
+/**
+ * https://expressjs.com/en/starter/hello-world.html
+ * OpenID: https://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_using_openid.htm&type=5
+ * So we can extract some user information.
+ */
+
+
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
