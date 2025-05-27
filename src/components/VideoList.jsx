@@ -5,6 +5,7 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import { clearThumbCache } from '../js/controllers/VideoThumbs';
+import Video from '../js/models/Video.js';
 window.clearCache = clearThumbCache;
 
 
@@ -30,6 +31,9 @@ async function getVideoParser() {
     const parser = VideoDataParser.parse(resp.records);
 
     let videos = parser.getVideos();
+
+    //default thumb in case of unavailable image
+    Video.setDefaultThumbnail('http:/foobar');
 
     const thumbnailMap = await initThumbs(videos);
 
