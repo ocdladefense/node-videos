@@ -75,11 +75,13 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     // Will be executed everytime list changes, i.e., when setList is called.
     useEffect(() => {
         console.log("List has changed!");
+
         if (parser) {
-            setVideos(parser.getVideos(list));
+            setVideos(parser.getVideoList(list));
             setSeminars(parser.getSeminars(list)); // Not necessary, yet; but depending on the "list" different seminars might be available?
             console.log(videos);
         }
+
     }, [list]);
 
 
@@ -99,6 +101,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
                     <DropdownMenu
                         label="Seminars"
                         items={seminars}
+                        action={setList}
                     />
                 </div>
             </div>
@@ -125,13 +128,13 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-function VideoListGroup(group) {
+function VideoListGroup({ groups }) {
 
 
     return (<ul>
         {
-            Object.keys(filter).map(key => {
-                let theGroup = filter[key];
+            Object.keys(groups).map(key => {
+                let theGroup = group[key];
                 let numVideos = theGroup.length;
 
                 if (true || numVideos > 2) {

@@ -23,18 +23,7 @@ export default class VideoDataParser {
     // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
     // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
 
-    getSeminars() {
-
-        // This should be in the VideoDataParser.getSeminars(); 
-        /*
-        seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
-        for (const key in groupedVideos) {
-            console.log(key);
-            seminars.push({ title: key, action: () => filterBySeminar(key) })
-        }
-            */
-        return [];
-    }
+    
 
     constructor(videos) {
         this.videos = videos;
@@ -46,37 +35,28 @@ export default class VideoDataParser {
 
         let videos = [];
         for (let d in apiData) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 4b5eb93 (Enable pip testing for a mini-player.)
             let vd = apiData[d];
             videos.push(Video.fromApiData(vd));
         }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4b5eb93 (Enable pip testing for a mini-player.)
-
         return new VideoDataParser(videos);
     }
 
-    //vidData.sort((a, b) => Date.parse(b.getSeminarDate()) - Date.parse(a.getSeminarDate()));
+    
 
-    /*
-    const alphabetical = videos.toSorted((a, b) => {
-        let textA = a.getVideoName();
-        let textB = b.getVideoName();
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-    });
+    getSeminars() {
+        let seminars = [];
+        let grouped = this.groupBySeminar()
+        seminars.push({title: "All Seminars", type: "grouped", value: "seminar"});
+        
+        for (const key in grouped ) {
+            
+            seminars.push({ title: key, type: "grouped", value: key })
+        }
+            
+        return seminars;
+    }
 
-    const sortAlpha = () => setFilter(alphabetical);
 
-
-    const sortSeminar = () => setFilter(videos);
-
-*/
     sortAlpha() {
         return this.videos.toSorted((a, b) => {
             let textA = a.getVideoName();
@@ -87,10 +67,12 @@ export default class VideoDataParser {
 
     sortSeminar() {
 
+
     }
 
     getVideos() {
-        return this.videos;
+        let v = this.videos.reverse();
+        return v;
     }
 
     groupBySeminar() {
@@ -115,23 +97,27 @@ export default class VideoDataParser {
         let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
         return Object.keys(grouped).reduce((acc, key) => {
             if (seminar.includes(key)) {
-              acc[key] = grouped[key];
-            }
-            return acc;
-          }, {});
-    }
-
-    filterBySeminar(seminar) {
-        console.log(seminar);
-        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
-        return Object.keys(grouped).reduce((acc, key) => {
-            if (seminar.includes(key)) {
+                acc[key] = grouped[key];
                 acc[key] = grouped[key];
             }
             return acc;
         }, {});
+        
     }
 
+    getVideoList(list) {
+        switch(list) {
+            case "all":
+                return this.getVideos();
+            break;
+            case "seminar":
+                return this.groupBySeminar();
+            break;
+            default:
+                return this.filterBySeminar(list);
+
+        }
+     }
 
 
 
