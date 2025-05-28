@@ -7,8 +7,9 @@
     [
       "@babel/preset-react",
       {
-        "pragma": "vNode", // default pragma is React.createElement (only in classic runtime)
-        "pragmaFrag": "Fragment", // default is React.Fragment (only in classic runtime)
+        //commented out pragma properties for jest compatibility
+        //"pragma": "vNode", // default pragma is React.createElement (only in classic runtime)
+        //"pragmaFrag": "Fragment", // default is React.Fragment (only in classic runtime)
         "throwIfNamespace": false, // defaults to true
         "runtime": "automatic", // defaults to classic
         "targets": {

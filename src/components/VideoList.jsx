@@ -67,7 +67,19 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
+<<<<<<< HEAD
         async function fn() { parser = await getVideoParser(); setList("all"); }
+=======
+        async function fn() {
+            parser = await getVideoParser(); setFilter(parser.groupBySeminar());
+
+            seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
+            for (const key in groupedVideos) {
+                //console.log(key);
+                seminars.push({ title: key, action: () => filterBySeminar(key) })
+            }
+        }
+>>>>>>> a686895 (added jest functionality, repaired older tests, added new error handling)
         fn();
     }, []);
 
@@ -84,6 +96,10 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
+<<<<<<< HEAD
+=======
+    //console.log(seminars);
+>>>>>>> a686895 (added jest functionality, repaired older tests, added new error handling)
     return (
 
         <div className="p-8 bg-zinc-900 min-h-screen">

@@ -1,6 +1,9 @@
 module.exports = {
 
     testEnvironment: 'jsdom',
+
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+
     testEnvironmentOptions: {
         url: 'http://localhost',
         userAgent: 'Custom User Agent',
@@ -17,11 +20,4 @@ module.exports = {
     transform: {
         "^.+\\.js$": "babel-jest",
     },
-
-    //added configs for jsdom environment
-    testEnvironment: 'jsdom',
-    testEnvironmentOptions: {
-    url: 'http://localhost',
-    userAgent: 'Custom User Agent',
-  },
 };
