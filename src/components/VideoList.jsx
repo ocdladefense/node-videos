@@ -60,6 +60,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     // const [videos, setVideos] = useState([]);
     // const [seminars, setSeminars] = useState([]);
     let videos = (parser && list && parser.getVideos(list)) || [];
+    let listMeta = parser.getList(list);
     let seminars = (parser && list && parser.getSeminars(list)) || [];
 
     // Retrieve data from the server only once during lifecycle.
@@ -90,12 +91,12 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-            {list && list == "grouped" ?
+            {listMeta && listMeta.layout == "grouped" ?
 
-                <VideoListGroup groups={videos} />
+                <VideoListGroup groups={videos} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />
                 :
                 <ul className="video-list grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-5 gap-8">
-                    {videos.map((video, index) => (
+                    {videos && videos.map((video, index) => (
                         <TitleComponent video={video} index={index} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />
                     ))}
                 </ul>
@@ -110,13 +111,13 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-function VideoListGroup({ groups }) {
+function VideoListGroup({ groups, setRoute, setSelectedVideo, user }) {
 
 
     return (<ul>
         {
             Object.keys(groups).map(key => {
-                let theGroup = group[key];
+                let theGroup = groups[key];
                 let numVideos = theGroup.length;
 
                 if (true || numVideos > 2) {
