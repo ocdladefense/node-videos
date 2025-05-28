@@ -12,7 +12,7 @@ import { useState } from "react";
 */
 
 
-export default function DropdownMenu({ buttonLabel, items }) {
+export default function DropdownMenu({ label, items = [], action }) {
     const [open, setOpen] = useState(false);
 
     const handleToggle = () => {
@@ -26,8 +26,7 @@ export default function DropdownMenu({ buttonLabel, items }) {
                 className="inline-flex items-center justify-center text-xl border-2 bg-zinc-100 border-zinc-50 rounded-lg px-4 py-2 relative mr-5"
                 onClick={handleToggle}
             >
-                {buttonLabel}
-
+                {label}
             </button>
             {open && (
                 <div className="max-h-[400px] overflow-y-scroll">
@@ -37,7 +36,7 @@ export default function DropdownMenu({ buttonLabel, items }) {
                                 key={index}
                                 className={` flex items-center gap-2 px-4 py-2 text-sm hover:bg-zinc-300 border-b`}
                             >
-                                <button type="button" onClick={() => { item.action(); handleToggle(); }} className='w-full text-left'>{item.title}</button>
+                                <button type="button" value={item.value} onClick={(e) => { action(e.target.value); handleToggle(); }} className='w-full text-left'>{item.title}</button>
                             </li>
                         ))}
                     </ul>

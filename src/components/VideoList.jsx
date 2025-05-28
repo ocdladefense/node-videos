@@ -17,9 +17,6 @@ window.clearCache = clearThumbCache;
 
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser;
-let seminars = [];
-let groupedVideos;
-const filterBySeminar = () => { };
 const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
 
 // @jbernal - previously in index.js
@@ -46,43 +43,38 @@ async function getVideoParser() {
         video.setThumbnail(thumbs);
     });
 
-    groupedVideos = parser.groupBySeminar();
-
-
 
     return parser;
 }
 
 
+const avaliableLists = [
+    { type: "flat", value: "all", title: "All" },
+    { value: "recent", title: "Most Recent" },
+    { type: "grouped", value: "seminar", title: "By Seminar" },
+    { value: "oldest", title: "Oldest" },
+    { value: "my", title: "My List" },
+    { value: "favorites", title: "Favorites" },
+    { value: "continue", title: "Continue Watching" }
+];
 
 
 
 export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
-
-    const [filter, setFilter] = useState([]);
-    const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
-    const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
-    const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar))
-
+    //user.getfavorite, user.continewatching.
+    const [list, setList] = useState(null);
+    // const [videos, setVideos] = useState([]);
+    // const [seminars, setSeminars] = useState([]);
+    let videos = (parser && list && parser.getVideos(list)) || [];
+    let seminars = (parser && list && parser.getSeminars(list)) || [];
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
-        async function fn() {
-            parser = await getVideoParser(); setFilter(parser.groupBySeminar());
-
-            seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
-            for (const key in groupedVideos) {
-                //console.log(key);
-                seminars.push({ title: key, action: () => filterBySeminar(key) })
-            }
-        }
+        async function fn() { parser = await getVideoParser(); setList("all"); }
         fn();
     }, []);
 
-
-
-    //console.log(seminars);
     return (
 
         <div className="p-8 bg-zinc-900 min-h-screen">
@@ -91,54 +83,68 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
                 <div className="inline-flex">
                     <DropdownMenu
-                        buttonLabel="Order By"
-                        items={[
-                            { title: "Most Recent", action: sortByNewestSeminar },
-                            { title: "Oldest", action: sortByOldestSeminar },
-                            { title: "My List", action: sortByOldestSeminar },
-                            { title: "Favorites", action: sortByOldestSeminar },
-                            { title: "Continue Watching", action: sortByOldestSeminar },
-                            { title: "Popular", action: sortByOldestSeminar },
-                        ]}
+                        label="Show"
+                        items={avaliableLists}
+                        action={setList}
                     />
                     <DropdownMenu
-                        buttonLabel="Filter Seminar"
+                        label="Seminars"
                         items={seminars}
+                        action={setList}
                     />
                 </div>
             </div>
 
-            <ul>
-                {
-                    Object.keys(filter).map(key => {
-                        let theGroup = filter[key];
-                        let numVideos = theGroup.length;
-
-                        if (true || numVideos > 2) {
-
-                            return (
 
 
-                                <ul className="video-list grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-5 gap-8">
-                                    <li className='text-4xl text-zinc-100 grid col-span-full mt-10'>{key}</li>
-                                    <hr className='grid col-span-full text-zinc-100 -mt-5' />
-                                    {theGroup.map((video, index) => (
+            {list && list == "grouped" ?
 
-                                        <TitleComponent video={video} index={index} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />
+                <VideoListGroup groups={videos} />
+                :
+                <ul className="video-list grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-5 gap-8">
+                    {videos.map((video, index) => (
+                        <TitleComponent video={video} index={index} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />
+                    ))}
+                </ul>
 
-                                    ))}
-                                </ul>
-                            )
-                        }
-                    })
-                }
-
-
-            </ul>
-
+            }
 
         </div>
 
     );
 
+}
+
+
+
+function VideoListGroup({ groups }) {
+
+
+    return (<ul>
+        {
+            Object.keys(groups).map(key => {
+                let theGroup = group[key];
+                let numVideos = theGroup.length;
+
+                if (true || numVideos > 2) {
+
+                    return (
+
+
+                        <ul className="video-list grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-5 gap-8">
+                            <li className='text-4xl text-zinc-100 grid col-span-full mt-10'>{key}</li>
+                            <hr className='grid col-span-full text-zinc-100 -mt-5' />
+                            {theGroup.map((video, index) => (
+
+                                <TitleComponent video={video} index={index} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />
+
+                            ))}
+                        </ul>
+                    )
+                }
+            })
+        }
+
+
+    </ul>);
 }

@@ -4,6 +4,27 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos;
 
+
+
+
+
+    /*
+    const actions = {
+        all: sortByOldestSeminar,
+        recent: { value: "recent", title: "Most Recent", action: sortByNewestSeminar },
+        oldest: { value: "oldest", title: "Oldest", action: sortByOldestSeminar },
+        my: { value: "my", title: "My List", action: sortByOldestSeminar },
+        favorites: { value: "favorites", title: "Favorites", action: sortByOldestSeminar },
+        continue: { value: "continue", title: "Continue Watching", action: sortByOldestSeminar }
+    };
+    */
+
+    // const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
+    // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
+    // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
+
+
+
     constructor(videos) {
         this.videos = videos;
     }
@@ -17,25 +38,25 @@ export default class VideoDataParser {
             let vd = apiData[d];
             videos.push(Video.fromApiData(vd));
         }
-
         return new VideoDataParser(videos);
     }
 
-    //vidData.sort((a, b) => Date.parse(b.getSeminarDate()) - Date.parse(a.getSeminarDate()));
-
-    /*
-    const alphabetical = videos.toSorted((a, b) => {
-        let textA = a.getVideoName();
-        let textB = b.getVideoName();
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-    });
-
-    const sortAlpha = () => setFilter(alphabetical);
 
 
-    const sortSeminar = () => setFilter(videos);
+    getSeminars() {
+        let seminars = [];
+        let grouped = this.groupBySeminar()
+        seminars.push({ title: "All Seminars", type: "grouped", value: "seminar" });
 
-*/
+        for (const key in grouped) {
+
+            seminars.push({ title: key, type: "grouped", value: key })
+        }
+
+        return seminars;
+    }
+
+
     sortAlpha() {
         return this.videos.toSorted((a, b) => {
             let textA = a.getVideoName();
@@ -49,7 +70,8 @@ export default class VideoDataParser {
     }
 
     getVideos() {
-        return this.videos;
+        let v = this.videos.reverse();
+        return v;
     }
 
     groupBySeminar() {
@@ -75,11 +97,26 @@ export default class VideoDataParser {
         return Object.keys(grouped).reduce((acc, key) => {
             if (seminar.includes(key)) {
                 acc[key] = grouped[key];
+                acc[key] = grouped[key];
             }
             return acc;
         }, {});
+
     }
 
+    getVideoList(list) {
+        switch (list) {
+            case "all":
+                return this.getVideos();
+                break;
+            case "seminar":
+                return this.groupBySeminar();
+                break;
+            default:
+                return this.filterBySeminar(list);
+
+        }
+    }
 
 
 
