@@ -4,6 +4,38 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos;
 
+
+
+
+
+    /*
+    const actions = {
+        all: sortByOldestSeminar,
+        recent: { value: "recent", title: "Most Recent", action: sortByNewestSeminar },
+        oldest: { value: "oldest", title: "Oldest", action: sortByOldestSeminar },
+        my: { value: "my", title: "My List", action: sortByOldestSeminar },
+        favorites: { value: "favorites", title: "Favorites", action: sortByOldestSeminar },
+        continue: { value: "continue", title: "Continue Watching", action: sortByOldestSeminar }
+    };
+    */
+
+    // const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
+    // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
+    // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
+
+    getSeminars() {
+
+        // This should be in the VideoDataParser.getSeminars(); 
+        /*
+        seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
+        for (const key in groupedVideos) {
+            console.log(key);
+            seminars.push({ title: key, action: () => filterBySeminar(key) })
+        }
+            */
+        return [];
+    }
+
     constructor(videos) {
         this.videos = videos;
     }
@@ -13,13 +45,13 @@ export default class VideoDataParser {
         console.log(apiData[0].Event__r.Name);
         let videos = [];
         for (let d in apiData) {
-           
+
             let vd = apiData[d];
 
             videos.push(Video.fromApiData(vd));
             //console.log(this.videoDataArray);
         }
-        
+
 
 
         return new VideoDataParser(videos);
@@ -49,7 +81,7 @@ export default class VideoDataParser {
     }
 
     sortSeminar() {
-        
+
     }
 
     getVideos() {
@@ -78,13 +110,13 @@ export default class VideoDataParser {
         let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
         return Object.keys(grouped).reduce((acc, key) => {
             if (seminar.includes(key)) {
-              acc[key] = grouped[key];
+                acc[key] = grouped[key];
             }
             return acc;
-          }, {});
+        }, {});
     }
 
-    
-    
+
+
 
 }

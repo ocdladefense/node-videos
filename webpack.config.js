@@ -114,10 +114,6 @@ module.exports = env => {
                         from: path.resolve(__dirname, "src/images"),
                         to: path.resolve(__dirname, "dist/images")
                     },
-                    {
-                        from: "node_modules/@themes/active/images",
-                        to: path.resolve(__dirname, "dist/images")
-                    },
                     "src/.nojekyll",
                     "src/manifest.json",
                     "src/sw.js",
