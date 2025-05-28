@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import TitleComponent from './TitleComponent';
 import DropdownMenu from './DropdownMenu';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
