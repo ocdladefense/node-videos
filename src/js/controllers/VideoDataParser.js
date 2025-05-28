@@ -42,17 +42,22 @@ export default class VideoDataParser {
 
 
     static parse(apiData) {
-        console.log(apiData[0].Event__r.Name);
+        apiData = apiData || [];
+
         let videos = [];
         for (let d in apiData) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4b5eb93 (Enable pip testing for a mini-player.)
             let vd = apiData[d];
-
             videos.push(Video.fromApiData(vd));
-            //console.log(this.videoDataArray);
         }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4b5eb93 (Enable pip testing for a mini-player.)
 
         return new VideoDataParser(videos);
     }
