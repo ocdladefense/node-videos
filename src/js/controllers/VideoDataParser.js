@@ -23,14 +23,25 @@ export default class VideoDataParser {
     // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
     // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
 
+    getLists() {
 
+        return [
+            { type: "flat", value: "all", title: "All" },
+            { value: "recent", title: "Most Recent" },
+            { type: "grouped", value: "seminar", title: "By Seminar" },
+            { value: "oldest", title: "Oldest" },
+            { value: "my", title: "My List" },
+            { value: "favorites", title: "Favorites" },
+            { value: "continue", title: "Continue Watching" }
+        ];
+    }
 
     constructor(videos) {
         this.videos = videos;
     }
 
 
-    static parse(apiData) {
+    parse(apiData) {
         apiData = apiData || [];
 
         let videos = [];
@@ -38,7 +49,9 @@ export default class VideoDataParser {
             let vd = apiData[d];
             videos.push(Video.fromApiData(vd));
         }
-        return new VideoDataParser(videos);
+        this.videos = videos;
+
+        return this;
     }
 
 

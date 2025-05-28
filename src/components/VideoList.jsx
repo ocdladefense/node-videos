@@ -16,7 +16,9 @@ window.clearCache = clearThumbCache;
 // if (selectedVideo) console.log("get watched vid by id", user.getWatchedVideo(selectedVideo.resourceId));
 
 // Top-level reference to the "parser" that can return various lists of videos.
-let parser;
+let parser = new VideoDataParser();
+
+
 const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
 
 // @jbernal - previously in index.js
@@ -28,14 +30,14 @@ async function getVideoParser() {
 
     let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
     let resp = await api.query(query);
-    const parser = VideoDataParser.parse(resp.records);
+    parser.parse(resp.records);
 
     let videos = parser.getVideos();
 
-    //default thumb in case of unavailable image
+    // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    const thumbnailMap = await initThumbs(videos);
+    const thumbnailMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
 
     parser.getVideos().forEach(video => {
         const thumbs = thumbnailMap.get(video.resourceId);
@@ -48,15 +50,6 @@ async function getVideoParser() {
 }
 
 
-const avaliableLists = [
-    { type: "flat", value: "all", title: "All" },
-    { value: "recent", title: "Most Recent" },
-    { type: "grouped", value: "seminar", title: "By Seminar" },
-    { value: "oldest", title: "Oldest" },
-    { value: "my", title: "My List" },
-    { value: "favorites", title: "Favorites" },
-    { value: "continue", title: "Continue Watching" }
-];
 
 
 
@@ -84,7 +77,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
                 <div className="inline-flex">
                     <DropdownMenu
                         label="Show"
-                        items={avaliableLists}
+                        items={parser.getLists()}
                         action={setList}
                     />
                     <DropdownMenu
