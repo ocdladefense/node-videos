@@ -115,6 +115,17 @@ export default class VideoDataParser {
         let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
         return Object.keys(grouped).reduce((acc, key) => {
             if (seminar.includes(key)) {
+              acc[key] = grouped[key];
+            }
+            return acc;
+          }, {});
+    }
+
+    filterBySeminar(seminar) {
+        console.log(seminar);
+        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
+        return Object.keys(grouped).reduce((acc, key) => {
+            if (seminar.includes(key)) {
                 acc[key] = grouped[key];
             }
             return acc;

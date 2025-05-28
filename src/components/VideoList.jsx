@@ -5,7 +5,6 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import { clearThumbCache } from '../js/controllers/VideoThumbs';
-import Video from '../js/models/Video.js';
 window.clearCache = clearThumbCache;
 
 
@@ -31,9 +30,6 @@ async function getVideoParser() {
     const parser = VideoDataParser.parse(resp.records);
 
     let videos = parser.getVideos();
-
-    //default thumb in case of unavailable image
-    Video.setDefaultThumbnail('http:/foobar');
 
     const thumbnailMap = await initThumbs(videos);
 
@@ -71,19 +67,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
-<<<<<<< HEAD
         async function fn() { parser = await getVideoParser(); setList("all"); }
-=======
-        async function fn() {
-            parser = await getVideoParser(); setFilter(parser.groupBySeminar());
-
-            seminars.push({ title: "All Seminars", action: sortByNewestSeminar })
-            for (const key in groupedVideos) {
-                //console.log(key);
-                seminars.push({ title: key, action: () => filterBySeminar(key) })
-            }
-        }
->>>>>>> a686895 (added jest functionality, repaired older tests, added new error handling)
         fn();
     }, []);
 
@@ -100,10 +84,6 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-<<<<<<< HEAD
-=======
-    //console.log(seminars);
->>>>>>> a686895 (added jest functionality, repaired older tests, added new error handling)
     return (
 
         <div className="p-8 bg-zinc-900 min-h-screen">
