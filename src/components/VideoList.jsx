@@ -89,7 +89,11 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
                 </div>
             </div>
 
+            {/*
 
+//  { value: "oldest", title: "Oldest" }, // Make these two separate buttons that always display (for now);
+// would probably require a separate useState("desc"), "asc"
+*/}
 
             {listMeta && listMeta.layout == "grouped" ?
 

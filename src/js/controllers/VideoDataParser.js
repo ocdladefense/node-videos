@@ -23,22 +23,24 @@ export default class VideoDataParser {
     // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
     // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
 
+
+
     getLists() {
 
         return [
             { layout: "flat", value: "all", title: "All" },
-            { value: "recent", title: "Most Recent" },
             { layout: "grouped", value: "seminar", title: "By Seminar" },
-            { value: "oldest", title: "Oldest" },
-            { value: "my", title: "My List" },
+            { value: "recent", title: "Recently Added" },
+            { value: "coming", title: "Coming Soon" },
             { value: "favorites", title: "Favorites" },
-            { value: "continue", title: "Continue Watching" }
+            { value: "continue", title: "Continue Watching" },
+            { value: "purchased", title: "Purchased" }, // List of all videos that have been purchased.
         ];
     }
 
     getList(list) {
         let lists = this.getLists();
-        
+
         let filtered = lists.filter((item) => list === item.value)[0];
         console.log(filtered);
         return filtered;
@@ -90,7 +92,7 @@ export default class VideoDataParser {
 
     }
 
-   
+
 
     groupBySeminar() {
         let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
@@ -132,12 +134,12 @@ export default class VideoDataParser {
                 break;
             default:
                 return this.videos.reverse();
-                
+
 
         }
     }
 
-    
+
 
 
 }
