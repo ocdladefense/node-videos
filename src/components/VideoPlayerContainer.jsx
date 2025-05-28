@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import '../css/videostyles.css';
 import VideoControlBar from './VideoControlBar';
 import VideoProgressBar from './VideoProgressBar';
