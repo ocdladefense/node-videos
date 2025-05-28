@@ -60,31 +60,16 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
     //user.getfavorite, user.continewatching.
     const [list, setList] = useState(null);
-    const [videos, setVideos] = useState([]);
-    const [seminars, setSeminars] = useState([]);
-
-
+    // const [videos, setVideos] = useState([]);
+    // const [seminars, setSeminars] = useState([]);
+    let videos = (parser && list && parser.getVideos(list)) || [];
+    let seminars = (parser && list && parser.getSeminars(list)) || [];
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
         async function fn() { parser = await getVideoParser(); setList("all"); }
         fn();
     }, []);
-
-
-    // Will be executed everytime list changes, i.e., when setList is called.
-    useEffect(() => {
-        console.log("List has changed!");
-
-        if (parser) {
-            setVideos(parser.getVideoList(list));
-            setSeminars(parser.getSeminars(list)); // Not necessary, yet; but depending on the "list" different seminars might be available?
-            console.log(videos);
-        }
-
-    }, [list]);
-
-
 
     return (
 
@@ -108,7 +93,7 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
 
 
 
-            {list && list.type == "grouped" ?
+            {list && list == "grouped" ?
 
                 <VideoListGroup groups={videos} />
                 :
