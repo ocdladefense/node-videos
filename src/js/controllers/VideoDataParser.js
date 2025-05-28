@@ -26,14 +26,22 @@ export default class VideoDataParser {
     getLists() {
 
         return [
-            { type: "flat", value: "all", title: "All" },
+            { layout: "flat", value: "all", title: "All" },
             { value: "recent", title: "Most Recent" },
-            { type: "grouped", value: "seminar", title: "By Seminar" },
+            { layout: "grouped", value: "seminar", title: "By Seminar" },
             { value: "oldest", title: "Oldest" },
             { value: "my", title: "My List" },
             { value: "favorites", title: "Favorites" },
             { value: "continue", title: "Continue Watching" }
         ];
+    }
+
+    getList(list) {
+        let lists = this.getLists();
+        
+        let filtered = lists.filter((item) => list === item.value)[0];
+        console.log(filtered);
+        return filtered;
     }
 
     constructor(videos) {
@@ -82,10 +90,7 @@ export default class VideoDataParser {
 
     }
 
-    getVideos() {
-        let v = this.videos.reverse();
-        return v;
-    }
+   
 
     groupBySeminar() {
         let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
@@ -117,20 +122,22 @@ export default class VideoDataParser {
 
     }
 
-    getVideoList(list) {
+    getVideos(list) {
         switch (list) {
             case "all":
-                return this.getVideos();
+                return this.videos.reverse();
                 break;
             case "seminar":
                 return this.groupBySeminar();
                 break;
             default:
-                return this.filterBySeminar(list);
+                return this.videos.reverse();
+                
 
         }
     }
 
+    
 
 
 }
