@@ -47,7 +47,7 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, parser, setSelectedVideo }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo }) {
 
 
     const [grouped, setGrouped] = useState([]);
@@ -93,14 +93,8 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
-    let currentSeminar = null;
-    for (const seminar in grouped) {
-        if (grouped[seminar].some(v => v.getVideoResourceId() === video.getVideoResourceId())) {
-            currentSeminar = seminar;
-            break;
-        }
-    }
-    const seminarVideos = currentSeminar ? grouped[currentSeminar] : [];
+    let currentSeminar = video.getSeminarName();
+    const seminarVideos = parser.getRelatedVideos(video.getResourceId());
 
     return (
         <div className="video-details bg-zinc-900 min-h-screen">
