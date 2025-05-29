@@ -59,7 +59,12 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     const [list, setList] = useState(null);
     // const [videos, setVideos] = useState([]);
     // const [seminars, setSeminars] = useState([]);
-    let videos = (parser && list && parser.getVideos(list)) || [];
+    let prevWatched = user.getPreviouslyWatchedVideos();
+    let purchased = user.getUserPurchasedVideos();
+    console.log(purchased);
+    let videos = (parser && list && parser.getVideos(list, prevWatched, purchased)) || [];
+
+
     let listMeta = parser.getList(list);
     let seminars = (parser && list && parser.getSeminars(list)) || [];
 

@@ -4,7 +4,23 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos;
 
+    constructor(videos) {
+        this.videos = videos;
+    }
 
+
+    parse(apiData) {
+        apiData = apiData || [];
+
+        let videos = [];
+        for (let d in apiData) {
+            let vd = apiData[d];
+            videos.push(Video.fromApiData(vd));
+        }
+        this.videos = videos;
+
+        return this;
+    }
 
 
 
@@ -46,37 +62,49 @@ export default class VideoDataParser {
         return filtered;
     }
 
-    constructor(videos) {
-        this.videos = videos;
-    }
-
-
-    parse(apiData) {
-        apiData = apiData || [];
-
-        let videos = [];
-        for (let d in apiData) {
-            let vd = apiData[d];
-            videos.push(Video.fromApiData(vd));
+    filterById(data) {
+        
+        let id = [];
+        for (let i = 0; i < data.length; i++) {
+            id.push(data[i].resourceId);
         }
-        this.videos = videos;
+        
 
-        return this;
+        let filter = this.videos.filter(video => { 
+            if (id.includes(video.getResourceId())) {
+                return video;
+            }
+        });
+        console.log(filter);
+
+        return filter;
     }
 
+   
 
+    
 
     getSeminars() {
         let seminars = [];
         let grouped = this.groupBySeminar()
-        seminars.push({ title: "All Seminars", type: "grouped", value: "seminar" });
+        seminars.push({ title: "All Seminars", layout: "grouped", value: "seminar" });
 
         for (const key in grouped) {
 
-            seminars.push({ title: key, type: "grouped", value: key })
+            seminars.push({ title: key, layout: "grouped", value: key })
         }
 
         return seminars;
+    }
+
+    getAllVideos() {
+        let videoList = [];
+        let v = this.videos;
+        
+        for (var i = v.length - 1; i> -1; i--) {
+            videoList.push(v[i]);
+        }
+        return videoList;
     }
 
 
@@ -124,16 +152,21 @@ export default class VideoDataParser {
 
     }
 
-    getVideos(list) {
+    getVideos(list, prevWatched, purchased) {
         switch (list) {
             case "all":
-                return this.videos.reverse();
+                return this.getAllVideos();
                 break;
             case "seminar":
                 return this.groupBySeminar();
                 break;
+            case "continue":
+                return this.filterById(prevWatched);
+                break;
+            case "purchased":
+                return this.filterById(purchased);
             default:
-                return this.videos.reverse();
+                return this.getAllVideos();
 
 
         }

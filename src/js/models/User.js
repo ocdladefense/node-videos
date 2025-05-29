@@ -7,10 +7,10 @@ export default class User {
     userName;
 
 
-    purchased;
+    purchasedVideos;
 
 
-    watched;
+    previouslyWatched;
 
     constructor(name) {
         this.userName = name;
@@ -45,7 +45,7 @@ export default class User {
 
     getPurchasedVideo(videoId) {
         for (let i = 0; i < this.purchasedVideos.length; i++) {
-            if (this.purchasedVideos[i] === videoId) {
+            if (this.purchasedVideos[i].resourceId === videoId) {
                 return this.purchasedVideos[i];
             }
         }
@@ -84,8 +84,15 @@ export default class User {
 
     addToPurchasedVideos(resourceId) {
         if (!this.purchasedVideos.includes(resourceId)) {
-            this.purchasedVideos.push(resourceId);
+            this.purchasedVideos.push({ "resourceId": resourceId });
         }
     }
 
 }
+
+
+
+
+
+
+
