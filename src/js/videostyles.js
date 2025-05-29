@@ -90,6 +90,7 @@ export const videoPlayerTheme = createTheme({
             styleOverrides: {
                 root: {
                     width: '100%',
+                    maxWidth: 'false',
                     backgroundColor: 'transparent',
                     display: 'flex',
                     justifyContent: 'center',
@@ -102,6 +103,7 @@ export const videoPlayerTheme = createTheme({
         MuiBox: {
             styleOverrides: {
                 root: {
+                    maxWidth: 'false',
                     width: '100%',
                     backgroundColor: 'transparent',
                     display: 'flex',

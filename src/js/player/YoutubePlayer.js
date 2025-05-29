@@ -206,6 +206,28 @@ export default class YouTubePlayer extends VideoPlayer {
         this.#player.setVolume(volume);
     }
 
+    toggleFullscreen() {
+        const playerElement = document.querySelector('#playerBox');
+        if (!playerElement) {
+            return;
+        }
+
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        else {
+            playerElement.requestFullscreen?.() ||
+                playerElement.webkitRequestFullscreen?.() ||
+                playerElement.mozRequestFullScreen?.() ||
+                playerElement.msRequestFullscreen?.();
+            this.setSize(
+                window.innerWidth,
+                window.innerHeight);
+
+        }
+
+
+    }
 
     makeConfig(onReady) {
 

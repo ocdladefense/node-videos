@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 import MediaControlsFloating from './MediaControlsFloating';
-import { videoPlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
+import { videoPlayerTheme, VideoContainer, TitleContainer, fullscreenButton } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
-import { Skeleton as PlayerPlaceholder } from '@mui/material';
+import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
 
 
 
 
 /**
- * 
+ *  
  * @param {MediaPlayer} player The MediaPlayer or specific subclass that will be used to control this media.
  * @param {Video} video The video object that is to be played (todo for a more abstract MediaPlayerContainer use resource or even url).
  * @param {String} layout In either standard or pip; pip displays a player with a fixed position and smaller size.
@@ -62,15 +62,15 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     return (
 
-        <ThemeProvider theme={videoPlayerTheme}>
+        <ThemeProvider theme={videoPlayerTheme} injectFirst>
 
 
-            <Box style={{ ...{ position: "relative", width: width + "px", height: (height) + "px", margin: "0 auto", overflow: "hidden" }, ...(!pip ? {} : { position: "fixed", top: "0px", right: "25px" }) }}>
+            <Box id='playerBox' style={{ ...{ position: "relative", margin: "0 auto", width: width, height: height, overflow: "hidden" }, ...(!pip ? {} : { position: "fixed", top: "0px", right: "25px" }) }}>
                 <TitleContainer style={{ display: "none" }}>
                     <h1>{video.getVideoName()}</h1>
                 </TitleContainer>
 
-                <VideoContainer>
+                <VideoContainer maxWidth={false}>
                     <div id="player-wrapper">
                         <div id="player">
                             <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
@@ -81,6 +81,8 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
                 <div id="blocker"></div>
 
                 {controls.split(",").includes("float") ? <MediaControlsFloating onBack={onBack} layout={layout} setLayout={setLayout} player={player} playerInitialized={playerInitialized} /> : <MediaControls layout={layout} onBack={onBack} setLayout={setLayout} player={player} playerInitialized={playerInitialized} />}
+
+
 
             </Box>
         </ThemeProvider>
