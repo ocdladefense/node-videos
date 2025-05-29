@@ -28,7 +28,7 @@ export function App2({ user }) {
 }
 
 
-export default function App({ user }) {
+export default function App() {
 
 
     return (
@@ -36,7 +36,7 @@ export default function App({ user }) {
             <Header />
             {/* typeof HeaderTwo === "function" ? <HeaderTwo /> : <></> */}
             <div class="container mx-auto">
-                <Home user={user} />
+                <Home />
             </div>
             <Footer />
         </>
