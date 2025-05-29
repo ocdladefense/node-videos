@@ -6,108 +6,81 @@ const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 
 export default class WatchedVideoService {
 
-    //assume I have access to user globally when they are signed in?
-    getCurrentUserId() {
-        //return window.currentUserId;
+
+    // User id that will be included in all inserts and updates to watched video objects.
+    #userId;
+
+    #handlers = [];
+
+
+    constructor(userId) {
+        this.#userId = userId;
     }
 
-    //respond to media event based on playerstate
-    handleMediaStateChange = (event) => {
-
-        const { playerState, videoId, timestamp } = event.detail;
-
-        //playerState: UNSTARTED = -1, ENDED = 0, PLAYING = 1, PAUSED = 2, BUFFERING = 3, CUED = 5;
-
-        if (playerState == -1) {
-            this.createWatchedVideo(videoId, timestamp);
-        } else {
-            this.updateUserTimestamp(videoId, timestamp);
-        }
-    }
-
-
-    //might still be needed just to edit timestamps while NOT persisting
-    updateUserTimestamp(videoId, timestamp) {
-        console.log("updating user timestamp data", videoId, timestamp);
-    }
 
 
     listen() {
-        document.addEventListener('mediastatechange', this.handleMediaStateChange);
+        document.addEventListener('mediastatechange', (e) => this.handleEvent(e));
     }
+
+
+    onSave(fn) {
+        this.#handlers.push(fn);
+    }
+
+
+    //respond to media event based on playerstate
+    handleEvent = (event) => {
+        console.log(event.detail);
+        const { playerState, resourceId, timestamp } = event.detail;
+
+        // playerState: UNSTARTED = -1, ENDED = 0, PLAYING = 1, PAUSED = 2, BUFFERING = 3, CUED = 5;
+
+        this.save(resourceId, timestamp);
+    }
+
+
+
+    async load() {
+
+        const query = `SELECT Name, CreatedById, ResourceId__c, Timestamp__c FROM Watched_Video__c WHERE CreatedById = '${this.#userId}'`;
+
+        let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+        let resp = await api.query(query);
+
+        return resp.records;
+    }
+
+
+
+
 
 
     //create salesforce record for watchedVideo SOBject
-    async createWatchedVideo(videoId, timestamp) {
-        // let userId = this.#user.Id;
-        // let externalId = userId + '.' + videoId;
+    async save(videoId, timestamp) {
+        let userId = this.#userId;
+        let externalId = userId + '.' + videoId;
+
+
         const payload = {
-            UserId__c: 3, //temporarily hardcoding UserId__c
+            ExternalId__c: externalId, // When this new customer Salesforce field is marked as "Use as external id" you can use it for future updates.
             ResourceId__c: videoId,
-            // ExternalId__c: externalId, // When this new customer Salesforce field is marked as "Use as external id" you can use it for future updates.
             Timestamp__c: timestamp
         };
 
-        let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+        let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+
+        let resp;
 
         try {
-            const createResponse = await sfrAPI.create('Watched_Video__c', payload);
-            return createResponse;
+            resp = await api.upsert('Watched_Video__c', payload, "ExternalId__c");
+            this.#handlers.forEach((callback) => {
+                callback(videoId, timestamp);
+            });
         } catch (error) {
-            console.log("Error creating watched video record", error);
+            console.warn("Error creating watched video record: ", error);
         }
     }
 
-
-    //update salesforce record for watchedVideo SOBject
-    async updateWatchedVideo(videoId, timestamp) {
-
-        console.log("Updating Watched Video Record");
-
-        //find recordId required for update restApi call
-        // *** Not necessary when using the ExternalId__c field - see above.
-        const recordId = await this.getWatchedVideoRecordId(userId, videoId);
-
-        // *** Not necessary when using the ExternalId__c field - see above.
-        if (!recordId) {
-            console.log("No existing record found");
-            return null;
-        }
-
-        // let userId = this.#user.Id;
-        // let externalId = userId + '.' + videoId;
-        const payload = {
-            // ExternalId__c: externalId, // When this new customer Salesforce field is marked as "Use as external id" you can use it in update calls,
-            // and not have to figure out the internal Salesforce Id field.
-            Timestamp__c: timestamp
-        };
-
-        let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-
-        try {
-            const updateResponse = await sfrAPI.update("Watched_Video__c", recordId, payload); // You might need to change this method to use the alternate externalId.
-            console.log("Updated watched video record:", updateResponse);
-            return updateResponse;
-        } catch (error) {
-            console.error("Error updating watched video record", error);
-            throw error;
-        }
-    }
-
-
-    //collect watchedVideo record for update call
-    async getWatchedVideoRecordId(userId, videoId) {
-        const query = `SELECT Id FROM Watched_Video__c WHERE UserId__c = '${userId}' AND ResourceId__c = '${videoId}'`;
-
-        let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-
-        try {
-            const response = await sfrAPI.query(query);
-            return response;
-        } catch (error) {
-            console.error("Error getting watched video record id:", error);
-            return null;
-        }
-    }
 
 }

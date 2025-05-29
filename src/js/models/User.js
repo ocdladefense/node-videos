@@ -4,24 +4,27 @@ export default class User {
     userId;
 
 
-    userName;
+    username;
 
 
-    purchased;
+    purchased = [];
 
 
-    watched;
+    watched = [];
 
-    constructor(name) {
-        this.userName = name;
+
+
+
+    constructor(userId) {
+        this.userId = userId;
     }
 
     static fromUserData(data) {
         let user = new User(data.userName)
         user.userId = data.userId;
-        user.userName = data.userName;
+        user.username = data.userName;
         user.purchasedVideos = data.purchasedVideos;
-        user.previouslyWatched = data.previouslyWatched;
+        user.watchedVideos = data.previouslyWatched;
 
         return user;
     }
@@ -30,11 +33,11 @@ export default class User {
         return this.userId;
     }
 
-    getUserName() {
-        return this.userName;
+    getUsername() {
+        return this.username;
     }
 
-    getUserPurchasedVideos() {
+    getPurchasedVideos() {
         // return an array
         if (this.purchasedVideos.length > 1) {
             return this.purchasedVideos;
@@ -43,48 +46,41 @@ export default class User {
         }
     }
 
-    getPurchasedVideo(videoId) {
-        for (let i = 0; i < this.purchasedVideos.length; i++) {
-            if (this.purchasedVideos[i] === videoId) {
-                return this.purchasedVideos[i];
-            }
-        }
-        return null;
+    hasPurchasedVideo(videoId) {
+        return this.purchased.some((video) => video.resourceId == videoId);
     }
 
-    getPreviouslyWatchedVideos() {
-        return this.previouslyWatched;
+    getWatchedVideos() {
+        return this.watched;
+    }
+
+    hasWatchedVideo(videoId) {
+        return this.watched.some((video) => video.resourceId == videoId);
+    }
+
+    getPurchasedVideo(videoId) {
+        return this.hasPurchasedVideo(videoId) && {};
     }
 
     getWatchedVideo(videoId) {
-        for (let i = 0; i < this.previouslyWatched.length; i++) {
-            if (this.previouslyWatched[i].resourceId === videoId) {
-                return this.previouslyWatched[i];
-            }
-        }
-        return null;
+        return this.hasWatchedVideo(videoId) && {};
     }
 
-    addToWatchedVideos(id, timestamp = 0) {
-        this.previouslyWatched.push(
-            {
-                "resourceId": id,
-                "timestamp": timestamp
-            }
-        )
+
+    addWatched(record) {
+        this.watched.push(record);
     }
 
-    updateTimestamp(id, time) {
-        for (let i = 0; i < this.previouslyWatched.length; i++) {
-            if (this.previouslyWatched[i].resourceId === id) {
-                this.previouslyWatched[i].timeStamp = time;
-            }
-        }
+
+    addPurchased(record) {
+        this.purchased.push(record);
     }
 
-    addToPurchasedVideos(resourceId) {
-        if (!this.purchasedVideos.includes(resourceId)) {
-            this.purchasedVideos.push(resourceId);
-        }
+
+    async load(service, callback) {
+        let data = await service.load();
+
+        callback(this, data);
     }
+
 }
