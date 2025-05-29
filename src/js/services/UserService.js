@@ -1,3 +1,8 @@
+import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
+
+const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+
 export default class UserService {
 
 
@@ -8,8 +13,6 @@ export default class UserService {
     constructor(user) {
         this.#user = user;
     }
-
-
 
 
     listen() {
@@ -30,7 +33,40 @@ export default class UserService {
         console.log('Added to watched video!');
     }
 
+    async fetchWatchedVideos() {
 
+        const userId = this.#user.getUserId();
+
+
+        const watchedVideosQuery = `SELECT Name, UserId__c, ResourceId__c, Timestamp__c 
+            FROM Watched_Video__c WHERE UserId__c = '${userId}'`;
+    
+        let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+        let watchedResponse = await sfrAPI.query(watchedVideosQuery);
+
+        console.log("watched video query watchedResponse", watchedResponse.records);
+        return watchedResponse.records;
+    }
+
+    attachWatchedVideos(watchedVideosApiData) {
+      
+        watchedVideosApiData.forEach(record => {
+          const resourceId = record.ResourceID__c;
+          const timestamp = record.Timestamp__c;
+          
+          this.#user.addToWatchedVideos(resourceId, timestamp);
+        });
+    
+        console.log("Attached watched videos to user:", this.#user.userId);
+    }
+    
+
+    //execute with user init
+    // ger records and attach to user object.
+    // const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';
+    // let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+    // let watchedResponse = await sfrAPI.query(watchedVideosQuery);
+    // console.log("watched video query watchedResponse", watchedResponse.records);
 }
 
 

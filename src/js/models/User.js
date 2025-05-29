@@ -87,5 +87,4 @@ export default class User {
             this.purchasedVideos.push(resourceId);
         }
     }
-
 }
