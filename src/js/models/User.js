@@ -23,8 +23,8 @@ export default class User {
         let user = new User(data.userName)
         user.userId = data.userId;
         user.username = data.userName;
-        user.purchasedVideos = data.purchasedVideos;
-        user.watchedVideos = data.previouslyWatched;
+        user.purchased = data.purchasedVideos;
+        user.watched = data.previouslyWatched;
 
         return user;
     }
@@ -39,11 +39,7 @@ export default class User {
 
     getPurchasedVideos() {
         // return an array
-        if (this.purchasedVideos.length > 1) {
-            return this.purchasedVideos;
-        } else {
-            return this.purchasedVideos[0];
-        }
+        return this.purchased;
     }
 
     hasPurchasedVideo(videoId) {
