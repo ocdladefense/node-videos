@@ -22,7 +22,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                     />
                     {!hasAccess && (
                         <div className="absolute inset-0 bg-zinc-800 bg-opacity-60 flex items-center justify-center">
-                            <span className="text-white text-sm font-bold">Purchase</span>
+                            <span className="text-white text-sm font-bold">🔒Purchase</span>
                         </div>
                     )}
                 </div>

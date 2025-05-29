@@ -87,7 +87,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
 
     const actions = {
         play: playVideo,
-        resume: playVideo,
+        resume: playVideo,//how much time remaining
         rewatch: playVideo,
         purchase: function() { setShowModal(true) }
     };
@@ -127,7 +127,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
             </div>
             {/* Related videos section */}
             {seminarVideos.length > 1 && (
-                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} />
+                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} setSelectedVideo={setSelectedVideo} />
             )}
             {showModal && (
                 <Modal setShowModal={setShowModal} confirmAction={confirmPurchase}>
