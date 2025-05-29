@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './VideoPlayerContainer';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
-import UserService from '../js/services/UserService.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
-import Video from '../js/models/Video.js';
+import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
+import User from '../js/models/User.js';
 
 
 window.playerMap = {
@@ -17,7 +17,12 @@ const player = new YouTubePlayer();
 // let user = {}; //getCurrentUser();
 
 
-export default function Home({ parser, user }) {
+
+
+let user = new User("005VC00000ET8LZ");
+
+
+export default function Home({ parser }) {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
@@ -32,11 +37,27 @@ export default function Home({ parser, user }) {
     const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
 
     useEffect(() => {
-        let s1 = new UserService(user);
-        s1.listen();
+        //  let s1 = new UserService(user);
+        // s1.listen();
 
-        let s2 = new WatchedVideoService();
-        s2.listen()
+        let s2 = new WatchedVideoService(user.getUserId());
+        s2.listen();
+        let s3 = new PurchasedVideoService(user.getUserId());
+        s3.listen();  // can listen for mediapurchase events!
+
+
+        //append collected data to user object
+        user.load(s2, (user, data) => {
+
+            data.forEach(record => {
+                const resourceId = record.ResourceID__c;
+                const timestamp = record.Timestamp__c;
+
+                user.addWatched({ resourceId, timestamp });
+            });
+        });
+
+        s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
     }, [])
 
 

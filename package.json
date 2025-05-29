@@ -28,7 +28,7 @@
         "@ocdla/global-components": "file:./dev_modules/@ocdla/global-components",
         "@ocdla/lib-http": "^2.1.0",
         "@ocdla/lib-routing": "^1.1.0",
-        "@ocdla/salesforce": "~0.4",
+        "@ocdla/salesforce": "file:./dev_modules/@ocdla/salesforce",
         "@ocdla/view": "~2.5.0",
         "autoprefixer": "^10.4.19",
         "cookie-parser": "^1.4.7",
