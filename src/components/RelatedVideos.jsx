@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-export default function RelatedVideos({ video, currentSeminar, seminarVideos }) {
+export default function RelatedVideos({ video, currentSeminar, seminarVideos, setSelectedVideo }) {
 
     const scrollRef = useRef(null);
     const scroll = (dir) => {
