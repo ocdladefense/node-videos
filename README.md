@@ -25,6 +25,10 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
 ## Further reading
 
 
+## Adding submodules
+Git submodules can be added to this repository using the <code>git submodule add</code> command:
+* <code>git submodule add https://github.com/ocdladefense/node-lib-salesforce dev_modules/@ocdla/salesforce</code>
+
 
 ## Design Resources
 * https://webflow.com/blog/google-fonts
