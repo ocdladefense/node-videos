@@ -9,3 +9,4 @@
 [submodule "dev_modules/@ocdla/salesforce"]
 	path = dev_modules/@ocdla/salesforce
 	url = https://github.com/ocdladefense/node-lib-salesforce
+	branch = development
