@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from "react-router";
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
@@ -47,16 +48,22 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, parser, setSelectedVideo }) {
+export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo }) {
 
-
+    let params = useParams();
+    const [video, setVideo] = useState(null);
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
-        async function fn() { parser = await getVideoParser(); setGrouped(parser.groupBySeminar()); }
+        async function fn() {
+            let videoId = params.resourceId;
+            parser = await getVideoParser();
+            setVideo(parser.getVideo(videoId));
+            setGrouped(parser.groupBySeminar());
+        }
         fn();
     }, []);
 
@@ -103,28 +110,30 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     const seminarVideos = currentSeminar ? grouped[currentSeminar] : [];
 
     return (
+
         <div className="video-details bg-zinc-900 min-h-screen">
             <button className="absolute top-4 left-4 text-zinc-300 text-3xl z-20" onClick={onBack}>←</button>
 
+            {video ?
+                <div className="video-content relative w-full">
+                    {/* <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1> */}
+                    <img
+                        src={video.getVideoThumbnail(video.getMaxResThumb())}
+                        alt={'Thumbnail for ${video.getVideoName()}'}
+                        className="w-full object-cover h-[700px] md:h-[400px] lg:h-[300px]"
+                    />
+                    <div className="absolute bottom-0 left-0 p-6 bg-black/70 w-full md:w-3/4">
+                        <h1 className="text-4xl font-bold mb-2 text-left">{video.getVideoName()}</h1>
+                        {currentSeminar && (
+                            <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
+                        )}
+                        <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
 
-            <div className="video-content relative w-full">
-                {/* <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1> */}
-                <img
-                    src={video.getVideoThumbnail(video.getMaxResThumb())}
-                    alt={'Thumbnail for ${video.getVideoName()}'}
-                    className="w-full object-cover h-[700px] md:h-[400px] lg:h-[300px]"
-                />
-                <div className="absolute bottom-0 left-0 p-6 bg-black/70 w-full md:w-3/4">
-                    <h1 className="text-4xl font-bold mb-2 text-left">{video.getVideoName()}</h1>
-                    {currentSeminar && (
-                        <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
-                    )}
-                    <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
+                        <VideoDetailsActions actions={actions} />
 
-                    <VideoDetailsActions actions={actions} />
-
+                    </div>
                 </div>
-            </div>
+                : ""}
             {/* Related videos section */}
             {seminarVideos.length > 1 && (
                 <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} />

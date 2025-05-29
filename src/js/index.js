@@ -1,8 +1,9 @@
 import "../css/input.css";
-import React, {useState}  from 'react';
 import { createRoot } from 'react-dom/client';
+// import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import users from '../data/users.json';
-import App from '../components/App';
+import { App2 as App } from '../components/App';
 import UserController from './controllers/UserController.js';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 
@@ -44,6 +45,9 @@ let watchedResponse = await sfrAPI.query(watchedVideosQuery);
 
 const $root = document.getElementById("app");
 const root = createRoot($root);
-root.render(<App user={user} />);
 
-
+root.render(
+    <BrowserRouter>
+        <App user={user} />
+    </BrowserRouter>
+);
