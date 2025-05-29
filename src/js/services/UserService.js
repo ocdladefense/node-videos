@@ -33,6 +33,7 @@ export default class UserService {
         console.log('Added to watched video!');
     }
 
+    //collect video records from salesforce
     async fetchWatchedVideos() {
 
         const userId = this.#user.getUserId();
@@ -48,6 +49,7 @@ export default class UserService {
         return watchedResponse.records;
     }
 
+    //append collected data to user object
     attachWatchedVideos(watchedVideosApiData) {
       
         watchedVideosApiData.forEach(record => {
@@ -59,14 +61,6 @@ export default class UserService {
     
         console.log("Attached watched videos to user:", this.#user.userId);
     }
-    
-
-    //execute with user init
-    // ger records and attach to user object.
-    // const watchedVideosQuery = 'SELECT Name, UserId__c, ResourceId__c, Timestamp__c FROM Watched_Video__c';
-    // let sfrAPI = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-    // let watchedResponse = await sfrAPI.query(watchedVideosQuery);
-    // console.log("watched video query watchedResponse", watchedResponse.records);
 }
 
 
