@@ -80,10 +80,3 @@ export default class User {
     }
 
 }
-
-
-
-
-
-
-

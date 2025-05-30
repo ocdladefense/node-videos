@@ -59,15 +59,16 @@ export default function VideoList({ setSelectedVideo, setRoute, user }) {
     const [list, setList] = useState(null);
     // const [videos, setVideos] = useState([]);
     // const [seminars, setSeminars] = useState([]);
-    let prevWatched = user.getPreviouslyWatchedVideos();
-    let purchased = user.getUserPurchasedVideos();
-    console.log(purchased);
+    let prevWatched = user.getWatchedVideos();
+    let purchased = user.getPurchasedVideos();
+    console.log(prevWatched);
     let videos = (parser && list && parser.getVideos(list, prevWatched, purchased)) || [];
 
-
-    let listMeta = parser.getList(list);
     let seminars = (parser && list && parser.getSeminars(list)) || [];
+    let listMeta = parser.getList(list, seminars);
 
+
+    console.log(seminars);
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
         async function fn() { parser = await getVideoParser(); setList("all"); }
