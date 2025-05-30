@@ -2,7 +2,7 @@ import Video from '../models/Video.js';
 
 
 export default class VideoDataParser {
-    videos;
+    videos = [];
 
     constructor(videos) {
         this.videos = videos;
@@ -173,5 +173,19 @@ export default class VideoDataParser {
 
 
 
+<<<<<<< HEAD
+=======
+    getRelatedVideos(resourceId) {
+
+        if (!this.videos || this.videos.length === 0) return [];
+
+        let grouped = this.groupBySeminar();
+        let video = this.videos.filter((v) => v.getResourceId() == resourceId)[0];
+
+        let related = video.getSeminarName() && grouped[video.getSeminarName()];
+
+        return related || []; // At least return an empty array.
+    }
+>>>>>>> modal
 
 }

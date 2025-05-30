@@ -47,7 +47,7 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, parser, setSelectedVideo }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo }) {
 
 
     const [grouped, setGrouped] = useState([]);
@@ -87,20 +87,14 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
 
     const actions = {
         play: playVideo,
-        resume: playVideo,
+        resume: playVideo,//how much time remaining
         rewatch: playVideo,
         purchase: function() { setShowModal(true) }
     };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
-    let currentSeminar = null;
-    for (const seminar in grouped) {
-        if (grouped[seminar].some(v => v.getVideoResourceId() === video.getVideoResourceId())) {
-            currentSeminar = seminar;
-            break;
-        }
-    }
-    const seminarVideos = currentSeminar ? grouped[currentSeminar] : [];
+    let currentSeminar = video.getSeminarName();
+    const seminarVideos = parser.getRelatedVideos(video.getResourceId());
 
     return (
         <div className="video-details bg-zinc-900 min-h-screen">
@@ -127,7 +121,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
             </div>
             {/* Related videos section */}
             {seminarVideos.length > 1 && (
-                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} />
+                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} setSelectedVideo={setSelectedVideo} />
             )}
             {showModal && (
                 <Modal setShowModal={setShowModal} confirmAction={confirmPurchase}>
