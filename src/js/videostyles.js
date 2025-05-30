@@ -66,8 +66,7 @@ export const ControlBarContainer = styled(Container)(({ theme }) => ({
     borderBottomRightRadius: 10,
 }));
 
-
-export const videoPlayerTheme = createTheme({
+export const PlayerTheme = createTheme({
     components: {
         MuiSlider: {
             styleOverrides: {
@@ -131,4 +130,7 @@ export const videoPlayerTheme = createTheme({
         },
 
     },
+});
+export const PlayerThemeFullscreen = createTheme({
+
 });
