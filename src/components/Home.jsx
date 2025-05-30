@@ -37,19 +37,23 @@ export default function Home({ parser }) {
     const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
 
     useEffect(() => {
-        //  let s1 = new UserService(user);
-        // s1.listen();
 
-        let s2 = new WatchedVideoService(user.getUserId());
-        s2.listen();
-        let s3 = new PurchasedVideoService(user.getUserId());
-        s3.listen();  // can listen for mediapurchase events!
+        let s1 = new WatchedVideoService(user.getUserId());
+        s1.listen();
+        let s2 = new PurchasedVideoService(user.getUserId());
+        s2.listen();  // can listen for mediapurchase events!
 
 
-        //append collected data to user object
-        user.load(s2, (user, data) => {
+        // Get data from each Service's load() method,
+        // and use it consistent with this application's logic.
+        // Specifically, we add data to the user object for future use.
 
-            data.forEach(record => {
+        // WatchedVideoService
+        s1.load().then((resp) => {
+
+            let records = resp.records;
+
+            records.forEach(record => {
                 const resourceId = record.ResourceID__c;
                 const timestamp = record.Timestamp__c;
 
@@ -57,7 +61,20 @@ export default function Home({ parser }) {
             });
         });
 
-        s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
+        // PurchasedVideoService
+        s2.load().then((resp) => {
+            let records = resp.recrods;
+
+            records.forEach(record => {
+                const resourceId = record.ResourceID__c;
+                const timestamp = record.Timestamp__c;
+
+                user.addPurchased({ resourceId, timestamp });
+            });
+        });
+
+        s1.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
+        s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addPurchased({ resourceId: videoId, timestamp }) });
     }, [])
 
 
