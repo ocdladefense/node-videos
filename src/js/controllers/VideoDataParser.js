@@ -37,7 +37,7 @@ export default class VideoDataParser {
     }
 
     getList(list, seminars) {
-        if(list) {
+        if (list) {
             console.log(seminars);
             let lists = this.getLists();
             if (list.includes(lists)) {
@@ -53,14 +53,14 @@ export default class VideoDataParser {
     }
 
     filterById(data) {
-        
+
         let id = [];
         for (let i = 0; i < data.length; i++) {
             id.push(data[i].resourceId);
         }
-        
 
-        let filter = this.videos.filter(video => { 
+
+        let filter = this.videos.filter(video => {
             if (id.includes(video.getResourceId())) {
                 return video;
             }
@@ -70,18 +70,18 @@ export default class VideoDataParser {
         return filter;
     }
 
-   
 
-    
+
+
 
     getSeminars() {
         let seminars = [];
         let grouped = this.groupBySeminar()
-        seminars.push({ layout: "grouped",  value: "seminar", title: "All Seminars" });
+        seminars.push({ layout: "grouped", value: "seminar", title: "All Seminars" });
 
         for (const key in grouped) {
 
-            seminars.push({ layout: "grouped",  value: key, title: key })
+            seminars.push({ layout: "grouped", value: key, title: key })
         }
         console.log(seminars);
         return seminars;
@@ -90,7 +90,7 @@ export default class VideoDataParser {
     getAllVideos() {
         let videoList = [];
         let v = this.videos;
-        
+
         for (var i = v.length - 1; i > -1; i--) {
             videoList.push(v[i]);
         }
@@ -135,7 +135,7 @@ export default class VideoDataParser {
 
 
     getVideos(list, prevWatched, purchased) {
-        
+
         // switch (list) {
         //     case "all":
         //         return this.getAllVideos();
@@ -152,7 +152,7 @@ export default class VideoDataParser {
         //         return this.getAllVideos();
         // }
         console.log(list);
-        if(list === "all") {
+        if (list === "all") {
             return this.getAllVideos();
         } else if (list === "seminar") {
             return this.groupBySeminar();
@@ -167,14 +167,12 @@ export default class VideoDataParser {
             return this.getAllVideos();
         }
 
-        
-        
+
+
     }
 
 
 
-<<<<<<< HEAD
-=======
     getRelatedVideos(resourceId) {
 
         if (!this.videos || this.videos.length === 0) return [];
@@ -186,6 +184,5 @@ export default class VideoDataParser {
 
         return related || []; // At least return an empty array.
     }
->>>>>>> modal
 
 }
