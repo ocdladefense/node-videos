@@ -4,21 +4,26 @@
         "userName": "John Doe",
         "purchasedVideos": [
             {
-                "subject": null,
-                "speakers": "Tristen Edwards, David Elkanich & Carl Macpherson",
-                "resourceId": "Q6TRolTHbKY",
-                "published": true,
-                "originalDate": null,
-                "name": "Part 1: Obtaining Police Records & Ethics Presentations",
-                "id": "a2A0a000009QSWJEA4",
-                "description": "The first part of the 2020 Annual Conference,  moderated by Kati Dunn of Canyon City, occurred Wednesday, May 20, 2020. Topics: \r\n\"Obtaining Police Disciplinary Records\" Tristen Edwards, Meto PD, and \"Ethics: Can I take my client's phone? Ethical Concerns in Processing Client Evidence,\" by Carl Macpherson, Metro PD, and David Elkanich, Portland.",
-                "free": false
+                "resourceId": "Q6TRolTHbKY"
+            },
+            {
+                "resourceId": "9w-ROKc0BWU"
+            },
+            {
+                "resourceId": "1CgKDovCgZQ"
+            },
+            {
+                "resourceId": "hLm9-mEvhJw"
             }
         ],
         "previouslyWatched": [
             {
                 "resourceId": "_4xNa80IP3o",
                 "timeStamp": 120
+            },
+            {
+                "resourceId": "hLm9-mEvhJw",
+                "timeStamp": 300
             }
         ]
     },

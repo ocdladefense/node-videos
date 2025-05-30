@@ -4,48 +4,6 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos;
 
-
-
-
-
-    /*
-    const actions = {
-        all: sortByOldestSeminar,
-        recent: { value: "recent", title: "Most Recent", action: sortByNewestSeminar },
-        oldest: { value: "oldest", title: "Oldest", action: sortByOldestSeminar },
-        my: { value: "my", title: "My List", action: sortByOldestSeminar },
-        favorites: { value: "favorites", title: "Favorites", action: sortByOldestSeminar },
-        continue: { value: "continue", title: "Continue Watching", action: sortByOldestSeminar }
-    };
-    */
-
-    // const sortByNewestSeminar = () => setFilter(parser.groupBySeminar());
-    // const sortByOldestSeminar = () => setFilter(parser.sortByOldestSeminar());
-    // const filterBySeminar = (seminar) => setFilter(parser.filterBySeminar(seminar));
-
-
-
-    getLists() {
-
-        return [
-            { layout: "flat", value: "all", title: "All" },
-            { layout: "grouped", value: "seminar", title: "By Seminar" },
-            { value: "recent", title: "Recently Added" },
-            { value: "coming", title: "Coming Soon" },
-            { value: "favorites", title: "Favorites" },
-            { value: "continue", title: "Continue Watching" },
-            { value: "purchased", title: "Purchased" }, // List of all videos that have been purchased.
-        ];
-    }
-
-    getList(list) {
-        let lists = this.getLists();
-
-        let filtered = lists.filter((item) => list === item.value)[0];
-        console.log(filtered);
-        return filtered;
-    }
-
     constructor(videos) {
         this.videos = videos;
     }
@@ -65,18 +23,78 @@ export default class VideoDataParser {
     }
 
 
+    getLists() {
+
+        return [
+            { layout: "flat", value: "all", title: "All" },
+            { layout: "grouped", value: "seminar", title: "By Seminar" },
+            { value: "recent", title: "Recently Added" },
+            { value: "coming", title: "Coming Soon" },
+            { value: "favorites", title: "Favorites" },
+            { value: "continue", title: "Continue Watching" },
+            { value: "purchased", title: "Purchased" }, // List of all videos that have been purchased.
+        ];
+    }
+
+    getList(list, seminars) {
+        if(list) {
+            console.log(seminars);
+            let lists = this.getLists();
+            if (list.includes(lists)) {
+                let filtered = lists.filter((item) => list === item.value)[0];
+                console.log(filtered);
+                return filtered;
+            } else {
+                let filtered = seminars.filter((item) => list === item.value)[0];
+                console.log(filtered);
+                return filtered;
+            }
+        }
+    }
+
+    filterById(data) {
+        
+        let id = [];
+        for (let i = 0; i < data.length; i++) {
+            id.push(data[i].resourceId);
+        }
+        
+
+        let filter = this.videos.filter(video => { 
+            if (id.includes(video.getResourceId())) {
+                return video;
+            }
+        });
+        console.log(filter);
+
+        return filter;
+    }
+
+   
+
+    
 
     getSeminars() {
         let seminars = [];
         let grouped = this.groupBySeminar()
-        seminars.push({ title: "All Seminars", type: "grouped", value: "seminar" });
+        seminars.push({ layout: "grouped",  value: "seminar", title: "All Seminars" });
 
         for (const key in grouped) {
 
-            seminars.push({ title: key, type: "grouped", value: key })
+            seminars.push({ layout: "grouped",  value: key, title: key })
         }
-
+        console.log(seminars);
         return seminars;
+    }
+
+    getAllVideos() {
+        let videoList = [];
+        let v = this.videos;
+        
+        for (var i = v.length - 1; i > -1; i--) {
+            videoList.push(v[i]);
+        }
+        return videoList;
     }
 
 
@@ -86,10 +104,6 @@ export default class VideoDataParser {
             let textB = b.getVideoName();
             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
         });
-    }
-
-    sortSeminar() {
-
     }
 
 
@@ -111,32 +125,50 @@ export default class VideoDataParser {
         return Object.groupBy(this.videos, (video) => video.getSeminarName());
     }
 
-    filterBySeminar(seminar) {
-        console.log(seminar);
-        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
-        return Object.keys(grouped).reduce((acc, key) => {
-            if (seminar.includes(key)) {
-                acc[key] = grouped[key];
-                acc[key] = grouped[key];
-            }
-            return acc;
-        }, {});
 
+    filterSeminar(list) {
+        let grouped = this.groupBySeminar();
+        let filtered = Object.fromEntries(Object.entries(grouped).filter(([key]) => key === list));
+        console.log(filtered);
+        return filtered;
     }
 
-    getVideos(list) {
-        switch (list) {
-            case "all":
-                return this.videos.reverse();
-                break;
-            case "seminar":
-                return this.groupBySeminar();
-                break;
-            default:
-                return this.videos.reverse();
 
-
+    getVideos(list, prevWatched, purchased) {
+        
+        // switch (list) {
+        //     case "all":
+        //         return this.getAllVideos();
+        //         break;
+        //     case "seminar":
+        //         return this.groupBySeminar();
+        //         break;
+        //     case "continue":
+        //         return this.filterById(prevWatched);
+        //         break;
+        //     case "purchased":
+        //         return this.filterById(purchased);
+        //     default:
+        //         return this.getAllVideos();
+        // }
+        console.log(list);
+        if(list === "all") {
+            return this.getAllVideos();
+        } else if (list === "seminar") {
+            return this.groupBySeminar();
+        } else if (list === "continue") {
+            return this.filterById(prevWatched);
+        } else if (list === "purchased") {
+            return this.filterById(purchased);
+        } else if (list !== "all" && list !== "seminar" && list !== "recent" && list !== "continue" && list !== "purchased" && list !== undefined) {
+            console.log(list);
+            return this.filterSeminar(list);
+        } else {
+            return this.getAllVideos();
         }
+
+        
+        
     }
 
 
