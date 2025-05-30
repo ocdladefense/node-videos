@@ -46,9 +46,7 @@ export default class WatchedVideoService {
         const query = `SELECT Name, CreatedById, ResourceId__c, Timestamp__c FROM Watched_Video__c WHERE CreatedById = '${this.#userId}'`;
 
         let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-        let resp = await api.query(query);
-
-        return resp.records;
+        return api.query(query);
     }
 
 
