@@ -63,7 +63,7 @@ export default function Home({ parser }) {
 
         // PurchasedVideoService
         s2.load().then((resp) => {
-            let records = resp.recrods;
+            let records = resp.records;
 
             records.forEach(record => {
                 const resourceId = record.ResourceID__c;

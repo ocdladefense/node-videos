@@ -74,6 +74,7 @@ export default class PurchasedVideoService {
     // Note: not necessarily happening here, but
     async save(videoId, timestamp) {
 
+        let resp;
         // Mock of an actual REST callout for purchased videos.
         let api = new Promise((resolve, reject) => {
             resolve({ success: true, resourceId: videoId, timestamp: timestamp });
