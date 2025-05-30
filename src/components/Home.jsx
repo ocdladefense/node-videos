@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
-import VideoPlayerContainer from './VideoPlayerContainer';
+import VideoPlayerContainer from './player/VideoPlayerContainer.jsx';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
