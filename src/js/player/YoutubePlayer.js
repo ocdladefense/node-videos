@@ -268,6 +268,14 @@ export default class YouTubePlayer extends VideoPlayer {
 
     startPublishing() {
         this.#broadcastId = setInterval(() => {
+            let fn = (event) => {
+
+                this.#_state = event.data;
+                console.log(event);
+                let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
+                this.#player.getIframe().dispatchEvent(e);
+            };
+            fn();
             this.#subscribers.forEach((fn) => fn(this.serialize()));
         }, 1000);
     }
