@@ -47,12 +47,13 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched = true, elapsedTime = 0, setSelectedVideo, user }) {
 
 
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
+    let buttons = [];
 
     // Retrieve data from the server only once during lifecycle.
     useEffect(() => {
@@ -85,6 +86,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         }
     };
 
+
     const actions = {
         play: playVideo,
         resume: playVideo,//how much time remaining
@@ -93,6 +95,14 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
+
+    if (user.hasPurchasedVideo(video.getResourceId())) {
+        buttons.push("play");
+    } else {
+        buttons.push("purchase");
+    }
+
+
     let currentSeminar = video.getSeminarName();
     const seminarVideos = parser.getRelatedVideos(video.getResourceId());
 
@@ -115,7 +125,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                     )}
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
 
-                    <VideoDetailsActions actions={actions} />
+                    <VideoDetailsActions actions={actions} buttons={buttons} />
 
                 </div>
             </div>
