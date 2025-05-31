@@ -30,7 +30,7 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
     // The player "publishes" its state and this component subscribes to these events with its addListener() method.
-    const [playerState, setPlayerState] = useState(player.serialize());
+    const [playerState, setPlayerState] = useState(JSON.stringify(player.getPlayerState()));
 
     const fullscreenRef = useRef(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
