@@ -21,6 +21,9 @@ const DEFAULT_PLAYER_WIDTH = 1200;
 // Height of the player, but can be overriden.
 const DEFAULT_PLAYER_HEIGHT = 720;
 
+// Interval, in milliseconds, to use when publishing events.
+const PUBLISH_INTERVAL = 1000;
+
 
 
 export default class YouTubePlayer extends VideoPlayer {
@@ -216,17 +219,16 @@ export default class YouTubePlayer extends VideoPlayer {
             },
             events: {
                 onReady: onReady,
-                onError: function(e) { console.error(e); },
+                onError: (event) => console.error(event),
                 onStateChange: (event) => {
-                    // console.log("YT Event:", event);
                     this.#_state = event.data;
-                    console.log(event);
-                    let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
-                    this.#player.getIframe().dispatchEvent(e);
+                    let playerState = this.getPlayerState();
+                    this.dispatchStateChange(playerState);
                 }
             }
         };
     }
+
 
 
 
@@ -256,28 +258,36 @@ export default class YouTubePlayer extends VideoPlayer {
         return {
             playerState: this.#_state,
             videoId: this.#video ? this.#video.getResourceId() : null,
+            resourceId: this.#video ? this.#video.getResourceId() : null,
             timestamp: this.getElapsedTime(), // Kept here temporarily for backwards-compatibility for other listeners.
             elapsedTime: this.getElapsedTime()
         };
     }
 
 
-    serialize() {
-        return JSON.stringify(this.getPlayerState());
-    }
+
 
     startPublishing() {
         this.#broadcastId = setInterval(() => {
-            let fn = (event) => {
+            let playerState = this.getPlayerState();
+            this.dispatchStateChange(playerState);
+            this.#subscribers.forEach((fn) => fn(JSON.serialize(playerState)));
+        }, PUBLISH_INTERVAL);
+    }
 
-                this.#_state = event.data;
-                console.log(event);
-                let e = this.getMediaPlayerEvent(this.#video.getResourceId(), this.getElapsedTime());
-                this.#player.getIframe().dispatchEvent(e);
-            };
-            fn();
-            this.#subscribers.forEach((fn) => fn(this.serialize()));
-        }, 1000);
+
+
+    /**
+     * dispatchStateChange
+     * 
+     */
+    dispatchStateChange(playerState) {
+        console.log("dispatchStateChange called.");
+        let e = new CustomEvent('mediastatechange', {
+            detail: playerState,
+            bubbles: true
+        });
+        this.#player.getIframe().dispatchEvent(e);
     }
 
 
