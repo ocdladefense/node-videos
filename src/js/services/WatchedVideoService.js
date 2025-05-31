@@ -12,6 +12,11 @@ export default class WatchedVideoService {
 
     #handlers = [];
 
+    // Only callout to the api every 10 events/seconds.
+    static SAVE_SECONDS = 10;
+
+    counter = 0;
+
 
     constructor(userId) {
         this.#userId = userId;
@@ -56,6 +61,10 @@ export default class WatchedVideoService {
 
     //create salesforce record for watchedVideo SOBject
     async save(videoId, timestamp) {
+
+        // Only push to API endpoint if we have hit the desired endpoint.
+        if (this.counter++ != 0 && (this.counter % WatchedVideoService.SAVE_SECONDS > 0)) return;
+
         let userId = this.#userId;
         let externalId = userId + '.' + videoId;
 
