@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
@@ -47,7 +47,7 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched = true, elapsedTime = 0, setSelectedVideo, user }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 563, setSelectedVideo, user }) {
 
 
     const [grouped, setGrouped] = useState([]);
@@ -55,11 +55,20 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     const [showModal, setShowModal] = useState(false);
     let buttons = [];
 
+
+
     // Retrieve data from the server only once during lifecycle.
+    const parserRef = useRef(null);
+
     useEffect(() => {
-        async function fn() { parser = await getVideoParser(); setGrouped(parser.groupBySeminar()); }
+        async function fn() {
+            const parser = await getVideoParser();
+            parserRef.current = parser;
+            setGrouped(parser.groupBySeminar());
+        }
         fn();
     }, []);
+
 
     function secondsToRoundedMinutes(seconds) {
         if (!seconds || isNaN(seconds)) return 0;
@@ -103,7 +112,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     if (user.hasPurchasedVideo(video.getResourceId())) {
         if (hasWatched && elapsedTime > 0) {
             const roundedMinutes = secondsToRoundedMinutes(elapsedTime);
-            buttons.push(`resume (${roundedMinutes} min)`);
+            buttons.push(`resume (${roundedMinutes} min)`); // e.g. resume (8 min)
             buttons.push("rewatch");
         } else {
             buttons.push("play");
@@ -111,6 +120,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     } else {
         buttons.push("purchase");
     }
+
 
 
     let currentSeminar = video.getSeminarName();
