@@ -47,7 +47,7 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 563, setSelectedVideo, user }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
 
 
     const [grouped, setGrouped] = useState([]);
@@ -58,23 +58,23 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
 
 
     // Retrieve data from the server only once during lifecycle.
-    const parserRef = useRef(null);
+    // const parserRef = useRef(null);
 
     useEffect(() => {
         async function fn() {
             const parser = await getVideoParser();
-            parserRef.current = parser;
             setGrouped(parser.groupBySeminar());
         }
         fn();
     }, []);
 
 
-    function secondsToRoundedMinutes(seconds) {
-        if (!seconds || isNaN(seconds)) return 0;
-        return Math.ceil(seconds / 60); // Round up
-    }
-
+    // function secondsToRoundedMinutes(seconds) {
+    //     if (!seconds || isNaN(seconds)) return 0;
+    //     return Math.ceil(seconds / 60); // Round up
+    // }
+    const watched = hasWatched && elapsedTime > 0;
+    const almostDone = video.getDuration && (elapsedTime / video.getDuration()) > 0.9;
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -110,18 +110,17 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     // data: has been purchased, has been watched, if has been watched, show time remaining
 
     if (user.hasPurchasedVideo(video.getResourceId())) {
-        if (hasWatched && elapsedTime > 0) {
-            const roundedMinutes = secondsToRoundedMinutes(elapsedTime);
-            buttons.push(`resume (${roundedMinutes} min)`); // e.g. resume (8 min)
+        buttons.push("play");
+
+        if (watched && !almostDone) {
+            buttons.push("resume");
+        } else if (almostDone || elapsedTime > 0) {
             buttons.push("rewatch");
-        } else {
-            buttons.push("play");
         }
+
     } else {
         buttons.push("purchase");
     }
-
-
 
     let currentSeminar = video.getSeminarName();
     const seminarVideos = parser.getRelatedVideos(video.getResourceId());
