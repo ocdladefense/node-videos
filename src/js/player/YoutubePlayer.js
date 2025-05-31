@@ -271,7 +271,7 @@ export default class YouTubePlayer extends VideoPlayer {
         this.#broadcastId = setInterval(() => {
             let playerState = this.getPlayerState();
             this.dispatchStateChange(playerState);
-            this.#subscribers.forEach((fn) => fn(JSON.serialize(playerState)));
+            this.#subscribers.forEach((fn) => fn(JSON.stringify(playerState)));
         }, PUBLISH_INTERVAL);
     }
 
