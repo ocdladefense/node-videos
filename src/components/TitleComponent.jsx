@@ -40,8 +40,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                             </>
                         ) : (
                             <>
-                                {/* <span className="text-gray-400">🔒</span>
-                                <span className="text-gray-500">Paid</span> */}
+                                <span className="text-gray-500">Paid</span>
                             </>
                         )}
                     </li>

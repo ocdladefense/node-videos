@@ -61,6 +61,10 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         fn();
     }, []);
 
+    function secondsToRoundedMinutes(seconds) {
+        if (!seconds || isNaN(seconds)) return 0;
+        return Math.ceil(seconds / 60); // Round up
+    }
 
 
     const playVideo = function() {
@@ -97,7 +101,13 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     // data: has been purchased, has been watched, if has been watched, show time remaining
 
     if (user.hasPurchasedVideo(video.getResourceId())) {
-        buttons.push("play");
+        if (hasWatched && elapsedTime > 0) {
+            const roundedMinutes = secondsToRoundedMinutes(elapsedTime);
+            buttons.push(`resume (${roundedMinutes} min)`);
+            buttons.push("rewatch");
+        } else {
+            buttons.push("play");
+        }
     } else {
         buttons.push("purchase");
     }
