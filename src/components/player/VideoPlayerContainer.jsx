@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 import MediaControlsFloating from './MediaControlsFloating';
-import { videoPlayerTheme, VideoContainer, TitleContainer, fullscreenButton } from '../../js/videostyles.js';
+import { PlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
 import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
 
@@ -32,9 +32,37 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
     // The player "publishes" its state and this component subscribes to these events with its addListener() method.
     const [playerState, setPlayerState] = useState(player.serialize());
 
+    const fullscreenRef = useRef(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    const toggleFullscreen = (event) => {
+        if (isFullscreen) {
+            document.exitFullscreen();
+        } else {
+            fullscreenRef.current?.requestFullscreen();
+        }
+    };
+
+    useEffect(() => {
+
+        fullscreenRef.current = document.querySelector('#playerBox');
+
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+
+    }, []);
 
     const pip = layout === "pip";
     const [width, height] = pip ? [400, 250] : [1200, 720];
+
+
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
@@ -62,7 +90,7 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     return (
 
-        <ThemeProvider theme={videoPlayerTheme} injectFirst>
+        <ThemeProvider theme={PlayerTheme} injectFirst>
 
 
             <Box id='playerBox' style={{ ...{ position: "relative", margin: "0 auto", width: width, height: height, overflow: "hidden" }, ...(!pip ? {} : { position: "fixed", top: "0px", right: "25px" }) }}>
@@ -70,18 +98,19 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
                     <h1>{video.getVideoName()}</h1>
                 </TitleContainer>
 
-                <VideoContainer maxWidth={false}>
-                    <div id="player-wrapper">
-                        <div id="player">
-                            <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+
+
+                <div id="blocker">
+                    <VideoContainer maxWidth={false}>
+                        <div id="player-wrapper">
+                            <div id="player">
+                                <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+                            </div>
                         </div>
-                    </div>
-                </VideoContainer>
+                    </VideoContainer>
+                </div>
 
-                <div id="blocker"></div>
-
-                {controls.split(",").includes("float") ? <MediaControlsFloating onBack={onBack} layout={layout} setLayout={setLayout} player={player} playerInitialized={playerInitialized} /> : <MediaControls layout={layout} onBack={onBack} setLayout={setLayout} player={player} playerInitialized={playerInitialized} />}
-
+                <MediaControls player={player} onBack={onBack} isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} playerInitialized={playerInitialized} />
 
 
             </Box>
@@ -89,3 +118,7 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     )
 }
+/* 
+-PIP stuff
+
+*/
