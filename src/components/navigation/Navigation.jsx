@@ -9,15 +9,6 @@ export default function Navigation() {
             label: "home"
         },
         {
-            url: "/videos",
-            label: "videos"
-        },
-        {
-            url: "/audio",
-            label: "audio",
-            hidden: true
-        },
-        {
             url: "/login",
             label: "login",
             hidden: true
@@ -34,12 +25,10 @@ export default function Navigation() {
         let phoneDisplay = !!item.hidden ? "hidden phone:hidden tablet:inline-block" : "phone:inline-block";
         return (
             <li class={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
-                <NavLink to={item.url}>{item.label}</NavLink>
-
-                {/*}
+                {/*<NavLink to={item.url}>{item.label}</NavLink> */}
                 <a href={item.url}>
                     <button class={`font-marketing text-white subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
-                </a>*/}
+                </a>
             </li>
         );
     });
@@ -60,7 +49,7 @@ export default function Navigation() {
         <nav className="tablet:px-8">
 
 
-            <ul className="inline-block" style={{ width: "100%" }}>
+            <ul className="text-zinc-100 inline-block" style={{ width: "100%" }}>
 
                 <li style={{ verticalAlign: "middle" }} className="inline-block p-3 laptop:px-4">
                     <a href="/">
@@ -75,18 +64,8 @@ export default function Navigation() {
                 </li>
             </ul>
 
-
-
-
-
-
             <ul id="mobile-menu" className="text-slate-50 block hidden min-h-[100vh] pt-[15vh]">
-
-
                 {all}
-
-
-
             </ul>
 
 

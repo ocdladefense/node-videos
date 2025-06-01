@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from "react-router";
-import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
-import Video from '../js/models/Video.js';
-import initThumbs from '../js/controllers/VideoThumbs';
-import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
@@ -12,52 +8,23 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-// Top-level reference to the "parser" that can return various lists of videos.
-let parser = new VideoDataParser();
-
-const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
-
-// @jbernal - previously in index.js
-// Retrieve video data and related thumbnail data.
-async function getVideoParser() {
-
-    const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
-    const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
-
-    let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-    let resp = await api.query(query);
-    parser.parse(resp.records);
-
-    let videos = parser.getVideos();
-
-    // Default thumb in case there is no available image.
-    Video.setDefaultThumbnail('http:/foobar');
-
-    const thumbnailMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
-
-    parser.getVideos().forEach(video => {
-        const thumbs = thumbnailMap.get(video.resourceId);
-        // console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
-        video.setThumbnail(thumbs);
-    });
 
 
-    return parser;
-}
-
-
-
-
-export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
+export default function VideoDetails({ parser, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
 
 
     let params = useParams();
-    const [video, setVideo] = useState(null);
-    const [grouped, setGrouped] = useState([]);
-    const [hasAccess2, setHasAccess2] = useState(hasAccess);
-    const [showModal, setShowModal] = useState(false);
     let buttons = [];
 
+    const [video, setVideo] = useState(null);
+
+    const [grouped, setGrouped] = useState([]);
+
+    const [hasAccess2, setHasAccess2] = useState(hasAccess);
+
+    const [showModal, setShowModal] = useState(false);
+
+    const navigate = function() { let href = "/player/" + video.getResourceId(); console.log(href); window.location.href = href; };
 
 
     // Retrieve data from the server only once during lifecycle.
@@ -66,7 +33,6 @@ export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, 
     useEffect(() => {
         async function fn() {
             let videoId = params.resourceId;
-            parser = await getVideoParser();
             setVideo(parser.getVideo(videoId));
             setGrouped(parser.groupBySeminar());
         }
@@ -84,11 +50,11 @@ export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, 
     const playVideo = function() {
         console.log("About to play the video!");
 
-        setRoute("player");
+        navigate();
     }
 
     const playVideoFromBeginning = function() {
-        setRoute("player");
+        navigate();
     }
 
     const confirmPurchase = async () => {
@@ -156,7 +122,7 @@ export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, 
                 </div>
                 : ""}
             {/* Related videos section */}
-            {seminarVideos.length > 1 && (
+            {video && seminarVideos.length > 1 && (
                 <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} setSelectedVideo={setSelectedVideo} />
             )}
             {showModal && (

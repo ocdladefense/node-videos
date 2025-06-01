@@ -10,6 +10,10 @@ import YouTubePlayer from '../js/player/YouTubePlayer.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import User from '../js/models/User.js';
+import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
+import Video from '../js/models/Video.js';
+import initThumbs from '../js/controllers/VideoThumbs';
+import VideoDataParser from "../js/controllers/VideoDataParser.js";
 
 
 window.playerMap = {
@@ -26,9 +30,46 @@ const player = new YouTubePlayer();
 let user = new User("005VC00000ET8LZ");
 
 
+
+// Top-level reference to the "parser" that can return various lists of videos.
+let parser = new VideoDataParser();
+
+const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
+
+// @jbernal - previously in index.js
+// Retrieve video data and related thumbnail data.
+async function getVideoParser() {
+
+    const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+    const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+
+    let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+    let resp = await api.query(query);
+    parser.parse(resp.records);
+
+    let videos = parser.getVideos();
+
+    // Default thumb in case there is no available image.
+    Video.setDefaultThumbnail('http:/foobar');
+
+    const thumbnailMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
+
+    parser.getVideos().forEach(video => {
+        const thumbs = thumbnailMap.get(video.resourceId);
+        // console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
+        video.setThumbnail(thumbs);
+    });
+
+
+    return parser;
+}
+
+
+
+
 export function App2() {
 
-
+    const [appReady, setAppReady] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [route, setRoute] = useState("list");
     let component, hasWatched, purchasedVideo;
@@ -80,21 +121,33 @@ export function App2() {
 
         s1.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
         s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addPurchased({ resourceId: videoId, timestamp }) });
-    }, [])
+    }, []);
+
+
+    useEffect(() => {
+        async function fn() {
+            parser = await getVideoParser();
+            setAppReady(true);
+        }
+        fn();
+    }, []);
+
 
 
 
     return (
         <>
-            <Header />
-            <div class="container mx-auto">
-                <Routes>
-                    <Route path="/" element={<VideoList setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
-                    <Route path="/details/:resourceId" element={<VideoDetails setRoute={setRoute} user={user} onBack={() => { setRoute("list"); }} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} />} />
-                    <Route path="/player" element={<VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />} />
-                </Routes>
-            </div>
-            <Footer />
+            {!parser.isInitialized() ? <h1>My splash screen</h1> :
+                <><Header />
+                    <div class="container mx-auto">
+                        <Routes>
+                            <Route path="/" element={<VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
+                            <Route path="/details/:resourceId" element={<VideoDetails parser={parser} setRoute={setRoute} user={user} onBack={() => { setRoute("list"); }} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} />} />
+                            <Route path="/player/:resourceId" element={<VideoPlayerContainer parser={parser} player={player} user={user} onBack={() => { setRoute("details"); }} />} />
+                        </Routes>
+                    </div>
+                    <Footer /></>
+            }
         </>
     );
 }

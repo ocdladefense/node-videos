@@ -4,6 +4,8 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos = [];
 
+    initialized = false;
+
     constructor(videos) {
         this.videos = videos;
     }
@@ -18,10 +20,15 @@ export default class VideoDataParser {
             videos.push(Video.fromApiData(vd));
         }
         this.videos = videos;
+        this.initialized = true;
 
         return this;
     }
 
+
+    isInitialized() {
+        return this.initialized;
+    }
 
     getLists() {
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useParams } from "react-router";
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 import MediaControlsFloating from './MediaControlsFloating';
@@ -17,7 +18,15 @@ import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
  * @param {StringList} controls A comma separated list of characteristics to be applied to the MediaControls.
  * @returns 
  */
-export default function VideoPlayerContainer({ player, video, onBack, controls = "standard,float,autohide,hidden" }) {
+export default function VideoPlayerContainer({ parser, player, onBack, controls = "standard,float,autohide,hidden" }) {
+
+    // Get page parameters.
+    let params = useParams();
+
+    let videoId = params.resourceId;
+
+    // Reference to the video that will be played.
+    const [video, setVideo] = useState(parser.getVideo(videoId));
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
@@ -34,6 +43,9 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     const fullscreenRef = useRef(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
+
+
+
 
     const toggleFullscreen = (event) => {
         if (isFullscreen) {
