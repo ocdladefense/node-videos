@@ -10,7 +10,7 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-export default function VideoDetails({ parser, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
+export default function VideoDetails({ parser, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
 
 
     let params = useParams();
@@ -25,7 +25,7 @@ export default function VideoDetails({ parser, onBack, setRoute, hasAccess, hasW
     const [showModal, setShowModal] = useState(false);
 
     const navigate = function() { let href = "/player/" + video.getResourceId(); console.log(href); window.location.href = href; };
-
+    const onBack = function() { let href = "/"; console.log(href); window.location.href = href; };
 
     // Retrieve data from the server only once during lifecycle.
     // const parserRef = useRef(null);
