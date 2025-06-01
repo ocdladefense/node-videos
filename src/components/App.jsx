@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
 // import Home from "./Home";
-import VideoList from './VideoList';
+import Home from './Home';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './player/VideoPlayerContainer';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
@@ -14,7 +14,8 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
-
+import { clearThumbCache } from '../js/controllers/VideoThumbs';
+window.clearCache = clearThumbCache;
 
 window.playerMap = {
     youtube: YouTubePlayer,
@@ -141,7 +142,7 @@ export function App2() {
                 <><Header />
                     <div class="container mx-auto">
                         <Routes>
-                            <Route path="/" element={<VideoList parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
+                            <Route path="/" element={<Home parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
                             <Route path="/details/:resourceId" element={<VideoDetails parser={parser} setRoute={setRoute} user={user} onBack={() => { setRoute("list"); }} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} />} />
                             <Route path="/player/:resourceId" element={<VideoPlayerContainer parser={parser} player={player} user={user} onBack={() => { setRoute("details"); }} />} />
                         </Routes>
