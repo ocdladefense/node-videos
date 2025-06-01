@@ -42,7 +42,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #initialized = false;
 
     // The state of the player.
-    #_state = -1;
+    #_state = -9;
 
 
     // The id of an window-bound broadcaster.
@@ -81,8 +81,9 @@ export default class YouTubePlayer extends VideoPlayer {
     }
 
 
-    addListener(listener) {
-        this.#subscribers.push(listener);
+
+    onElapsedTimeChange(subscriber) {
+        this.#subscribers.push(subscriber);
     }
 
 
@@ -92,35 +93,42 @@ export default class YouTubePlayer extends VideoPlayer {
      * @param {function} setPlayerInitialized 
      * @param {function} onStateChange 
      */
-    load(elemId, setPlayerInitialized) {
-
-        // We will only start emitting player statuses if the user indicates they want to load and interact* with the player.
-        // we should do the reverse when we want to tear down this instance.
-        this.startPublishing();
-
-        // Executes when the player instance is actually ready to interact with.
-        // Technically this happens after initialization.
-        const onReady = () => {
-            this.#initialized = true;
-            setPlayerInitialized(true);
-            console.log("YouTube Player is initialized.");
-        };
+    async load(elemId, setPlayerInitialized) {
 
 
-        const onYouTubeIframeAPIReady = () => {
-            this.#scriptsReady = true;
-            const config = this.makeConfig(onReady);
-            this.#player = new YT.Player(elemId, config);
-        };
+
+        return new Promise((resolve, reject) => {
+
+            // Executes when the player instance is actually ready to interact with.
+            // Technically this happens after initialization.
+            const onReady = (event) => {
+                // We will only start emitting player statuses if the user indicates they want to load and interact* with the player.
+                // we should do the reverse when we want to tear down this instance.
+                this.startPublishing();
+                this.#player = event.target; // interesting this is the fully functioning player; perhaps unlike the `new YT.Player()` call, below.
+                this.#_state = event.data;
+                console.log(event);
+                this.#initialized = true;
+                console.log("YouTube Player is initialized.");
+                resolve(this);
+            };
+
+            const onYouTubeIframeAPIReady = () => {
+                this.#scriptsReady = true;
+                const config = this.makeConfig(onReady);
+                let player = new YT.Player(elemId, config);
+            };
 
 
-        window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-        if (!this.#scriptsReady) {
-            injectScriptElement("https://www.youtube.com/iframe_api");
-        } else {
-            onYouTubeIframeAPIReady();
-        }
+            if (!this.#scriptsReady) {
+                injectScriptElement("https://www.youtube.com/iframe_api");
+            } else {
+                onYouTubeIframeAPIReady();
+            }
+
+        });
     }
 
 
@@ -161,7 +169,6 @@ export default class YouTubePlayer extends VideoPlayer {
 
     stop() {
         this.#player.stopVideo();
-        this.#player.seekTo(0);
     }
 
     seekTo(time) {
@@ -282,7 +289,6 @@ export default class YouTubePlayer extends VideoPlayer {
      * 
      */
     dispatchStateChange(playerState) {
-        console.log("dispatchStateChange called.");
         let e = new CustomEvent('mediastatechange', {
             detail: playerState,
             bubbles: true
@@ -293,7 +299,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     stopPublishing() {
         clearInterval(this.#broadcastId);
-        console.log("Stopped broadcasting.");
+        console.log("Stopped publishing.");
     }
 
     removeListeners() {

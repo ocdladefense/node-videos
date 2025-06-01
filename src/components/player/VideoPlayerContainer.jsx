@@ -33,7 +33,7 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
     // I.e., playerState > -1 == initialized.
-    const [playerInitialized, setPlayerInitialized] = useState(false);
+    const [playerInitialized, setPlayerInitialized] = useState(player.isInitialized());
 
     // Change the layout of the player: in "standard", "fullscreen" or "pip".
     const [layout, setLayout] = useState("standard");
@@ -94,9 +94,9 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
         if (!player.isInitialized()) {
-            player.addListener(setPlayerState);
+            player.onElapsedTimeChange(setPlayerState);
             // player.init(setPlayerInitialized);
-            player.load("player", setPlayerInitialized);
+            player.load("player").then((player) => setPlayerInitialized(true));
         }
     }, [player.isInitialized()]);
 
