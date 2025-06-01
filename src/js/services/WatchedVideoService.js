@@ -13,7 +13,7 @@ export default class WatchedVideoService {
     #handlers = [];
 
     // Only callout to the api every 10 events/seconds.
-    static SAVE_SECONDS = 10;
+    static SAVE_INTERVAL = 10;
 
     counter = 0;
 
@@ -63,7 +63,7 @@ export default class WatchedVideoService {
     async save(videoId, timestamp) {
 
         // Only push to API endpoint if we have hit the desired endpoint.
-        if (this.counter++ != 0 && (this.counter % WatchedVideoService.SAVE_SECONDS > 0)) return;
+        if (this.counter++ != 0 && (this.counter % WatchedVideoService.SAVE_INTERVAL > 0)) return;
 
         let userId = this.#userId;
         let externalId = userId + '.' + videoId;
