@@ -18,7 +18,7 @@ import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
  * @param {StringList} controls A comma separated list of characteristics to be applied to the MediaControls.
  * @returns 
  */
-export default function VideoPlayerContainer({ parser, player, onBack, controls = "standard,float,autohide,hidden" }) {
+export default function VideoPlayerContainer({ parser, player, controls = "standard,float,autohide,hidden" }) {
 
     // Get page parameters.
     let params = useParams();
@@ -27,6 +27,8 @@ export default function VideoPlayerContainer({ parser, player, onBack, controls 
 
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));
+
+    const onBack = function() { let href = "/details/" + video.getResourceId(); console.log(href); window.location.href = href; };
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
