@@ -2,6 +2,7 @@ import VideoPlayer from './VideoPlayer.js';
 import { injectScriptElement } from '../utils.js';
 
 
+const UNINITIALIZED = -9;
 
 const UNSTARTED = -1;
 
@@ -42,7 +43,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #initialized = false;
 
     // The state of the player.
-    #_state = -9;
+    #_state = UNINITIALIZED;
 
 
     // The id of an window-bound broadcaster.
@@ -93,7 +94,7 @@ export default class YouTubePlayer extends VideoPlayer {
      * @param {function} setPlayerInitialized 
      * @param {function} onStateChange 
      */
-    async load(elemId, setPlayerInitialized) {
+    async load(elemId) {
 
 
 
@@ -138,8 +139,8 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean}
      */
     destroy() {
-        this.#_state = -1;
-        this.removeListeners();
+        this.#_state = UNINITIALIZED;
+        this.removeSubscribers();
         this.stopPublishing();
         this.#player.destroy();
         this.#player = null;
@@ -302,7 +303,7 @@ export default class YouTubePlayer extends VideoPlayer {
         console.log("Stopped publishing.");
     }
 
-    removeListeners() {
+    removeSubscribers() {
         this.#subscribers = [];
     }
 }
