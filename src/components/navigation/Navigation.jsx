@@ -1,5 +1,5 @@
 
-import { vNode, View } from "@ocdla/view";
+import { NavLink } from "react-router-dom";
 import Hamburger from "./Hamburger";
 
 export default function Navigation() {
@@ -33,10 +33,13 @@ export default function Navigation() {
     let top = items.map(item => {
         let phoneDisplay = !!item.hidden ? "hidden phone:hidden tablet:inline-block" : "phone:inline-block";
         return (
-            <li className={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
+            <li class={`hidden ${phoneDisplay} p-2 laptop:p-6`}>
+                <NavLink to={item.url}>{item.label}</NavLink>
+
+                {/*}
                 <a href={item.url}>
                     <button class={`font-marketing text-white subpixel-antialiased hover:text-wb-cordovan`}>{item.label}</button>
-                </a>
+                </a>*/}
             </li>
         );
     });

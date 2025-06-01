@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from "react-router";
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
@@ -47,9 +48,11 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
+export default function VideoDetails({ onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
 
 
+    let params = useParams();
+    const [video, setVideo] = useState(null);
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
@@ -62,7 +65,9 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
 
     useEffect(() => {
         async function fn() {
-            const parser = await getVideoParser();
+            let videoId = params.resourceId;
+            parser = await getVideoParser();
+            setVideo(parser.getVideo(videoId));
             setGrouped(parser.groupBySeminar());
         }
         fn();
@@ -74,7 +79,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     //     return Math.ceil(seconds / 60); // Round up
     // }
     const watched = hasWatched && elapsedTime > 0;
-    const almostDone = video.getDuration && (elapsedTime / video.getDuration()) > 0.9;
+    const almostDone = video && (elapsedTime / video.getDuration() > 0.9);
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -109,7 +114,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
 
-    if (user.hasPurchasedVideo(video.getResourceId())) {
+    if (user.hasPurchasedVideo(video && video.getResourceId())) {
         buttons.push("play");
 
         if (watched && !almostDone) {
@@ -122,32 +127,34 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         buttons.push("purchase");
     }
 
-    let currentSeminar = video.getSeminarName();
-    const seminarVideos = parser.getRelatedVideos(video.getResourceId());
+    let currentSeminar = video && video.getSeminarName();
+    const seminarVideos = parser.getRelatedVideos(video && video.getResourceId());
 
     return (
+
         <div className="video-details bg-zinc-900 min-h-screen">
             <button className="absolute top-4 left-4 text-zinc-300 text-3xl z-20" onClick={onBack}>←</button>
 
+            {video ?
+                <div className="video-content relative w-full">
+                    {/* <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1> */}
+                    <img
+                        src={video.getVideoThumbnail(video.getMaxResThumb())}
+                        alt={'Thumbnail for ${video.getVideoName()}'}
+                        className="w-full object-cover h-[700px] md:h-[400px] lg:h-[300px]"
+                    />
+                    <div className="absolute bottom-0 left-0 p-6 bg-black/70 w-full md:w-3/4">
+                        <h1 className="text-4xl font-bold mb-2 text-left">{video.getVideoName()}</h1>
+                        {currentSeminar && (
+                            <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
+                        )}
+                        <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
 
-            <div className="video-content relative w-full">
-                {/* <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1> */}
-                <img
-                    src={video.getVideoThumbnail(video.getMaxResThumb())}
-                    alt={'Thumbnail for ${video.getVideoName()}'}
-                    className="w-full object-cover h-[700px] md:h-[400px] lg:h-[300px]"
-                />
-                <div className="absolute bottom-0 left-0 p-6 bg-black/70 w-full md:w-3/4">
-                    <h1 className="text-4xl font-bold mb-2 text-left">{video.getVideoName()}</h1>
-                    {currentSeminar && (
-                        <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
-                    )}
-                    <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
+                        <VideoDetailsActions actions={actions} buttons={buttons} />
 
-                    <VideoDetailsActions actions={actions} buttons={buttons} />
-
+                    </div>
                 </div>
-            </div>
+                : ""}
             {/* Related videos section */}
             {seminarVideos.length > 1 && (
                 <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} setSelectedVideo={setSelectedVideo} />

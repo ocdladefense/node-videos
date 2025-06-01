@@ -134,6 +134,11 @@ export default class VideoDataParser {
     }
 
 
+    getVideo(resourceId) {
+        return this.videos.filter((video) => video.resourceId === resourceId)[0];
+    }
+
+
     getVideos(list, prevWatched, purchased) {
 
         // switch (list) {

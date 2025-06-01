@@ -1,13 +1,15 @@
-import React from 'react';
+import { useNavigate } from "react-router";
+
 
 export default function TitleComponent({ video, index, setSelectedVideo, setRoute, user }) {
     const hasAccess = video.isFree() || user.getPurchasedVideo(video.getVideoResourceId());
-
+    // const navigate = useNavigate("/details/" + video.getResourceId());
+    const navigate = function() { let href = "/details/" + video.getResourceId(); console.log(href); window.location.href = href; };
 
     return (
         <li
             key={video.id || index}
-            onClick={() => { setRoute("details"); setSelectedVideo(video); }}
+            onClick={navigate}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
             data-video-id={video.getVideoResourceId()}
         >

@@ -12,13 +12,15 @@ export default class Video {
     seminar;
     free;
     thumbnail;
-    
+
     static defaultThumbNail;
 
 
     constructor(title) {
         this.name = title;
     }
+
+
 
     static fromApiData(data) {
         let video = new Video(data.Name);
@@ -37,6 +39,10 @@ export default class Video {
         return video;
     }
 
+
+    getDuration() {
+        return 1000;
+    }
 
     // ------------------- Get all the data fields ------------------- //
     getVideoId() {
