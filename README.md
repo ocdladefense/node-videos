@@ -26,6 +26,7 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
 * [Babel online parser](https://babeljs.io/repl/#?browsers=defaults)
 * Ubuntu: How to run an express server [as a service](https://www.google.com/search?q=ubuntu+how+to+run+a+node+express+server+as+a+service)
 * [React Router](https://reactrouter.com/start/framework/navigating)
+* [Complete guide to routing in React](https://hygraph.com/blog/routing-in-react)
 
 
 ## Deployment
