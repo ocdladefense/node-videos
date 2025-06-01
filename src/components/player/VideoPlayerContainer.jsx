@@ -95,7 +95,6 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
     useEffect(() => {
         if (!player.isInitialized()) {
             player.onElapsedTimeChange(setPlayerState);
-            // player.init(setPlayerInitialized);
             player.load("player").then((player) => setPlayerInitialized(true));
         }
     }, [player.isInitialized()]);
