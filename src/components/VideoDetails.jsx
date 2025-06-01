@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
@@ -47,20 +47,34 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
 
 
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
+    let buttons = [];
+
+
 
     // Retrieve data from the server only once during lifecycle.
+    // const parserRef = useRef(null);
+
     useEffect(() => {
-        async function fn() { parser = await getVideoParser(); setGrouped(parser.groupBySeminar()); }
+        async function fn() {
+            const parser = await getVideoParser();
+            setGrouped(parser.groupBySeminar());
+        }
         fn();
     }, []);
 
 
+    // function secondsToRoundedMinutes(seconds) {
+    //     if (!seconds || isNaN(seconds)) return 0;
+    //     return Math.ceil(seconds / 60); // Round up
+    // }
+    const watched = hasWatched && elapsedTime > 0;
+    const almostDone = video.getDuration && (elapsedTime / video.getDuration()) > 0.9;
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -85,6 +99,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         }
     };
 
+
     const actions = {
         play: playVideo,
         resume: playVideo,//how much time remaining
@@ -93,6 +108,20 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
+
+    if (user.hasPurchasedVideo(video.getResourceId())) {
+        buttons.push("play");
+
+        if (watched && !almostDone) {
+            buttons.push("resume");
+        } else if (almostDone || elapsedTime > 0) {
+            buttons.push("rewatch");
+        }
+
+    } else {
+        buttons.push("purchase");
+    }
+
     let currentSeminar = video.getSeminarName();
     const seminarVideos = parser.getRelatedVideos(video.getResourceId());
 
@@ -115,7 +144,7 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                     )}
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
 
-                    <VideoDetailsActions actions={actions} />
+                    <VideoDetailsActions actions={actions} buttons={buttons} />
 
                 </div>
             </div>
