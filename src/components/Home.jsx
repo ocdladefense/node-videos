@@ -25,7 +25,7 @@ export default function Home({ parser, user, setSelectedVideo }) {
 
             <div className='inline-flex w-full h-[100px] justify-between'>
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
-                <div className="inline-flex">
+                <div className="inline-flex phone:flex-wrap">
                     <DropdownMenu
                         label="Show"
                         items={parser.getLists()}

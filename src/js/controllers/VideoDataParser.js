@@ -172,7 +172,7 @@ export default class VideoDataParser {
             return this.filterById(prevWatched);
         } else if (list === "purchased") {
             return this.filterById(purchased);
-        } else if (list !== "all" && list !== "seminar" && list !== "recent" && list !== "continue" && list !== "purchased" && list !== undefined) {
+        } else if (list !== "all" && list !== "seminar" && list !== "recent" && list !== "coming" && list !== "favorites" && list !== "continue" && list !== "purchased" && list !== undefined) {
             console.log(list);
             return this.filterSeminar(list);
         } else {
