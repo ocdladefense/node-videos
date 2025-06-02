@@ -4,22 +4,41 @@ import Video from '../models/Video.js';
 export default class VideoDataParser {
     videos = [];
 
+    seminars = new Map();
+
     initialized = false;
 
+    lists = [
+        { layout: "flat", value: "all", label: "All" },
+        { layout: "grouped", groupBy: "seminar", value: "seminar", label: "By Seminar" },
+        { layout: "grouped", groupBy: "year", value: "year", label: "By Year" },
+        { value: "watched", label: "Continue Watching" },
+        { value: "purchased", label: "Purchased" }, // List of all videos that have been purchased.
+        { value: "recent", label: "Recently Added" },
+        { value: "coming", label: "Coming Soon" },
+        { value: "favorites", label: "Favorites" }
+    ];
+
+
+
     constructor(videos) {
-        this.videos = videos;
+        this.videos = videos || [];
     }
 
+
+    getSeminars() {
+        return this.seminars;
+    }
 
     parse(apiData) {
         apiData = apiData || [];
 
-        let videos = [];
-        for (let d in apiData) {
-            let vd = apiData[d];
-            videos.push(Video.fromApiData(vd));
+        for (let i = 0; i < apiData.length; i++) {
+            let record = apiData[i];
+            let video = Video.fromApiData(record);
+            this.videos.push(video);
+            this.seminars.set(video.getSeminarId(), video.getSeminarName());
         }
-        this.videos = videos;
         this.initialized = true;
 
         return this;
@@ -31,32 +50,12 @@ export default class VideoDataParser {
     }
 
     getLists() {
+        return this.lists;
 
-        return [
-            { layout: "flat", value: "all", title: "All" },
-            { layout: "grouped", value: "seminar", title: "By Seminar" },
-            { value: "recent", title: "Recently Added" },
-            { value: "coming", title: "Coming Soon" },
-            { value: "favorites", title: "Favorites" },
-            { value: "continue", title: "Continue Watching" },
-            { value: "purchased", title: "Purchased" }, // List of all videos that have been purchased.
-        ];
     }
 
-    getList(list, seminars) {
-        if (list) {
-            console.log(seminars);
-            let lists = this.getLists();
-            if (list.includes(lists)) {
-                let filtered = lists.filter((item) => list === item.value)[0];
-                console.log(filtered);
-                return filtered;
-            } else {
-                let filtered = seminars.filter((item) => list === item.value)[0];
-                console.log(filtered);
-                return filtered;
-            }
-        }
+    getList(list) {
+        return this.lists.filter((l) => l.value === list)[0];
     }
 
     filterById(data) {
@@ -81,18 +80,11 @@ export default class VideoDataParser {
 
 
 
-    getSeminars() {
-        let seminars = [];
-        let grouped = this.groupBySeminar()
-        seminars.push({ layout: "grouped", value: "seminar", title: "All Seminars" });
+    getSeminarOptions() {
 
-        for (const key in grouped) {
-
-            seminars.push({ layout: "grouped", value: key, title: key })
-        }
-        console.log(seminars);
-        return seminars;
+        return [...this.seminars.keys()].map((id) => { return { value: id, label: this.seminars.get(id) } });
     }
+
 
     getAllVideos() {
         let videoList = [];
@@ -115,8 +107,22 @@ export default class VideoDataParser {
 
 
 
-    groupBySeminar() {
-        let grouped = Object.groupBy(this.videos, (video) => video.getSeminarName());
+    static group(videos = [], by = "seminar") {
+
+
+
+        let filtered = videos.filter((video) => video.getSeminarId());
+
+        return Object.groupBy(filtered, (video) => video.getSeminarId());
+
+        // if by == "year" then return  something else.
+    }
+
+
+
+    sortByOldestSeminar() {
+        return Object.groupBy(this.videos, (video) => video.getSeminarName());
+        /*
         const keys = Object.keys(grouped);
         const reversedKeys = keys.reverse();
         const reversedGroupedObj = {};
@@ -126,18 +132,15 @@ export default class VideoDataParser {
         });
 
         return reversedGroupedObj;
-    }
-
-    sortByOldestSeminar() {
-        return Object.groupBy(this.videos, (video) => video.getSeminarName());
+        */
     }
 
 
-    filterSeminar(list) {
-        let grouped = this.groupBySeminar();
-        let filtered = Object.fromEntries(Object.entries(grouped).filter(([key]) => key === list));
-        console.log(filtered);
-        return filtered;
+    filterBySeminarId(seminarId, IDS_ONLY = false) {
+
+        let videos = this.videos.filter((video) => video.getSeminarId() == seminarId && seminarId != null);
+
+        return IDS_ONLY ? videos.map((video) => video.getResourceId()) : videos;
     }
 
 
@@ -146,55 +149,24 @@ export default class VideoDataParser {
     }
 
 
-    getVideos(list, prevWatched, purchased) {
+    getVideosById(ids = []) {
 
-        // switch (list) {
-        //     case "all":
-        //         return this.getAllVideos();
-        //         break;
-        //     case "seminar":
-        //         return this.groupBySeminar();
-        //         break;
-        //     case "continue":
-        //         return this.filterById(prevWatched);
-        //         break;
-        //     case "purchased":
-        //         return this.filterById(purchased);
-        //     default:
-        //         return this.getAllVideos();
-        // }
-        console.log(list);
-        if (list === "all") {
-            return this.getAllVideos();
-        } else if (list === "seminar") {
-            return this.groupBySeminar();
-        } else if (list === "continue") {
-            return this.filterById(prevWatched);
-        } else if (list === "purchased") {
-            return this.filterById(purchased);
-        } else if (list !== "all" && list !== "seminar" && list !== "recent" && list !== "coming" && list !== "favorites" && list !== "continue" && list !== "purchased" && list !== undefined) {
-            console.log(list);
-            return this.filterSeminar(list);
-        } else {
-            return this.getAllVideos();
-        }
+        return this.videos.filter((video) => ids.includes(video.resourceId));
+    }
 
 
+    getVideos(filterIds = null) {
 
+        return this.videos.filter((video) => (null == filterIds || filterIds.length < 1) ? true : filterIds.includes(video.getResourceId()));
     }
 
 
 
     getRelatedVideos(resourceId) {
 
-        if (!this.videos || this.videos.length === 0) return [];
-
-        let grouped = this.groupBySeminar();
         let video = this.videos.filter((v) => v.getResourceId() == resourceId)[0];
 
-        let related = video.getSeminarName() && grouped[video.getSeminarName()];
-
-        return related || []; // At least return an empty array.
+        return this.filterBySeminarId(video.getSeminarId());
     }
 
 }

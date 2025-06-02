@@ -1,17 +1,36 @@
 
 export default class Video {
+
+
     id;
+
     resourceId;
+
     name;
+
     description;
+
     date;
+
     published;
+
     public;
-    speakers;
-    eventId;
-    seminar;
+
     free;
+
     thumbnail;
+
+    speakers;
+
+    seminarId;
+
+    seminarName;
+
+    startDate;
+
+
+
+
 
     static defaultThumbNail;
 
@@ -23,6 +42,8 @@ export default class Video {
 
 
     static fromApiData(data) {
+        let relatedSeminar = data.Event__r || null;
+
         let video = new Video(data.Name);
         video.id = data.Id;
         video.resourceId = data.ResourceId__c;
@@ -33,7 +54,10 @@ export default class Video {
         video.public = data.IsPublic__c;
         video.speakers = data.Speakers__c;
         video.eventId = data.Event__c;
-        video.seminar = data.Event__r;
+        video.seminar = relatedSeminar && relatedSeminar.Name;
+        video.seminarId = data.Event__c;
+        video.startDate = relatedSeminar && relatedSeminar.Start_Date__c;
+
         video.free = true;
 
         return video;
@@ -84,16 +108,11 @@ export default class Video {
     }
 
     getSeminarId() {
-        return this.eventId;
+        return this.seminarId;
     }
 
     getSeminarName() {
-        if (this.seminar == null) {
-            return "No seminar data";
-        }
-        //console.log(
-        //    `getSeminarName: ${)
-        return this.seminar.Name;
+        return this.seminar || "";
     }
 
     getSeminarDate() {
@@ -135,7 +154,7 @@ export default class Video {
     }
 
     getDuration() {
-        
+
     }
 
     setThumbnail(thumbnailData) {

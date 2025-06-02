@@ -27,8 +27,6 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const elapsedTime = watched.timestamp || 0;
 
-    const grouoped = parser.groupBySeminar();
-
     const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
 
     const [showModal, setShowModal] = useState(false);

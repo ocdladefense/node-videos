@@ -41,7 +41,7 @@ window.user = user;
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser = new VideoDataParser();
 
-const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c';
+const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c ORDER BY Event__r.Start_Date__c DESC NULLS LAST';
 
 // @jbernal - previously in index.js
 // Retrieve video data and related thumbnail data.
@@ -119,7 +119,7 @@ export function App2() {
 
             records.forEach(record => {
                 const resourceId = record.ResourceID__c;
-                const timestamp = record.Timestamp__c;
+                const timestamp = 0;//record.Timestamp__c;
 
                 user.addPurchased({ resourceId, timestamp });
             });

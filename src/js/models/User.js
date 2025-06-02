@@ -45,6 +45,10 @@ export default class User {
         return this.purchased.values();
     }
 
+    getPurchasedIds() {
+        return [...this.purchased.keys()];
+    }
+
     hasPurchasedVideo(videoId) {
         return this.purchased.get(videoId) || false;
     }
@@ -65,6 +69,10 @@ export default class User {
 
     getWatchedVideos() {
         return this.watched.values();
+    }
+
+    getWatchedIds() {
+        return [...this.watched.keys()];
     }
 
     hasWatchedVideo(videoId) {

@@ -36,7 +36,7 @@ export default function DropdownMenu({ label, items = [], action }) {
                                 key={index}
                                 className={` flex items-center gap-2 px-4 py-2 text-sm hover:bg-slate-600 border-b`}
                             >
-                                <button type="button" value={item.value} onClick={(e) => { action(e.target.value); handleToggle(); }} className='w-full text-left'>{item.title}</button>
+                                <button type="button" value={item.value} onClick={(e) => { action(e.target.value); handleToggle(); }} className='w-full text-left'>{item.label}</button>
                             </li>
                         ))}
                     </ul>
