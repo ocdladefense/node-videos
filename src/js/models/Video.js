@@ -134,6 +134,10 @@ export default class Video {
         return "default";
     }
 
+    getDuration() {
+        
+    }
+
     setThumbnail(thumbnailData) {
         this.thumbnail = thumbnailData;
     }
