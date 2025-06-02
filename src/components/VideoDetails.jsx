@@ -10,18 +10,24 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-export default function VideoDetails({ parser, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
+export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
 
     let params = useParams();
+
+    let videoId = params.resourceId;
+
     let buttons = [];
 
-    const [video, setVideo] = useState(null);
+    const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const [grouped, setGrouped] = useState([]);
+    const [grouped, setGrouped] = useState(parser.groupBySeminar());
 
-    const [hasAccess2, setHasAccess2] = useState(hasAccess);
+    const [hasAccess, setHasAccess] = useState(user.hasWatched(videoId) && user.hasPurchased(videoId));
 
+    const watched = user.getWatchedVideo(videoId);
+    const hasWatched = !!watched.resourceId;
+    const elapsedTime = watched.timestamp || 0;
     const [showModal, setShowModal] = useState(false);
 
     const navigate = function() { let href = "/player/" + video.getResourceId(); console.log(href); window.location.href = href; };
@@ -29,22 +35,22 @@ export default function VideoDetails({ parser, hasAccess, hasWatched, elapsedTim
 
     // Retrieve data from the server only once during lifecycle.
     // const parserRef = useRef(null);
-
-    useEffect(() => {
-        async function fn() {
-            let videoId = params.resourceId;
-            setVideo(parser.getVideo(videoId));
-            setGrouped(parser.groupBySeminar());
-        }
-        fn();
-    }, []);
-
-
+    /*
+        useEffect(() => {
+            async function fn() {
+                let videoId = params.resourceId;
+                setVideo(parser.getVideo(videoId));
+                setGrouped(parser.groupBySeminar());
+            }
+            fn();
+        }, []);
+    
+    */
     // function secondsToRoundedMinutes(seconds) {
     //     if (!seconds || isNaN(seconds)) return 0;
     //     return Math.ceil(seconds / 60); // Round up
     // }
-    const watched = hasWatched && elapsedTime > 0;
+
     const almostDone = video && (elapsedTime / video.getDuration() > 0.9);
 
     const playVideo = function() {
@@ -79,14 +85,21 @@ export default function VideoDetails({ parser, hasAccess, hasWatched, elapsedTim
     };
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
+    if (hasWatched) {
+        buttons.push("resume");
+    }
+    else if (hasWatched && !almostDone) {
+        buttons.push("resume");
+    }
+    else if (user.hasPurchasedVideo(video && video.getResourceId())) {
 
-    if (user.hasPurchasedVideo(video && video.getResourceId())) {
-        buttons.push("play");
 
-        if (watched && !almostDone) {
+        if (hasWatched && !almostDone) {
             buttons.push("resume");
         } else if (almostDone || elapsedTime > 0) {
             buttons.push("rewatch");
+        } else {
+            buttons.push("play");
         }
 
     } else {

@@ -3,8 +3,6 @@ import User from "../js/models/User";
 
 export default function VideoDetailsActions({ buttons = ["play", "resume", "rewatch", "purchase"], actions }) {
 
-    let hasAccess2 = true;
-    let hasWatched = false;
     let showPlay = buttons.includes("play");
     let showResume = buttons.includes("resume");
     let showRewatch = buttons.includes("rewatch");
@@ -12,9 +10,9 @@ export default function VideoDetailsActions({ buttons = ["play", "resume", "rewa
     return (
         <div className="options space-y-2">
 
-            {showPlay && <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={actions["play"]}>Play Video</button>}
+            {showPlay && <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={actions["play"]}>Play</button>}
 
-            {showResume && <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={actions["resume"]}>Resume/Continue</button>}
+            {showResume && <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={actions["resume"]}>Continue Watching</button>}
 
             {showRewatch && <button className="text-xl border-2 bg-zinc-50 rounded-lg px-4 py-2 mr-3" onClick={actions["rewatch"]}>Start From Beginning</button>}
 

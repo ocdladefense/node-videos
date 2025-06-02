@@ -37,6 +37,9 @@ export default class User {
         return this.username;
     }
 
+
+    // Purchased video methods.
+
     getPurchasedVideos() {
         // return an array
         return this.purchased;
@@ -46,6 +49,20 @@ export default class User {
         return this.purchased.some((video) => video.resourceId == videoId);
     }
 
+    hasPurchased(videoId) {
+        return this.purchased.some((video) => video.resourceId == videoId);
+    }
+
+    getPurchasedVideo(videoId) {
+        let found = this.purchased.filter((video) => video.resourceId == videoId);
+
+        return found.length > 0 ? found[0] : {};
+    }
+
+
+
+    // Watched video methods.
+
     getWatchedVideos() {
         return this.watched;
     }
@@ -54,15 +71,19 @@ export default class User {
         return this.watched.some((video) => video.resourceId == videoId);
     }
 
-    getPurchasedVideo(videoId) {
-        return this.hasPurchasedVideo(videoId) && {};
+    hasWatched(videoId) {
+        return this.watched.some((video) => video.resourceId == videoId);
     }
 
     getWatchedVideo(videoId) {
-        return this.hasWatchedVideo(videoId) && {};
+        let found = this.watched.filter((video) => video.resourceId == videoId);
+
+        return found.length > 0 ? found[0] : {};
     }
 
 
+
+    // Add methods.
     addWatched(record) {
         this.watched.push(record);
     }

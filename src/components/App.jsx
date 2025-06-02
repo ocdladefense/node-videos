@@ -143,7 +143,9 @@ export function App2() {
                     <div class="container mx-auto">
                         <Routes>
                             <Route path="/" element={<Home parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
-                            <Route path="/details/:resourceId" element={<VideoDetails parser={parser} setRoute={setRoute} user={user} onBack={() => { setRoute("list"); }} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} />} />
+
+                            <Route path="/details/:resourceId" element={<VideoDetails parser={parser} setRoute={setRoute} user={user} />} />
+
                             <Route path="/player/:resourceId" element={<VideoPlayerContainer parser={parser} player={player} user={user} onBack={() => { setRoute("details"); }} />} />
                         </Routes>
                     </div>
