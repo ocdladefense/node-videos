@@ -35,7 +35,7 @@ const player = new YouTubePlayer();
 
 
 let user = new User(SF_USER_ID || "005VC00000ET8LZ");
-
+window.user = user;
 
 
 // Top-level reference to the "parser" that can return various lists of videos.
@@ -125,8 +125,8 @@ export function App2() {
             });
         });
 
-        s1.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
-        s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addPurchased({ resourceId: videoId, timestamp }) });
+        s1.onSave((videoId, timestamp) => { user.addWatched({ resourceId: videoId, timestamp }) });
+        s2.onSave((videoId, timestamp) => { user.addPurchased({ resourceId: videoId, timestamp }) });
     }, []);
 
 

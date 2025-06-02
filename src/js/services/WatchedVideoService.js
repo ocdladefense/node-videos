@@ -3,6 +3,7 @@ import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
 const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 
+const PLAYER_STATE_SEEKING = 101;
 
 export default class WatchedVideoService {
 
@@ -37,18 +38,18 @@ export default class WatchedVideoService {
     //respond to media event based on playerstate
     handleEvent = (event) => {
         console.log(event.detail);
-        const { playerState, resourceId, timestamp } = event.detail;
+        const { state, resourceId, timestamp } = event.detail;
 
         // playerState: UNSTARTED = -1, ENDED = 0, PLAYING = 1, PAUSED = 2, BUFFERING = 3, CUED = 5;
 
-        this.save(resourceId, timestamp);
+        this.save(resourceId, timestamp, state);
     }
 
 
 
     async load() {
 
-        const query = `SELECT Name, CreatedById, ResourceId__c, Timestamp__c FROM Watched_Video__c WHERE CreatedById = '${this.#userId}'`;
+        const query = `SELECT Name, CreatedById, ResourceId__c, Timestamp__c FROM Watched_Video__c WHERE CreatedById='${this.#userId}'`;
 
         let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
         return api.query(query);
@@ -60,10 +61,14 @@ export default class WatchedVideoService {
 
 
     //create salesforce record for watchedVideo SOBject
-    async save(videoId, timestamp) {
+    async save(videoId, timestamp, state) {
+
+        this.#handlers.forEach((callback) => {
+            callback(videoId, timestamp, state);
+        });
 
         // Only push to API endpoint if we have hit the desired endpoint.
-        if (this.counter++ != 0 && (this.counter % WatchedVideoService.SAVE_INTERVAL > 0)) return;
+        if (state != PLAYER_STATE_SEEKING && this.counter++ != 0 && (this.counter % WatchedVideoService.SAVE_INTERVAL > 0)) return;
 
         let userId = this.#userId;
         let externalId = userId + '.' + videoId;
@@ -81,9 +86,7 @@ export default class WatchedVideoService {
 
         try {
             resp = await api.upsert('Watched_Video__c', payload, "ExternalId__c");
-            this.#handlers.forEach((callback) => {
-                callback(videoId, timestamp);
-            });
+
         } catch (error) {
             console.warn("Error creating watched video record: ", error);
         }

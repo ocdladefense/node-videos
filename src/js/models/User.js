@@ -7,10 +7,10 @@ export default class User {
     username;
 
 
-    purchased = [];
+    purchased = new Map();
 
 
-    watched = [];
+    watched = new Map();
 
 
 
@@ -42,21 +42,21 @@ export default class User {
 
     getPurchasedVideos() {
         // return an array
-        return this.purchased;
+        return this.purchased.values();
     }
 
     hasPurchasedVideo(videoId) {
-        return this.purchased.some((video) => video.resourceId == videoId);
+        return this.purchased.get(videoId) || false;
     }
 
     hasPurchased(videoId) {
-        return this.purchased.some((video) => video.resourceId == videoId);
+        return this.purchased.get(videoId) || false;
     }
 
     getPurchasedVideo(videoId) {
-        let found = this.purchased.filter((video) => video.resourceId == videoId);
+        let found = this.purchased.get(videoId);
 
-        return found.length > 0 ? found[0] : {};
+        return found || {};
     }
 
 
@@ -64,33 +64,34 @@ export default class User {
     // Watched video methods.
 
     getWatchedVideos() {
-        return this.watched;
+        return this.watched.values();
     }
 
     hasWatchedVideo(videoId) {
-        return this.watched.some((video) => video.resourceId == videoId);
+        return this.watched.get(videoId) || false;
     }
 
     hasWatched(videoId) {
-        return this.watched.some((video) => video.resourceId == videoId);
+        return this.watched.get(videoId) || false;
     }
 
     getWatchedVideo(videoId) {
-        let found = this.watched.filter((video) => video.resourceId == videoId);
+        let found = this.watched.get(videoId);
 
-        return found.length > 0 ? found[0] : {};
+        return found || {};
     }
 
 
 
     // Add methods.
     addWatched(record) {
-        this.watched.push(record);
+        console.log(record);
+        this.watched.set(record.resourceId, record);
     }
 
 
     addPurchased(record) {
-        this.purchased.push(record);
+        this.purchased.set(record.resourceId, record);
     }
 
 

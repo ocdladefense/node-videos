@@ -16,6 +16,8 @@ const BUFFERING = 3;
 
 const VIDEO_CUED = 5;
 
+const PLAYER_STATE_SEEKING = 101;
+
 // Width of the player, but can be overriden.
 const DEFAULT_PLAYER_WIDTH = 1200;
 
@@ -38,6 +40,9 @@ export default class YouTubePlayer extends VideoPlayer {
     // The video currently assigned to this player.
     // Note: a value here doesn't necessarily mean that the video is playing.
     #video;
+
+    // Configuration variable.
+    #startTime;
 
     // Whether the player and its dependencies have loaded and are ready for use.
     #initialized = false;
@@ -151,8 +156,9 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     // "Cue" refers to a signal or prompt that indicates a specific action or change.
-    cue(video) {
+    cue(video, startTime) {
         this.#video = video;
+        this.#startTime = startTime;
     }
 
     play() {
@@ -174,6 +180,7 @@ export default class YouTubePlayer extends VideoPlayer {
 
     seekTo(time) {
         this.#player.seekTo(time, true);
+        this.publish(PLAYER_STATE_SEEKING);
     }
 
     getDuration() {
@@ -218,7 +225,7 @@ export default class YouTubePlayer extends VideoPlayer {
             height: this.#config.height || DEFAULT_PLAYER_HEIGHT,
             videoId: this.#video.getResourceId(),
             playerVars: {
-                start: 0,
+                start: this.#startTime,
                 autoplay: 1,
                 modestbranding: 0,
                 controls: 0,
@@ -263,24 +270,31 @@ export default class YouTubePlayer extends VideoPlayer {
 
 
     getPlayerState() {
+        let resourceId = this.#video ? this.#video.getResourceId() : null;
+        let elapsedTime = this.getElapsedTime();
+
         return {
-            playerState: this.#_state,
-            videoId: this.#video ? this.#video.getResourceId() : null,
-            resourceId: this.#video ? this.#video.getResourceId() : null,
-            timestamp: this.getElapsedTime(), // Kept here temporarily for backwards-compatibility for other listeners.
-            elapsedTime: this.getElapsedTime()
+            state: this.#_state,
+            videoId: resourceId,
+            resourceId,
+            timestamp: elapsedTime, // Kept here temporarily for backwards-compatibility for other listeners.
+            elapsedTime
         };
     }
 
 
-
+    publish = (state) => {
+        let playerState = this.getPlayerState();
+        if (state) {
+            playerState.state = state
+        }
+        console.log(playerState);
+        this.dispatchStateChange(playerState);
+        this.#subscribers.forEach((fn) => fn(JSON.stringify(playerState)));
+    };
 
     startPublishing() {
-        this.#broadcastId = setInterval(() => {
-            let playerState = this.getPlayerState();
-            this.dispatchStateChange(playerState);
-            this.#subscribers.forEach((fn) => fn(JSON.stringify(playerState)));
-        }, PUBLISH_INTERVAL);
+        this.#broadcastId = setInterval(this.publish, PUBLISH_INTERVAL);
     }
 
 

@@ -85,7 +85,7 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
 
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
-        player.cue(video);
+        player.cue(video, (elapsedTime || 0));
     }, []);
 
 

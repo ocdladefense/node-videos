@@ -34,7 +34,7 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
     const [showModal, setShowModal] = useState(false);
 
     // Navigate to the player or back again.
-    const navigate = function() { let href = "/player/" + video.getResourceId(); if (elapsedTime > 0) { href += `?elapsedTime=${elapsedTime}`; } console.log(href); window.location.href = href; };
+    const navigate = function() { let href = "/player/" + video.getResourceId(); if (elapsedTime > 0) { href += `?start=${elapsedTime}`; } console.log(href); window.location.href = href; };
     const onBack = function() { let href = "/"; console.log(href); window.location.href = href; };
 
     // function secondsToRoundedMinutes(seconds) {
@@ -74,6 +74,8 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
         rewatch: playVideo,
         purchase: function() { setShowModal(true) }
     };
+
+
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
     if (hasWatched) {
