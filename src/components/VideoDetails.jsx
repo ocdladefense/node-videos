@@ -21,31 +21,22 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const [grouped, setGrouped] = useState(parser.groupBySeminar());
-
-    const [hasAccess, setHasAccess] = useState(user.hasWatched(videoId) && user.hasPurchased(videoId));
-
     const watched = user.getWatchedVideo(videoId);
+
     const hasWatched = !!watched.resourceId;
+
     const elapsedTime = watched.timestamp || 0;
+
+    const grouoped = parser.groupBySeminar();
+
+    const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
+
     const [showModal, setShowModal] = useState(false);
 
-    const navigate = function() { let href = "/player/" + video.getResourceId(); console.log(href); window.location.href = href; };
+    // Navigate to the player or back again.
+    const navigate = function() { let href = "/player/" + video.getResourceId(); if (elapsedTime > 0) { href += `?elapsedTime=${elapsedTime}`; } console.log(href); window.location.href = href; };
     const onBack = function() { let href = "/"; console.log(href); window.location.href = href; };
 
-    // Retrieve data from the server only once during lifecycle.
-    // const parserRef = useRef(null);
-    /*
-        useEffect(() => {
-            async function fn() {
-                let videoId = params.resourceId;
-                setVideo(parser.getVideo(videoId));
-                setGrouped(parser.groupBySeminar());
-            }
-            fn();
-        }, []);
-    
-    */
     // function secondsToRoundedMinutes(seconds) {
     //     if (!seconds || isNaN(seconds)) return 0;
     //     return Math.ceil(seconds / 60); // Round up
@@ -71,7 +62,7 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
         });
         if (resultOfPurchase === true) {
             document.dispatchEvent(e);
-            setHasAccess2(true);
+            setHasAccess(true);
             setShowModal(false); // close modal
         }
     };

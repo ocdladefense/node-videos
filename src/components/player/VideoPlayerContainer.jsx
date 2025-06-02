@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from "react-router";
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
-import MediaControlsFloating from './MediaControlsFloating';
+// import MediaControlsFloating from './MediaControlsFloating';
 import { PlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
 import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
-
+import { useSearchParams } from 'react-router-dom';
 
 
 
@@ -23,7 +23,12 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
     // Get page parameters.
     let params = useParams();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     let videoId = params.resourceId;
+
+    // Start watching the video at some previously alotted time.
+    let elapsedTime = searchParams.get("start") || 0;
 
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));

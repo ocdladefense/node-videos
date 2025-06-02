@@ -17,6 +17,12 @@ import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import { clearThumbCache } from '../js/controllers/VideoThumbs';
 window.clearCache = clearThumbCache;
 
+
+const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
+const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+const SF_USER_ID = process.env.SF_USER_ID;
+
+
 window.playerMap = {
     youtube: YouTubePlayer,
 };
@@ -28,7 +34,7 @@ const player = new YouTubePlayer();
 
 
 
-let user = new User("005VC00000ET8LZ");
+let user = new User(SF_USER_ID || "005VC00000ET8LZ");
 
 
 
@@ -41,8 +47,7 @@ const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
-    const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
-    const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+
 
     let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
     let resp = await api.query(query);
