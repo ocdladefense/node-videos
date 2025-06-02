@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, } from 'react';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
 import initThumbs from '../js/controllers/VideoThumbs';
@@ -6,6 +6,7 @@ import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
+
 
 
 
@@ -47,19 +48,17 @@ async function getVideoParser() {
 
 
 
-export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime, setSelectedVideo, user }) {
+export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWatched, elapsedTime = 0, setSelectedVideo, user }) {
 
 
     const [grouped, setGrouped] = useState([]);
     const [hasAccess2, setHasAccess2] = useState(hasAccess);
     const [showModal, setShowModal] = useState(false);
+
+
     let buttons = [];
-
-
-
     // Retrieve data from the server only once during lifecycle.
     // const parserRef = useRef(null);
-
     useEffect(() => {
         async function fn() {
             const parser = await getVideoParser();
@@ -68,13 +67,14 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
         fn();
     }, []);
 
+    function secondsToRoundedMinutes(seconds) {
+        return Math.ceil((+seconds || 0) / 60);
+    }
 
-    // function secondsToRoundedMinutes(seconds) {
-    //     if (!seconds || isNaN(seconds)) return 0;
-    //     return Math.ceil(seconds / 60); // Round up
-    // }
-    const watched = hasWatched && elapsedTime > 0;
-    const almostDone = video.getDuration && (elapsedTime / video.getDuration()) > 0.9;
+    const elapsed = 300;
+    const watched = true;
+    const duration = video.duration() || 1000;
+    const isAlmostDone = elapsed / duration >= 0.9;
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -109,15 +109,16 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
 
-    if (user.hasPurchasedVideo(video.getResourceId())) {
-        buttons.push("play");
-
-        if (watched && !almostDone) {
-            buttons.push("resume");
-        } else if (almostDone || elapsedTime > 0) {
-            buttons.push("rewatch");
+    if (user.hasPurchasedVideo(video.getResourceId()) || video.isFree()) {
+        if (watched) {
+            if (isAlmostDone) {
+                buttons.push("rewatch");
+            } else {
+                buttons.push("resume");
+            }
+        } else {
+            buttons.push("play");
         }
-
     } else {
         buttons.push("purchase");
     }
@@ -143,6 +144,14 @@ export default function VideoDetails({ video, onBack, setRoute, hasAccess, hasWa
                         <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
                     )}
                     <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
+
+                    {watched && elapsed > 0 && (
+                        <p className="text-sm text-zinc-300">
+                            {isAlmostDone
+                                ? "You’ve almost finished this video."
+                                : `You watched ${secondsToRoundedMinutes(elapsed)} minutes. Continue?`}
+                        </p>
+                    )}
 
                     <VideoDetailsActions actions={actions} buttons={buttons} />
 
