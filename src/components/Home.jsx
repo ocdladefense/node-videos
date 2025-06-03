@@ -24,6 +24,9 @@ export default function Home({ parser, user }) {
     let videos = [];
 
     // Execute any additional filters that are defined for this list.
+    // Pass user and p1, p2, p3... etc. as needed.
+    // Don't make this component need to know about how to get the filtered data.
+    // That's what our data parser is for.
     let filterIds = (filterFn && filterFn(user, p1) || []);
 
 

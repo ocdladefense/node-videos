@@ -13,7 +13,7 @@ export default class VideoDataParser {
         { layout: "grouped", groupBy: "seminar", value: "seminar", label: "By Seminar", filterFn: (user, p1) => this.filterBySeminarId(p1, true) },
         { layout: "grouped", groupBy: "year", value: "year", label: "By Year" },
         { value: "watched", label: "Continue Watching", filterFn: (user, p1) => user.getWatchedIds() },
-        { value: "purchased", label: "Purchased", filterFn: (user, p1) => user.getPurchaedIds() }, // List of all videos that have been purchased.
+        { value: "purchased", label: "Purchased", filterFn: (user, p1) => user.getPurchasedIds() }, // List of all videos that have been purchased.
         { value: "recent", label: "Recently Added" },
         { value: "coming", label: "Coming Soon" },
         { value: "favorites", label: "Favorites" }
