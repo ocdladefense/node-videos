@@ -58,12 +58,16 @@ async function getVideoParser() {
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    const thumbnailMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
+    const videoDataMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
+    console.log("init thumbs returned:", videoDataMap);
 
     parser.getVideos().forEach(video => {
-        const thumbs = thumbnailMap.get(video.resourceId);
-        // console.log(`For video ID ${video.resourceId}, retrieved thumbnail data:`, thumbs);
-        video.setThumbnail(thumbs);
+        const videoData = videoDataMap.get(video.resourceId);
+
+        if (videoData) {
+            video.setThumbnail(videoData.thumbs);
+            video.setDuration(videoData.duration);
+        }
     });
 
 

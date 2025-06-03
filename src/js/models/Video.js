@@ -28,7 +28,7 @@ export default class Video {
 
     startDate;
 
-
+    duration;
 
 
 
@@ -57,7 +57,6 @@ export default class Video {
         video.seminar = relatedSeminar && relatedSeminar.Name;
         video.seminarId = data.Event__c;
         video.startDate = relatedSeminar && relatedSeminar.Start_Date__c;
-
         video.free = true;
 
         return video;
@@ -65,7 +64,11 @@ export default class Video {
 
 
     getDuration() {
-        return 1000;
+        return this.duration;
+    }
+
+    setDuration(duration) {
+        this.duration = duration;
     }
 
     // ------------------- Get all the data fields ------------------- //
@@ -151,10 +154,6 @@ export default class Video {
         }
 
         return "default";
-    }
-
-    getDuration() {
-
     }
 
     setThumbnail(thumbnailData) {
