@@ -1,10 +1,10 @@
 import Video from '../models/Video';
-import initThumbs from '../controllers/VideoThumbs';
+import initData from '../controllers/VideoThumbs';
 import { VideoThumbnails } from '../controllers/VideoThumbs';
 
 
 
-test("testing initThumbs", async () => {
+test("testing initData", async () => {
     const localStorageMock = {
         getItem: jest.fn(),
         setItem: jest.fn(),
@@ -13,7 +13,7 @@ test("testing initThumbs", async () => {
     };
     global.localStorage = localStorageMock;
 
-    const thumbnailMap = await initThumbs([{ resourceId: '_4xNa80IP3o' }, {resourceId: 'foobar'}]);
+    const thumbnailMap = await initData([{ resourceId: '_4xNa80IP3o' }, { resourceId: 'foobar' }]);
     console.log("thumbnailMap:", thumbnailMap);
 })
 
@@ -50,7 +50,7 @@ describe("Thumb get/set", () => {
         video.setThumbnail(thumbData);
         expect(video.getMaxResThumb()).toBe("high");
     });
-    
+
 
     test("getVideoThumbnail returns message if no thumbnail", () => {
 
@@ -70,7 +70,7 @@ describe("Thumbs API Error Handling", () => {
                 code: 400,
                 message: "A required parameter is missing.",
                 errors: [
-                    {reason: "missingRequiredParameter", message: "Missing required parameter - id."}
+                    { reason: "missingRequiredParameter", message: "Missing required parameter - id." }
                 ],
             }
         };
@@ -96,7 +96,7 @@ describe("Thumbs API Error Handling", () => {
                 code: 403,
                 message: "Access forbidden",
                 errors: [
-                    {reason: "forbidden", message: "Authorization failed, access is forbidden"}
+                    { reason: "forbidden", message: "Authorization failed, access is forbidden" }
                 ],
             }
         };
@@ -111,11 +111,11 @@ describe("Thumbs API Error Handling", () => {
 
         //assert error is thrown
         await expect(VideoThumbnails.getThumbs(["dummyId"])).rejects.toThrow(/Authorization failed, access is forbidden/);
-        
+
     });
 
     test("Handles 403 response: Quota Exceeded", async () => {
-        
+
     });
 
 });
