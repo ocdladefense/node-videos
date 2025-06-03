@@ -11,20 +11,12 @@ export default function Group({ groups, labels, user }) {
         <ul>
             {
                 keys.map(key => {
-                    let theGroup = groups[key];
-                    let theLabel = labels.get(key);
-                    let numVideos = theGroup.length;
+                    let next = groups[key];
+                    let label = labels.get(key);
+                    let count = next.length;
 
-                    if (true || numVideos > 2) {
-
-                        return (
-
-                            <VideoList videos={theGroup} label={theLabel} user={user} />
-                        )
-                    }
+                    return <VideoList videos={next} label={label} user={user} />
                 })
             }
-
-
         </ul>);
 }

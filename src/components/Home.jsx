@@ -9,36 +9,25 @@ import VideoDataParser from '../js/controllers/VideoDataParser';
 
 
 
-export default function Home({ parser, user, setSelectedVideo }) {
+export default function Home({ parser, user }) {
 
     // user.getfavorite, user.continewatching.
     const [list, setList] = useState("all");
-    const [seminarId, setSeminarId] = useState(null);
 
-    // The array of watched videos.
-    let watched = user.getWatchedVideos();
+    // Define a parameter p1, that can be passed to the list filter callback.
+    const [p1, setSeminarId] = useState(null);
 
-    // The array of purchased videos.
-    let purchased = user.getPurchasedVideos();
+    // Metadata about the given list.
+    let { label, groupBy, layout, filterFn } = parser.getList(list);
 
     // Videos to be displayed for the current list.
     let videos = [];
 
-    let filterIds = null;
+    // Execute any additional filters that are defined for this list.
+    let filterIds = (filterFn && filterFn(user, p1) || []);
 
-    if ("purchased" == list) {
-        filterIds = user.getPurchasedIds();
-    }
-    else if ("watched" == list) {
-        filterIds = user.getWatchedIds();
-    } else if ("seminar" == list) {
 
-        filterIds = parser.filterBySeminarId(seminarId, TRUE); // second parameter of true return ids only! which is what we want here, for now, I guess, maybe, sorta.
-    }
-
-    // (parser && parser.getVideos(list)) || [];
     if (parser.isInitialized()) {
-
         videos = parser.getVideos(filterIds);
     }
 
@@ -50,11 +39,7 @@ export default function Home({ parser, user, setSelectedVideo }) {
     let seminars = parser && parser.getSeminars();
 
 
-    // Metadata about the given list.
-    // Not sure why seminars get passed here?
-    let listAttributes = parser.getList(list);
-    let listLabel = listAttributes.label;
-    let groupBy = listAttributes.groupBy;
+
 
 
 
@@ -67,7 +52,7 @@ export default function Home({ parser, user, setSelectedVideo }) {
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
                 <div className="inline-flex phone:flex-wrap">
                     <DropdownMenu
-                        label={listLabel || "Select"}
+                        label={label || "Select"}
                         items={parser.getLists()}
                         action={setList}
                     />
@@ -79,7 +64,7 @@ export default function Home({ parser, user, setSelectedVideo }) {
                 </div>
             </div>
 
-            {listAttributes && listAttributes.layout == "grouped" ? <Group labels={seminars} groups={VideoDataParser.group(videos, groupBy)} user={user} /> : <VideoList videos={videos} user={user} />}
+            {layout == "grouped" ? <Group labels={seminars} groups={VideoDataParser.group(videos, groupBy)} user={user} /> : <VideoList videos={videos} user={user} />}
 
         </div>
 
