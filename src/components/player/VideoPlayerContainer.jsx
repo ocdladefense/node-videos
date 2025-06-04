@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useLocation } from "react-router";
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 // import MediaControlsFloating from './MediaControlsFloating';
@@ -22,15 +22,19 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
 
     // Get page parameters.
     let params = useParams();
+    let location = useLocation();
+
+
 
     const [searchParams, setSearchParams] = useSearchParams();
+
 
     let videoId = params.resourceId;
 
     let navigate = useNavigate();
 
     // Start watching the video at some previously alotted time.
-    let elapsedTime = searchParams.get("start") || 0;
+    let elapsedTime = location.state.start;
 
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));
