@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
@@ -19,6 +19,8 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     let buttons = [];
 
+    let navigate = useNavigate();
+
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
     const watched = user.getWatchedVideo(videoId);
@@ -32,8 +34,8 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
     const [showModal, setShowModal] = useState(false);
 
     // Navigate to the player or back again.
-    const navigate = function() { let href = "/player/" + video.getResourceId(); if (elapsedTime > 0) { href += `?start=${elapsedTime}`; } console.log(href); window.location.href = href; };
-    const onBack = function() { let href = "/"; console.log(href); window.location.href = href; };
+
+    const onBack = function() { navigate("/"); };
 
     // function secondsToRoundedMinutes(seconds) {
     //     if (!seconds || isNaN(seconds)) return 0;
@@ -45,11 +47,12 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
     const playVideo = function() {
         console.log("About to play the video!");
 
-        navigate();
+        let state = { start: elapsedTime || 0 };
+        navigate("/player/" + video.getResourceId(), { state });
     }
 
     const playVideoFromBeginning = function() {
-        navigate();
+        navigate("/player/" + video.getResourceId());
     }
 
     const confirmPurchase = async () => {

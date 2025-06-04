@@ -1,4 +1,3 @@
-import TitleComponent from '../TitleComponent';
 import VideoList from './VideoList';
 
 export default function Group({ groups, labels, user }) {

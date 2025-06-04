@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 // import MediaControlsFloating from './MediaControlsFloating';
@@ -27,13 +27,15 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
 
     let videoId = params.resourceId;
 
+    let navigate = useNavigate();
+
     // Start watching the video at some previously alotted time.
     let elapsedTime = searchParams.get("start") || 0;
 
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const onBack = function() { let href = "/details/" + video.getResourceId(); console.log(href); window.location.href = href; };
+    const onBack = function() { navigate("/details/" + videoId) };
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
