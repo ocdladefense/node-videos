@@ -1,6 +1,6 @@
 export default class Cache {
     PREFIX;
-    #enabled;
+    #enabled = true;
 
     constructor(prefix) {
         this.PREFIX = prefix
@@ -22,10 +22,6 @@ export default class Cache {
 
     remove(key) {
         localStorage.removeItem(this.PREFIX + key);
-    };
-
-    persist() {
-        //push to Salesforce
     };
 
     hasKey(key) {

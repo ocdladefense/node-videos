@@ -35,11 +35,9 @@ const YouTubeData = (function() {
                 ok = null;
             });
 
-        console.log(response);
-
         thumbs = response.map(item => item.thumbs);;
         durations = response.map(item => item.duration);
-        console.log("thumbs:", thumbs);
+        console.log("thumbs + dura:", thumbs, durations);
     }
 
     function ifOkay(json) {
@@ -186,8 +184,8 @@ async function initData(videos) {
     }
 
 
-    //console.log("cache:", cache.getCacheContents());
-    //console.log("thumbnailMap:", thumbnailMap);
+    console.log("cache:", cache.getCacheContents());
+    //console.log("map:", map);
 
     return cache.isEnabled() ? cache : map;
 }
