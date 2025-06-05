@@ -6,11 +6,6 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-
-
-
-
-
 export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
 
@@ -24,26 +19,32 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const watched = user.getWatchedVideo(videoId);
+    const [watched, setWatched] = useState({});
 
-    const hasWatched = !!watched.resourceId;
+    const [elapsedTime, setElapsedTime] = useState(0);
 
-    const elapsedTime = watched.timestamp || 0;
+    const [hasWatched, setHasWatched] = useState(false);
 
     const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
 
     const [showModal, setShowModal] = useState(false);
 
+    const continueWatching = () => {
+        navigate("/player/" + video.getResourceId());
+    };
+
+
     // Navigate to the player or back again.
 
     const onBack = function() { navigate("/"); };
 
-    // function secondsToRoundedMinutes(seconds) {
-    //     if (!seconds || isNaN(seconds)) return 0;
-    //     return Math.ceil(seconds / 60); // Round up
-    // }
+    function formatElapsedTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '';
+        const minutes = Math.ceil(seconds / 60);
+        return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+    }
 
-    const almostDone = video && (elapsedTime / video.getDuration() > 0.9);
+    const almostDone = video && video.getDuration() > 0 && (elapsedTime / video.getDuration() > 0.9);
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -69,36 +70,37 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
         }
     };
 
+    useEffect(() => {
+        const w = user.getWatchedVideo(videoId);
+        setWatched(w);
+        setElapsedTime(w.timestamp || 0);
+        setHasWatched(!!w.resourceId);
+        setHasAccess(w || user.hasPurchased(videoId));
+    }, [videoId, user]);
+
 
     const actions = {
         play: playVideo,
         resume: playVideo,//how much time remaining
-        rewatch: playVideo,
+        rewatch: continueWatching,
         purchase: function() { setShowModal(true) }
     };
 
 
     // display remaining time if video has been watched
     // data: has been purchased, has been watched, if has been watched, show time remaining
-    if (hasWatched) {
-        buttons.push("resume");
-    }
-    else if (hasWatched && !almostDone) {
-        buttons.push("resume");
-    }
-    else if (user.hasPurchasedVideo(video && video.getResourceId())) {
-
-
-        if (hasWatched && !almostDone) {
-            buttons.push("resume");
-        } else if (almostDone || elapsedTime > 0) {
-            buttons.push("rewatch");
-        } else {
+    if (user.hasPurchasedVideo(video?.getResourceId())) {
+        if (!hasWatched) {
             buttons.push("play");
+        } else if (almostDone) {
+            buttons.push("continue");
+        } else {
+            buttons.push("resume");
         }
     } else {
         buttons.push("purchase");
     }
+
 
     let currentSeminar = video && video.getSeminarName();
     const seminarVideos = parser.getRelatedVideos(video && video.getResourceId());
@@ -122,8 +124,12 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
                             <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
                         )}
                         <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
-
-                        <VideoDetailsActions actions={actions} buttons={buttons} />
+                        {hasWatched && (
+                            <p className="text-sm text-red-500 mb-2">
+                                Watched for {formatElapsedTime(elapsedTime)}
+                            </p>
+                        )}
+                        <VideoDetailsActions actions={actions} buttons={buttons} video={video} elapsedTime={elapsedTime} />
 
                     </div>
                 </div>
