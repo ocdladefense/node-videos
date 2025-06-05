@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-export default function RelatedVideos({ video, currentSeminar, seminarVideos, setSelectedVideo }) {
+export default function RelatedVideos({ video, currentSeminar, seminarVideos }) {
 
     const scrollRef = useRef(null);
     const scroll = (dir) => {
@@ -39,6 +39,8 @@ export default function RelatedVideos({ video, currentSeminar, seminarVideos, se
                     style={{ scrollBehavior: "smooth" }}
                 >
                     {seminarVideos.map((vid) => (
+
+
                         <div
                             key={vid.getVideoResourceId()}
                             className={`flex-shrink-0 w-64 cursor-pointer p-2 roundedF

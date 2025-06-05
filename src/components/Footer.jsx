@@ -88,10 +88,7 @@ export default function Footer() {
                         </li>
                     </ul>
                 </li>
-                <li>
 
-                    <ul><iframe class="aspect-square w-full border-0 lg:w-64" src="https://google.com/maps/embed?pb=!1m18!1m12!1m3!1d2867.8775315978623!2d-123.09091950000001!3d44.0445852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54c11e41b2e3f7ad%3A0xa7600cd512aa10ed!2s101%20E%2014th%20Ave%2C%20Eugene%2C%20OR%2097401!5e0!3m2!1sen!2sus!4v1722628072318!5m2!1sen!2sus" allowfullscreen="true" referrerpolicy="no-referrer-when-downgrade"></iframe></ul>
-                </li>
             </ul>
         </footer>
     );

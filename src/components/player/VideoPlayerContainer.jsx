@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router";
+import { useOutletContext } from 'react-router-dom';
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
 // import MediaControlsFloating from './MediaControlsFloating';
@@ -18,7 +19,7 @@ import { useSearchParams } from 'react-router-dom';
  * @param {StringList} controls A comma separated list of characteristics to be applied to the MediaControls.
  * @returns 
  */
-export default function VideoPlayerContainer({ parser, player, controls = "standard,float,autohide,hidden" }) {
+export default function VideoPlayerContainer({ controls = "standard,float,autohide,hidden" }) {
 
     // Get page parameters.
     let params = useParams();
@@ -31,6 +32,9 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
 
     let videoId = params.resourceId;
 
+    // Use react-router-dom hook.
+    let { parser, user, player } = useOutletContext();
+
     let navigate = useNavigate();
 
     // Start watching the video at some previously alotted time.
@@ -39,7 +43,7 @@ export default function VideoPlayerContainer({ parser, player, controls = "stand
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const onBack = function() { navigate("/details/" + videoId) };
+    const onBack = function() { navigate("/media/" + videoId) };
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.

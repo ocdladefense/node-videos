@@ -1,13 +1,17 @@
 import "../css/input.css";
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { App2 as App } from '../components/App';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import App from '../components/App';
 const regeneratorRuntime = require("regenerator-runtime");
-
+import Home from '../components/Home.jsx';
+import VideoDetails from '../components/VideoDetails.jsx';
+import VideoPlayerContainer from '../components/player/VideoPlayerContainer.jsx';
 
 
 if (process.env.NODE_ENV === 'debug') {
-    setDebugLevel(1)
+    setDebugLevel(1);
 }
 
 
@@ -16,8 +20,31 @@ if (process.env.NODE_ENV === 'debug') {
 const $root = document.getElementById("app");
 const root = createRoot($root);
 
+
+
+const ScrollToTop = () => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null; // This component doesn't render anything
+};
+
+
+
 root.render(
     <BrowserRouter>
-        <App />
+        <ScrollToTop />
+        <Routes>
+            <Route path="/" element={<App />}>
+                <Route index element={<Home />} />
+                <Route path="media">
+                    <Route path=":resourceId" element={<VideoDetails />} />
+                    <Route path=":resourceId/play" element={<VideoPlayerContainer />} />
+                </Route>
+            </Route>
+        </Routes>
     </BrowserRouter>
 );

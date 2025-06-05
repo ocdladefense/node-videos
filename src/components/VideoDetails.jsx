@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from "react-router";
+import { useOutletContext } from 'react-router-dom';
 import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
@@ -10,12 +11,15 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-export default function VideoDetails({ parser, user, setSelectedVideo }) {
+export default function VideoDetails() {
 
 
     let params = useParams();
 
     let videoId = params.resourceId;
+
+    // Use react-router-dom hook.
+    let { parser, user } = useOutletContext();
 
     let buttons = [];
 
@@ -48,11 +52,11 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
         console.log("About to play the video!");
 
         let state = { start: elapsedTime || 0 };
-        navigate("/player/" + video.getResourceId(), { state });
+        navigate("/media/" + video.getResourceId() + "/play", { state });
     }
 
     const playVideoFromBeginning = function() {
-        navigate("/player/" + video.getResourceId());
+        navigate("/player/" + video.getResourceId() + "/play");
     }
 
     const confirmPurchase = async () => {
@@ -130,7 +134,7 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
                 : ""}
             {/* Related videos section */}
             {video && seminarVideos.length > 1 && (
-                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} setSelectedVideo={setSelectedVideo} />
+                <RelatedVideos video={video} currentSeminar={currentSeminar} seminarVideos={seminarVideos} />
             )}
             {showModal && (
                 <Modal setShowModal={setShowModal} confirmAction={confirmPurchase}>

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
 import VideoList from './list/VideoList';
 import Group from './list/Group';
@@ -9,13 +10,16 @@ import VideoDataParser from '../js/controllers/VideoDataParser';
 
 
 
-export default function Home({ parser, user }) {
+export default function Home() {
 
     // user.getfavorite, user.continewatching.
     const [list, setList] = useState("all");
 
     // Define a parameter p1, that can be passed to the list filter callback.
     const [p1, setSeminarId] = useState(null);
+
+    // Use react-router-dom hook.
+    let { parser, user } = useOutletContext();
 
     // Metadata about the given list.
     let { label, groupBy, layout, filterFn } = parser.getList(list);

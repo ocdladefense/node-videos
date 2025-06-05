@@ -10,7 +10,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
     return (
         <li
             key={video.id || index}
-            onClick={() => navigate("/details/" + video.getResourceId())}
+            onClick={() => navigate("/media/" + video.getResourceId())}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
             data-video-id={video.getVideoResourceId()}
         >

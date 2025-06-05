@@ -1,11 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
-// import Home from "./Home";
-import Home from './Home';
-import VideoDetails from './VideoDetails';
-import VideoPlayerContainer from './player/VideoPlayerContainer';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
@@ -47,8 +43,6 @@ const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
-
-
     let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
     let resp = await api.query(query);
     parser.parse(resp.records);
@@ -77,7 +71,7 @@ async function getVideoParser() {
 
 
 
-export function App2() {
+export default function App() {
 
     const [appReady, setAppReady] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
@@ -143,39 +137,15 @@ export function App2() {
     }, []);
 
 
-
-
-    return (
-        <>
-            {!parser.isInitialized() ? <h1>My splash screen</h1> :
-                <><Header />
-                    <div class="container mx-auto">
-                        <Routes>
-                            <Route path="/" element={<Home parser={parser} setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />} />
-
-                            <Route path="/details/:resourceId" element={<VideoDetails parser={parser} setRoute={setRoute} user={user} />} />
-
-                            <Route path="/player/:resourceId" element={<VideoPlayerContainer parser={parser} player={player} user={user} onBack={() => { setRoute("details"); }} />} />
-                        </Routes>
-                    </div>
-                    <Footer /></>
-            }
-        </>
-    );
-}
-
-
-export default function App() {
-
-
+    //  
     return (
         <>
             <Header />
-            {/* typeof HeaderTwo === "function" ? <HeaderTwo /> : <></> */}
             <div class="container mx-auto">
-                <Home />
+                {!parser.isInitialized() ? <h1>My splash screen</h1> : <Outlet context={{ parser, user, player }} />}
             </div>
             <Footer />
         </>
     );
 }
+
