@@ -1,15 +1,11 @@
 import moment from 'moment';
 import Cache from './Cache';
 
-//name: YouTubeData
-
 const YouTubeData = (function() {
 
 
-    var parts = "snippet,contentDetails,statistics";
-    var videoId = ["4mxFb5VH12Y"];
+    var parts = "snippet,contentDetails";
     var apiKey = process.env.API_KEY;
-    //var apiKey = "";
     var endpoint = "https://www.googleapis.com/youtube/v3/videos";
     let thumbs;
     let durations;
@@ -39,8 +35,11 @@ const YouTubeData = (function() {
                 ok = null;
             });
 
-        thumbs = response.thumbs;
-        durations = response.duration;
+        console.log(response);
+
+        thumbs = response.map(item => item.thumbs);;
+        durations = response.map(item => item.duration);
+        console.log("thumbs:", thumbs);
     }
 
     function ifOkay(json) {
@@ -60,8 +59,6 @@ const YouTubeData = (function() {
                 standard: item.snippet.thumbnails.standard,
             };
             obj["duration"] = duration;
-
-            //console.log("Thumbnail object:", obj);
 
             return obj;
         });
@@ -170,7 +167,7 @@ async function initData(videos) {
     //check for thumbs that havent been cached, and therefore need to be fetched
     const uncachedIDs = videoIDs.filter(id => !cache.hasKey(id));
 
-    //divide thumbs to collect to fit within api call size limits
+    //divide id's to be queried to fit within api call size limits
     const uncollectedThumbs = chunkArray(uncachedIDs, 50);
 
     for (const batch of uncollectedThumbs) {

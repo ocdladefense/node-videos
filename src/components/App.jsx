@@ -59,10 +59,11 @@ async function getVideoParser() {
     Video.setDefaultThumbnail('http:/foobar');
 
     const videoDataMap = await initData(videos); // should be initData(parser.getVideoIds());
-    console.log("init thumbs returned:", videoDataMap);
+    console.log("initData returned:", videoDataMap);
 
     parser.getVideos().forEach(video => {
         const videoData = videoDataMap.get(video.resourceId);
+        console.log(videoData);
 
         if (videoData) {
             video.setThumbnail(videoData.thumbs);
