@@ -3,6 +3,7 @@ import DropdownMenu from './DropdownMenu';
 import VideoList from './list/VideoList';
 import Group from './list/Group';
 import VideoDataParser from '../js/controllers/VideoDataParser';
+import SearchBar from './searchBar';
 
 
 
@@ -53,7 +54,9 @@ export default function Home({ parser, user }) {
 
             <div className='inline-flex w-full h-[100px] justify-between'>
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
+                <SearchBar />
                 <div className="inline-flex phone:flex-wrap">
+
                     <DropdownMenu
                         label={label || "Select"}
                         items={parser.getLists()}

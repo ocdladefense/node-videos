@@ -90,7 +90,7 @@ export default class VideoDataParser {
         let videoList = [];
         let v = this.videos;
 
-        for (var i = v.length - 1; i > -1; i--) {
+        for (let i = v.length - 1; i > -1; i--) {
             videoList.push(v[i]);
         }
         return videoList;
