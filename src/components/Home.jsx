@@ -1,99 +1,76 @@
-import { useEffect, useState } from 'react';
-import VideoList from './VideoList';
-import VideoDetails from './VideoDetails';
-import VideoPlayerContainer from './player/VideoPlayerContainer.jsx';
-import YouTubePlayer from '../js/player/YouTubePlayer.js';
-import WatchedVideoService from '../js/services/WatchedVideoService.js'
-import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
-import User from '../js/models/User.js';
-
-
-window.playerMap = {
-    youtube: YouTubePlayer,
-};
-
-// Player instance used throughout the application lifecycle.
-const player = new YouTubePlayer();
-// let user = {}; //getCurrentUser();
-
-
-
-
-let user = new User("005VC00000ET8LZ");
-
-
-export default function Home({ parser }) {
-
-    const [selectedVideo, setSelectedVideo] = useState(null);
-    const [route, setRoute] = useState("list");
-    let component, hasWatched, purchasedVideo;
-
-
-
-    if (selectedVideo != null) {
-        hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
-        purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
-    }
-    const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
-
-    useEffect(() => {
-
-        let s1 = new WatchedVideoService(user.getUserId());
-        s1.listen();
-        let s2 = new PurchasedVideoService(user.getUserId());
-        s2.listen();  // can listen for mediapurchase events!
-
-
-        // Get data from each Service's load() method,
-        // and use it consistent with this application's logic.
-        // Specifically, we add data to the user object for future use.
-
-        // WatchedVideoService
-        s1.load().then((resp) => {
-
-            let records = resp.records;
-
-            records.forEach(record => {
-                const resourceId = record.ResourceID__c;
-                const timestamp = record.Timestamp__c;
-
-                user.addWatched({ resourceId, timestamp });
-            });
-        });
-
-        // PurchasedVideoService
-        s2.load().then((resp) => {
-            let records = resp.records;
-
-            records.forEach(record => {
-                const resourceId = record.ResourceID__c;
-                const timestamp = record.Timestamp__c;
-
-                user.addPurchased({ resourceId, timestamp });
-            });
-        });
-
-        s1.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addWatched({ resourceId: videoId, timestamp }) });
-        s2.onSave((videoId, timestamp) => { console.log("SAVED! "); user.addPurchased({ resourceId: videoId, timestamp }) });
-    }, [])
+import { useState, useEffect } from 'react';
+import DropdownMenu from './DropdownMenu';
+import VideoList from './list/VideoList';
+import Group from './list/Group';
+import VideoDataParser from '../js/controllers/VideoDataParser';
 
 
 
 
 
-    if (route == "list") {
-        component = <VideoList setRoute={setRoute} setSelectedVideo={setSelectedVideo} user={user} />;
 
-    }
-    else if (route == "details") {
+export default function Home({ parser, user }) {
 
-        component = <VideoDetails video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("list"); }} parser={parser} setSelectedVideo={setSelectedVideo} hasWatched={hasWatched} hasAccess={hasAccess} elapsedTime={0} user={user} />;
-    }
-    else if (route == "player") {
-        // player.cueVideo(video);
-        // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));
-        component = <VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+    // user.getfavorite, user.continewatching.
+    const [list, setList] = useState("all");
+
+    // Define a parameter p1, that can be passed to the list filter callback.
+    const [p1, setSeminarId] = useState(null);
+
+    // Metadata about the given list.
+    let { label, groupBy, layout, filterFn } = parser.getList(list);
+
+    // Videos to be displayed for the current list.
+    let videos = [];
+
+    // Execute any additional filters that are defined for this list.
+    // Pass user and p1, p2, p3... etc. as needed.
+    // Don't make this component need to know about how to get the filtered data.
+    // That's what our data parser is for.
+    let filterIds = (filterFn && filterFn(user, p1) || []);
+
+
+    if (parser.isInitialized()) {
+        videos = parser.getVideos(filterIds);
     }
 
-    return component;
+
+    // A list of seminars to filter by.
+    let seminarFilterOptions = (parser && parser.getSeminarOptions()) || [];
+
+    // Map of seminars.
+    let seminars = parser && parser.getSeminars();
+
+
+
+
+
+
+
+    return (
+
+        <div className="p-8 bg-zinc-900 min-h-screen">
+
+            <div className='inline-flex w-full h-[100px] justify-between'>
+                <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
+                <div className="inline-flex phone:flex-wrap">
+                    <DropdownMenu
+                        label={label || "Select"}
+                        items={parser.getLists()}
+                        action={setList}
+                    />
+                    <DropdownMenu
+                        label="Seminars"
+                        items={seminarFilterOptions}
+                        action={setSeminarId}
+                    />
+                </div>
+            </div>
+
+            {layout == "grouped" ? <Group labels={seminars} groups={VideoDataParser.group(videos, groupBy)} user={user} /> : <VideoList videos={videos} user={user} />}
+
+        </div>
+
+    );
+    q
 }

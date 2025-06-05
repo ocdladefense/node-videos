@@ -8,7 +8,12 @@ export default function MediaControlsFloating({ player, onBack, layout = "standa
 
 
     return (
-        <Box style={{ position: "absolute", bottom: "0px", left: "0px", width: "100%", zIndex: 200 }}>
+        <Box style={{ position: "absolute", bottom: "0px", left: "0px", width: "100%", zIndex: 200 }}
+            sx={{
+                opacity: showControls ? 1 : 0,
+                pointerEvents: showControls ? 'auto' : 'none',
+                transition: 'opacity 0.3s ease-in-out',
+            }}>
             <Box style={{ position: "absolute", bottom: "0", left: "50%", transform: "translate(-50%, 0%)", zIndex: 200, backgroundColor: "rgba(20,20,20,0.6)", borderRadius: "8px" }}>
                 <VideoProgressBar player={player} />
 

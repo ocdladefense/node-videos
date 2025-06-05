@@ -14,52 +14,86 @@ export default function Footer() {
 
 
     return (
-        <footer className="text-slate-200 bg-wb-black p-8 tablet:p-16 laptop:p-32 laptop:pt-16">
+        <footer class="container mx-auto border border-b-0 p-4 pb-16 lg:p-8 lg:pb-32">
 
+            <ul id="ul-depth-1" class="flex flex-col gap-4">
+                <li>
 
-            {/*
-            <section className="shape-section">
-                <div className="container diamond-shape">
-                    <div className="item-count">99</div>
-                </div>
-            </section>
-*/}
+                    <ul class="flex flex-col gap-4 lg:flex-row lg:gap-8">
+                        <li>
 
-            <div className="container text-slate-200 text-center text-4xl mb-20" style={{ lineHeight: "1.0rem" }}>
-                <span className="font-smoothy-cursive text-slate-300 inline-block">Video</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">app</span>
-                <span className="pl-8 font-smoothy-cursive text-slate-300 inline-block">Video</span>&nbsp;<span className="font-marketing text-xl text-slate-300 inline-block">app</span>
-            </div>
+                            <ul id="ul-depth-2" class="flex flex-col gap-1">
+                                <li>
 
-            <div className="container tablet:grid tablet:grid-cols-6">
+                                    <ul id="ul-depth-3" class="flex items-center gap-1">
+                                        <li class=""><a class="" href="/"><img class="h-16" src="/images/logo_ocdla.png" /></a></li>
+                                        <li><a class="hover:opacity-[67.5%]" href="https://facebook.com/OregonCriminalDefenseLawyersAssociation"><img class="w-8" src="/images/logo_facebook.png" alt="Facebook logo" /></a></li>
+                                        <li><a class="hover:opacity-[67.5%]" href="https://x.com/oregondefense"><img class="w-8" src="/images/logo_twitter.png" alt="Twitter logo" /></a></li>
+                                        <li></li>
+                                    </ul>
+                                </li>
+                                <li>
 
-                <div className="col-start-1 pb-8">
-                    <a href='/'>
-                        <img src="../images/logos/logo.png" />
-                    </a>
-                </div>
+                                    <ul id="ul-depth-3" class="text-[0.625rem] font-thin leading-[0.75rem] text-neutral-500">
+                                        <li>©2024 Oregon Criminal Defense Lawyers Association</li>
+                                        <li class="size-full text-wrap">Oregon Criminal Defense Lawyers Association is a 501(c)(3) nonprofit educational association. Contributions to OCDLA may be tax deductible - check with your tax advisor. Electronic downloads are for the sole use of the purchasing member. Files may not be distributed to others.</li>
+                                    </ul>
+                                </li>
+                                <li>
 
-                <div className="col-start-3 pb-8">
-                    <h3 className="text-wb-red text-lg">Contact</h3>
-                    <ul className="text-slate-400">
-                        <li>OCDLA</li>
-                        <li><a href="http://ciderworks.ocdla.org/" className="hover:text-wb-lime">info@ocdla.org</a></li>
-                        <li><a href="tel:+14106101726" className="hover:text-wb-lime">(410) 610-1726</a></li>
-                        <li><a href="mailto:info@ocdla.org" className="hover:text-wb-lime">info@ocdla.org</a></li>
+                                    <ul class="text-neutral-300"><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://ocdla.org">ocdla.org</a>&lt;li&gt;&lt;/li&gt;<a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="mailto:info@ocdla.org">info@ocdla.org</a><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="tel:+15416868716">(+1) 541-686-8716</a></ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="size-full">
+
+                            <ul class="flex flex-col gap-8 text-nowrap text-[#516490] lg:flex-row lg:gap-16">
+                                <li>
+
+                                    <ul class="flex flex-col gap-1">
+                                        <li>
+
+                                            <p class="text-base font-bold">SERVICES</p>
+                                        </li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://pubs.ocdla.org/directory/members">Membership Directory</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://pubs.ocdla.org/directory/experts">Expert Directory</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="/">Online store</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+
+                                    <ul class="flex flex-col gap-1">
+                                        <li>
+
+                                            <p class="text-base font-bold">RESEARCH</p>
+                                        </li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://pubs.ocdla.org/car/list">Research Criminal Appellate Review</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://lod.ocdla.org/">Library of Defense</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://lod.ocdla.org/Public:Subscriptions">Books Online</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+
+                                    <ul class="flex flex-col gap-1">
+                                        <li>
+
+                                            <p class="text-base font-bold">RESOURCES</p>
+                                        </li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="/">CLEs</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="/">Videos</a></li>
+                                        <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="/">Seminars &amp; Events</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
-                    <Social instagram="waldbusserciderworks" />
-                </div>
+                </li>
+                <li>
 
-                <Sitemap classNames="col-start-5 text-nowrap text-stone-400 pb-8" style={{ fontWeight: 200 }}>
-                    <SitemapCategory title="OCDLA" path="/" classNames="hover:text-stone-500"
-                        Home="/"
-                        About="/about"
-                        Contact_Us="/contact"
-                    />
-                </Sitemap>
-
-            </div>
-
-        </footer >
+                    <ul><iframe class="aspect-square w-full border-0 lg:w-64" src="https://google.com/maps/embed?pb=!1m18!1m12!1m3!1d2867.8775315978623!2d-123.09091950000001!3d44.0445852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54c11e41b2e3f7ad%3A0xa7600cd512aa10ed!2s101%20E%2014th%20Ave%2C%20Eugene%2C%20OR%2097401!5e0!3m2!1sen!2sus!4v1722628072318!5m2!1sen!2sus" allowfullscreen="true" referrerpolicy="no-referrer-when-downgrade"></iframe></ul>
+                </li>
+            </ul>
+        </footer>
     );
 }
 

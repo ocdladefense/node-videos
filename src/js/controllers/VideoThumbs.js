@@ -1,4 +1,6 @@
-const VideoThumbnails = (function () {
+import moment from 'moment';
+
+const VideoThumbnails = (function() {
 
 
     var parts = "snippet,contentDetails,statistics";
@@ -20,7 +22,7 @@ const VideoThumbnails = (function () {
                 return resp.json();
             })
             .then((json) => {
-                if(ok) {
+                if (ok) {
                     return ifOkay(json);
                 }
                 const errorReason = statusCode + ok + json.error.errors[0].reason;
@@ -33,19 +35,26 @@ const VideoThumbnails = (function () {
     }
 
     function ifOkay(json) {
-        return json.items.map(function (item) {
-                var obj = {};
-                obj["id"] = item.id;
-                // Store all 5 resolutions for the thumbnail.
-                obj["thumbs"] = {
-                  default: item.snippet.thumbnails.default,
-                  high: item.snippet.thumbnails.high,
-                  maxres: item.snippet.thumbnails.maxres,
-                  medium: item.snippet.thumbnails.medium,
-                  standard: item.snippet.thumbnails.standard,
-                };
-                //console.log("Thumbnail object:", obj);
-                return obj;
+        return json.items.map(function(item) {
+            var obj = {};
+            var duration;
+
+            duration = moment.duration(item.contentDetails.duration).asSeconds(); //convert ISO to seconds
+
+            //return object with resourceId, 5 thumbnail resolution urls, and total video duration (in seconds)
+            obj["id"] = item.id;
+            obj["thumbs"] = {
+                default: item.snippet.thumbnails.default,
+                high: item.snippet.thumbnails.high,
+                maxres: item.snippet.thumbnails.maxres,
+                medium: item.snippet.thumbnails.medium,
+                standard: item.snippet.thumbnails.standard,
+            };
+            obj["duration"] = duration;
+
+            //console.log("Thumbnail object:", obj);
+
+            return obj;
         });
     }
 
@@ -53,49 +62,49 @@ const VideoThumbnails = (function () {
         console.log("Error: ", error);
         console.log("Error Message:", error.message);
 
-        
 
-            if(json.status == 400) {
-                return (json) => {
-                    if(json.error && json.error.errors && json.error.errors.length > 0) {
-                        const errorReason = json.error.errors[0].reason || "";
 
-                        console.log("400 error in fetch", errorReason);
+        if (json.status == 400) {
+            return (json) => {
+                if (json.error && json.error.errors && json.error.errors.length > 0) {
+                    const errorReason = json.error.errors[0].reason || "";
 
-                        if(errorReason == "missingRequiredParameter") {
-                            throw new Error("Missing Required Parameter");
-                        }
+                    console.log("400 error in fetch", errorReason);
+
+                    if (errorReason == "missingRequiredParameter") {
+                        throw new Error("Missing Required Parameter");
                     }
-                    else {
-                        throw new Error("Youtube API fetch error occured (400): " + response.status);
+                }
+                else {
+                    throw new Error("Youtube API fetch error occured (400): " + response.status);
+                }
+            };
+        }
+
+        if (response.status == 403) {
+            return response.json().then((json) => {
+                if (json.error && json.error.errors && json.error.errors.length > 0) {
+                    const errorReason = json.error.errors[0].reason || "";
+
+                    console.log("403 error in fetch", errorReason);
+
+                    if (errorReason == "quotaExceeded") {
+                        throw new Error("Youtube API quota exceeded");
                     }
-                };
-            }
-
-            if(response.status == 403) {
-                return response.json().then((json) => {
-                    if(json.error && json.error.errors && json.error.errors.length > 0) {
-                        const errorReason = json.error.errors[0].reason || "";
-
-                        console.log("403 error in fetch", errorReason);
-
-                        if(errorReason == "quotaExceeded") {
-                            throw new Error("Youtube API quota exceeded");
-                        }
-                        if(errorReason == "forbidden") {
-                            throw new Error("Authorization failed, access is forbidden");
-                        }
+                    if (errorReason == "forbidden") {
+                        throw new Error("Authorization failed, access is forbidden");
                     }
-                    else {
-                        throw new Error("Youtube API fetch error occured (403): " + response.status);
-                    }
-                });
-            }
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
+                }
+                else {
+                    throw new Error("Youtube API fetch error occured (403): " + response.status);
+                }
+            });
+        }
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
 
-            return response.json();
+        return response.json();
     }
 
     function getThumbById(thumbs, id) {
@@ -106,17 +115,17 @@ const VideoThumbnails = (function () {
         return {};
     }
 
-    var prepareThumbnailData = function (chapters) {
+    var prepareThumbnailData = function(chapters) {
 
-        var published = chapters.filter(function (chapter) { return chapter.VideoURL != null && chapter.PublishVideo != false; });
+        var published = chapters.filter(function(chapter) { return chapter.VideoURL != null && chapter.PublishVideo != false; });
         console.log("Chapters are: ", published);
 
-        videoIds = published.map(function (chapter) {
+        videoIds = published.map(function(chapter) {
             return chapter.VideoURL;
         });
-        return getThumbs(videoIds).then(function (thumbs) {
+        return getThumbs(videoIds).then(function(thumbs) {
             console.log("Thumbs are: ", thumbs);
-            return chapters.map(function (chapter) {
+            return chapters.map(function(chapter) {
                 chapter.thumb = getThumbById(thumbs, chapter.VideoURL);
                 return chapter;
             });
@@ -146,22 +155,21 @@ async function initThumbs(videos) {
     for (const batch of uncollectedThumbs) {
         let data;
         try {
-            //fetch for thumb data
             data = await VideoThumbnails.getThumbs(batch);
         } catch (error) {
             console.error("Error fetching thumbs", batch, error);
             continue;
         }
 
-            //cache thumb data
-            data.forEach(thumbData => {
-                cache.set(thumbData.id, thumbData.thumbs);
-                thumbnailMap.set(thumbData.id, thumbData.thumbs);
-            });
+        data.forEach(item => {
+            cache.set(item.id, item);
+            thumbnailMap.set(item.id, item);
+        });
     }
 
     //console.log("cache:", cache.getCacheContents());
-    //console.log("thumbnailMap:", thumbnailMap)
+    //console.log("thumbnailMap:", thumbnailMap);
+
     return cache.isEnabled() ? cache : thumbnailMap;
 }
 

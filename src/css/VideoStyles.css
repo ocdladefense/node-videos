@@ -49,9 +49,6 @@ iframe{
     background-color: transparent; 
     pointer-events: all; 
   }
-  .box{
-    max-width: false !important;
-  }
-  .MuiContainer-root{
-    max-width: false !important;
+  .ytp-button{
+    display: none;
   }

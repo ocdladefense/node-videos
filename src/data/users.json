@@ -2,20 +2,7 @@
     {
         "userId": "005VC00000ET8LZ",
         "userName": "John Doe",
-        "purchasedVideos": [
-            {
-                "resourceId": "Q6TRolTHbKY"
-            },
-            {
-                "resourceId": "9w-ROKc0BWU"
-            },
-            {
-                "resourceId": "1CgKDovCgZQ"
-            },
-            {
-                "resourceId": "hLm9-mEvhJw"
-            }
-        ],
+        "purchasedVideos": [],
         "previouslyWatched": [
             {
                 "resourceId": "_4xNa80IP3o",

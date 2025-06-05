@@ -17,12 +17,28 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
 2. Run <code>git submodule update --init --recursive</code>.
 3. Run <code>npm update</code>.
 4. Run <code>npm run build</code>.
-5. Optionally, preview the base website using <code>npm run watch</code>.
+5. Optionally run any required server processes
+ * sudo npm install -g nodemon
+ * nodemon app.js
+6. Optionally, preview the base website using <code>npm run watch</code>.
 
 ## Additional resources
 * [Babel online parser](https://babeljs.io/repl/#?browsers=defaults)
+* Ubuntu: How to run an express server [as a service](https://www.google.com/search?q=ubuntu+how+to+run+a+node+express+server+as+a+service)
+* [React Router](https://reactrouter.com/start/framework/navigating)
+* [Complete guide to routing in React](https://hygraph.com/blog/routing-in-react)
 
-## Further reading
+
+## Deployment
+Headless deployment, on Ubuntu
+## Install npm, node, sfdx, pm2 and related dependencies
+<code>npm install @salesforce/cli --global</code>
+
+### Display the SFDX Auth URL
+<code>sf org display --target-org MyOrg --verbose --json > authFile.json</code>
+
+### Authorize in CLI using the URL
+<code>sf org login sfdx-url --sfdx-url-file authFile.json --alias MyOrg</code>
 
 
 ## Adding submodules

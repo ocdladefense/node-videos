@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from "react-router";
 import '../../css/videostyles.css';
 import MediaControls from './MediaControls';
-import MediaControlsFloating from './MediaControlsFloating';
-import { videoPlayerTheme, VideoContainer, TitleContainer, fullscreenButton } from '../../js/videostyles.js';
+// import MediaControlsFloating from './MediaControlsFloating';
+import { PlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
 import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
-
+import { useSearchParams } from 'react-router-dom';
 
 
 
@@ -17,12 +18,33 @@ import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
  * @param {StringList} controls A comma separated list of characteristics to be applied to the MediaControls.
  * @returns 
  */
-export default function VideoPlayerContainer({ player, video, onBack, controls = "standard,float,autohide,hidden" }) {
+export default function VideoPlayerContainer({ parser, player, controls = "standard,float,autohide,hidden" }) {
+
+    // Get page parameters.
+    let params = useParams();
+    let location = useLocation();
+
+
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+
+    let videoId = params.resourceId;
+
+    let navigate = useNavigate();
+
+    // Start watching the video at some previously alotted time.
+    let elapsedTime = location.state.start;
+
+    // Reference to the video that will be played.
+    const [video, setVideo] = useState(parser.getVideo(videoId));
+
+    const onBack = function() { navigate("/details/" + videoId) };
 
     // Player initialization defaults to false.
     // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
     // I.e., playerState > -1 == initialized.
-    const [playerInitialized, setPlayerInitialized] = useState(false);
+    const [playerInitialized, setPlayerInitialized] = useState(player.isInitialized());
 
     // Change the layout of the player: in "standard", "fullscreen" or "pip".
     const [layout, setLayout] = useState("standard");
@@ -30,15 +52,46 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
     // Sync to an external system.
     // The serialize method returns the state of the player in JSON format.
     // The player "publishes" its state and this component subscribes to these events with its addListener() method.
-    const [playerState, setPlayerState] = useState(player.serialize());
+    const [playerState, setPlayerState] = useState(JSON.stringify(player.getPlayerState()));
 
+    const fullscreenRef = useRef(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+
+
+
+    const toggleFullscreen = (event) => {
+        if (isFullscreen) {
+            document.exitFullscreen();
+        } else {
+            fullscreenRef.current?.requestFullscreen();
+        }
+    };
+
+    useEffect(() => {
+
+        fullscreenRef.current = document.querySelector('#playerBox');
+
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+
+    }, []);
 
     const pip = layout === "pip";
     const [width, height] = pip ? [400, 250] : [1200, 720];
 
+
+
     // If the video changes, then set it as the queued video that will be played.
     useEffect(() => {
-        player.cue(video);
+        player.cue(video, (elapsedTime || 0));
     }, []);
 
 
@@ -52,9 +105,8 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
         if (!player.isInitialized()) {
-            player.addListener(setPlayerState);
-            // player.init(setPlayerInitialized);
-            player.load("player", setPlayerInitialized);
+            player.onElapsedTimeChange(setPlayerState);
+            player.load("player").then((player) => setPlayerInitialized(true));
         }
     }, [player.isInitialized()]);
 
@@ -62,7 +114,7 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     return (
 
-        <ThemeProvider theme={videoPlayerTheme} injectFirst>
+        <ThemeProvider theme={PlayerTheme} injectFirst>
 
 
             <Box id='playerBox' style={{ ...{ position: "relative", margin: "0 auto", width: width, height: height, overflow: "hidden" }, ...(!pip ? {} : { position: "fixed", top: "0px", right: "25px" }) }}>
@@ -70,18 +122,19 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
                     <h1>{video.getVideoName()}</h1>
                 </TitleContainer>
 
-                <VideoContainer maxWidth={false}>
-                    <div id="player-wrapper">
-                        <div id="player">
-                            <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+
+
+                <div id="blocker">
+                    <VideoContainer maxWidth={false}>
+                        <div id="player-wrapper">
+                            <div id="player">
+                                <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+                            </div>
                         </div>
-                    </div>
-                </VideoContainer>
+                    </VideoContainer>
+                </div>
 
-                <div id="blocker"></div>
-
-                {controls.split(",").includes("float") ? <MediaControlsFloating onBack={onBack} layout={layout} setLayout={setLayout} player={player} playerInitialized={playerInitialized} /> : <MediaControls layout={layout} onBack={onBack} setLayout={setLayout} player={player} playerInitialized={playerInitialized} />}
-
+                <MediaControls player={player} onBack={onBack} isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} playerInitialized={playerInitialized} />
 
 
             </Box>
@@ -89,3 +142,7 @@ export default function VideoPlayerContainer({ player, video, onBack, controls =
 
     )
 }
+/* 
+-PIP stuff
+
+*/

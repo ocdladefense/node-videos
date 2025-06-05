@@ -1,17 +1,20 @@
-import React from 'react';
+import { useNavigate } from "react-router";
+
 
 export default function TitleComponent({ video, index, setSelectedVideo, setRoute, user }) {
     const hasAccess = video.isFree() || user.getPurchasedVideo(video.getVideoResourceId());
+    let navigate = useNavigate();
 
+    //  const doNavigation = function() { let href = "/details/" + video.getResourceId(); console.log(href); window.location.href = href; };
 
     return (
         <li
             key={video.id || index}
-            onClick={() => { setRoute("details"); setSelectedVideo(video); }}
+            onClick={() => navigate("/details/" + video.getResourceId())}
             style={{ cursor: 'pointer', marginBottom: '1rem' }}
             data-video-id={video.getVideoResourceId()}
         >
-            <div className="text-zinc-100">
+            <div className="text-zinc-100 hover-1 title">
                 {/* <strong className="text-2xl">{video.getVideoName()}</strong> <br /> */}
 
                 <div className="relative w-full h-[185px]">
