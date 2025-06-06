@@ -19,11 +19,11 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
-    const [watched, setWatched] = useState({});
+    const [watched, setWatched] = useState({}); //change this line
 
-    const [elapsedTime, setElapsedTime] = useState(0);
+    const [elapsedTime, setElapsedTime] = useState(0); //change  this line
 
-    const [hasWatched, setHasWatched] = useState(false);
+    const [hasWatched, setHasWatched] = useState(false); //change this line
 
     const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
 
@@ -38,13 +38,16 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const onBack = function() { navigate("/"); };
 
+    //this is the code where it rounds the time then showing the exact number(only showing time watched then left)
     function formatElapsedTime(seconds) {
         if (!seconds || isNaN(seconds)) return '';
         const minutes = Math.ceil(seconds / 60);
         return `${minutes} minute${minutes > 1 ? 's' : ''}`;
     }
 
+    //this alos tries and make the rewatch pop up with no effect
     const almostDone = video && video.getDuration() > 0 && (elapsedTime / video.getDuration() > 0.9);
+
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -70,6 +73,7 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
         }
     };
 
+    //effect for rewatch, not working
     useEffect(() => {
         const w = user.getWatchedVideo(videoId);
         setWatched(w);
@@ -81,14 +85,11 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
 
     const actions = {
         play: playVideo,
-        resume: playVideo,//how much time remaining
+        resume: playVideo,
         rewatch: continueWatching,
         purchase: function() { setShowModal(true) }
     };
 
-
-    // display remaining time if video has been watched
-    // data: has been purchased, has been watched, if has been watched, show time remaining
     if (user.hasPurchasedVideo(video?.getResourceId())) {
         if (!hasWatched) {
             buttons.push("play");
@@ -124,12 +125,13 @@ export default function VideoDetails({ parser, user, setSelectedVideo }) {
                             <p className="text-lg text-zinc-300 mb-2">Included in Seminar: <span className="font-semibold">{currentSeminar}</span></p>
                         )}
                         <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
+                        {/*this is the way to show the duration */}
                         {hasWatched && (
                             <p className="text-sm text-red-500 mb-2">
                                 Watched for {formatElapsedTime(elapsedTime)}
                             </p>
                         )}
-                        <VideoDetailsActions actions={actions} buttons={buttons} video={video} elapsedTime={elapsedTime} />
+                        <VideoDetailsActions actions={actions} buttons={buttons} />
 
                     </div>
                 </div>
