@@ -64,11 +64,20 @@ export default class Video {
 
 
     getDuration() {
-        return this.duration;
+        return 2000; //this.duration;
     }
 
     setDuration(duration) {
         this.duration = duration;
+    }
+
+    getProgress(timestamp) {
+        if (!timestamp) {
+            return "0%";
+        }
+        const progress = timestamp / this.getDuration();
+        let intProgress = Math.round(progress * 100);
+        return intProgress.toString() + "%";
     }
 
     // ------------------- Get all the data fields ------------------- //
