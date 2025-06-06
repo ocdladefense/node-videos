@@ -8,7 +8,7 @@ export default class Cache {
 
     set(key, value) {
         if (this.#enabled === true) {
-            localStorage.setItem(Cache.PREFIX + key, JSON.stringify(value));
+            localStorage.setItem(this.PREFIX + key, JSON.stringify(value));
         }
     };
 

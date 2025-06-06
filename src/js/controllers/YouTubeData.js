@@ -35,8 +35,15 @@ const YouTubeData = (function() {
                 ok = null;
             });
 
-        thumbs = response.map(item => item.thumbs);;
-        durations = response.map(item => item.duration);
+        thumbs = response.map(item => ({
+            id: item.id,
+            thumbs: item.thumbs
+        }));;
+        durations = response.map(item => ({
+            id: item.id,
+            durations: item.duration
+        }));;
+
         console.log("thumbs + dura:", thumbs, durations);
     }
 
@@ -157,8 +164,9 @@ const YouTubeData = (function() {
 
 async function initData(videos) {
 
-    let cache = new Cache("thumb.");
-    let map = new Map();
+    let cache = new Cache("");
+    let thumbMap = new Map();
+    let durationMap = new Map();
 
     const videoIDs = videos.filter(video => !!video.resourceId).map(video => video.resourceId);
 
@@ -173,21 +181,24 @@ async function initData(videos) {
         await YouTubeData.load(batch);
 
         YouTubeData.getDurations().forEach(item => {
-            cache.set(item.id, item);
-            map.set(item.id, item);
+            if (item.id) {
+                cache.set("duration." + item.id, item);
+                durationMap.set(item.id, item);
+            }
         });
 
         YouTubeData.getThumbs().forEach(item => {
-            cache.set(item.id, item);
-            map.set(item.id, item);
+            if (item.id) {
+                cache.set("thumb." + item.id, item);
+                thumbMap.set(item.id, item);
+            }
         });
     }
 
 
     console.log("cache:", cache.getCacheContents());
-    //console.log("map:", map);
 
-    return cache.isEnabled() ? cache : map;
+    return cache.isEnabled() ? cache : thumbMap;
 }
 
 //for slicing data to handle youTube api limits
