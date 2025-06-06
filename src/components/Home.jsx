@@ -54,7 +54,7 @@ export default function Home({ parser, user }) {
 
             <div className='inline-flex w-full h-[100px] justify-between'>
                 <h1 className="text-zinc-100 text-4xl font-bold pb-8 mb-8 text-left">Welcome</h1>
-                <SearchBar />
+                {/* <SearchBar />  This feature doesn't work yet, un-comment to see styles */}
                 <div className="inline-flex phone:flex-wrap">
 
                     <DropdownMenu

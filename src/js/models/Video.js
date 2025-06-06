@@ -129,7 +129,6 @@ export default class Video {
         if (this.seminar !== null) {
             return this.startDate.slice(0, 4);
         }
-
     }
 
     isFree() {
