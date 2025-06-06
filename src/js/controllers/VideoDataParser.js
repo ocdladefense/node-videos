@@ -6,6 +6,7 @@ export default class VideoDataParser {
 
     seminars = new Map();
 
+
     initialized = false;
 
     lists = [
@@ -29,6 +30,7 @@ export default class VideoDataParser {
     getSeminars() {
         return this.seminars;
     }
+
 
     parse(apiData) {
         apiData = apiData || [];
@@ -110,10 +112,14 @@ export default class VideoDataParser {
     static group(videos = [], by = "seminar") {
 
 
+        if (by == "seminar") {
+            let filtered = videos.filter((video) => video.getSeminarId());
 
-        let filtered = videos.filter((video) => video.getSeminarId());
-
-        return Object.groupBy(filtered, (video) => video.getSeminarId());
+            return Object.groupBy(filtered, (video) => video.getSeminarId());
+        } else if (by == "year") {
+            let filtered = videos.filter((video) => video.getSeminarId());
+            return Object.groupBy(filtered, (video) => video.getSeminarYear());
+        };
 
         // if by == "year" then return  something else.
     }

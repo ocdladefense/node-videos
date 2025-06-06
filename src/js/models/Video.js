@@ -122,7 +122,14 @@ export default class Video {
         if (this.seminar == null) {
             return "No seminar data";
         }
-        return this.seminar.Start_Date__c;
+        return this.startDate
+    }
+
+    getSeminarYear() {
+        if (this.seminar !== null) {
+            return this.startDate.slice(0, 4);
+        }
+
     }
 
     isFree() {
