@@ -1,21 +1,23 @@
 import moment from 'moment';
+import Cache from './Cache';
 
-const VideoThumbnails = (function() {
+const YouTubeData = (function() {
 
 
-    var parts = "snippet,contentDetails,statistics";
-    var videoId = ["4mxFb5VH12Y"];
+    var parts = "snippet,contentDetails";
     var apiKey = process.env.API_KEY;
-    //var apiKey = "";
     var endpoint = "https://www.googleapis.com/youtube/v3/videos";
+    let thumbs;
+    let durations;
 
-    async function getThumbs(ids) {
+    async function load(ids) {
         ids = ids.join(",");
         let url = endpoint + "?part=" + parts + "&id=" + ids + "&key=" + apiKey;
         let statusCode;
         let ok;
 
-        return fetch(url)
+
+        let response = await fetch(url)
             .then((resp) => {
                 statusCode = resp.status;
                 ok = resp.ok;
@@ -32,6 +34,17 @@ const VideoThumbnails = (function() {
                 statusCode = null;
                 ok = null;
             });
+
+        thumbs = response.map(item => ({
+            id: item.id,
+            thumbs: item.thumbs
+        }));;
+        durations = response.map(item => ({
+            id: item.id,
+            durations: item.duration
+        }));;
+
+        console.log("thumbs + dura:", thumbs, durations);
     }
 
     function ifOkay(json) {
@@ -51,8 +64,6 @@ const VideoThumbnails = (function() {
                 standard: item.snippet.thumbnails.standard,
             };
             obj["duration"] = duration;
-
-            //console.log("Thumbnail object:", obj);
 
             return obj;
         });
@@ -132,45 +143,62 @@ const VideoThumbnails = (function() {
         });
     };
 
+
+    function getThumbs() {
+        return thumbs || [];
+    }
+
+    function getDurations() {
+        return durations || [];
+    }
+
+
+
     return {
+        load: load,
         getThumbs: getThumbs,
-        prepareThumbnailData: prepareThumbnailData
+        getDurations: getDurations,
     };
 
 })();
 
-async function initThumbs(videos) {
+async function initData(videos) {
 
-    let cache = new ThumbnailCache();
-    let thumbnailMap = new Map();
+    let cache = new Cache("");
+    let thumbMap = new Map();
+    let durationMap = new Map();
 
-    const videoIDs = videos.map(video => video.resourceId);
+    const videoIDs = videos.filter(video => !!video.resourceId).map(video => video.resourceId);
 
     //check for thumbs that havent been cached, and therefore need to be fetched
     const uncachedIDs = videoIDs.filter(id => !cache.hasKey(id));
 
-    //divide thumbs to collect to fit within api call size limits
+    //divide id's to be queried to fit within api call size limits
     const uncollectedThumbs = chunkArray(uncachedIDs, 50);
 
     for (const batch of uncollectedThumbs) {
-        let data;
-        try {
-            data = await VideoThumbnails.getThumbs(batch);
-        } catch (error) {
-            console.error("Error fetching thumbs", batch, error);
-            continue;
-        }
 
-        data.forEach(item => {
-            cache.set(item.id, item);
-            thumbnailMap.set(item.id, item);
+        await YouTubeData.load(batch);
+
+        YouTubeData.getDurations().forEach(item => {
+            if (item.id) {
+                cache.set("duration." + item.id, item);
+                durationMap.set(item.id, item);
+            }
+        });
+
+        YouTubeData.getThumbs().forEach(item => {
+            if (item.id) {
+                cache.set("thumb." + item.id, item);
+                thumbMap.set(item.id, item);
+            }
         });
     }
 
-    //console.log("cache:", cache.getCacheContents());
-    //console.log("thumbnailMap:", thumbnailMap);
 
-    return cache.isEnabled() ? cache : thumbnailMap;
+    console.log("cache:", cache.getCacheContents());
+
+    return cache.isEnabled() ? cache : thumbMap;
 }
 
 //for slicing data to handle youTube api limits
@@ -183,61 +211,9 @@ function chunkArray(array, size) {
 }
 
 export function clearThumbCache() {
-    const cache = new ThumbnailCache();
+    const cache = new Cache();
     cache.clear();
-    console.log("Thumbnail cache cleared.");
+    console.log("cache cleared.");
 }
 
-class ThumbnailCache {
-    static PREFIX = "thumb.";
-    #enabled;
-
-    constructor(enabled = true) {
-        this.#enabled = enabled;
-    }
-
-    set(key, value) {
-        if (this.#enabled === true) {
-            localStorage.setItem(ThumbnailCache.PREFIX + key, JSON.stringify(value));
-        }
-    };
-
-    get(key) {
-        return JSON.parse(localStorage.getItem(ThumbnailCache.PREFIX + key));
-    };
-
-    clear() {
-        localStorage.clear();
-    };
-
-    remove(key) {
-        localStorage.removeItem(ThumbnailCache.PREFIX + key);
-    };
-
-    persist() {
-        //push to Salesforce
-    };
-
-    hasKey(key) {
-        return null == localStorage.getItem(ThumbnailCache.PREFIX + key) ? false : true;
-    };
-
-    isEnabled() {
-        return this.#enabled;
-    };
-
-    getCacheContents() {
-        let cacheContents = {};
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith(ThumbnailCache.PREFIX)) {
-                cacheContents[key] = JSON.parse(localStorage.getItem(key));
-            }
-        }
-        return cacheContents;
-    };
-}
-
-export default initThumbs;
-export { VideoThumbnails };
-export const getThumbs = VideoThumbnails.getThumbs;
+export default initData;

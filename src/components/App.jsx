@@ -8,9 +8,9 @@ import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import User from '../js/models/User.js';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
-import initThumbs from '../js/controllers/VideoThumbs';
+import initData from '../js/controllers/YouTubeData.js';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
-import { clearThumbCache } from '../js/controllers/VideoThumbs';
+import { clearThumbCache } from '../js/controllers/YouTubeData.js';
 window.clearCache = clearThumbCache;
 
 
@@ -47,21 +47,25 @@ async function getVideoParser() {
     let resp = await api.query(query);
     parser.parse(resp.records);
 
-    let videos = parser.getVideos();
-
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    const videoDataMap = await initThumbs(videos); // should be initThumbs(parser.getVideoIds());
-    console.log("init thumbs returned:", videoDataMap);
+    const videoData = await initData(parser.getVideos());
+    console.log("initData returned:", videoData);
 
     parser.getVideos().forEach(video => {
-        const videoData = videoDataMap.get(video.resourceId);
+        const thumbData = videoData.get("thumb." + video.resourceId);
+        const durationData = videoData.get("duration." + video.resourceId);
+        console.log(thumbData);
 
-        if (videoData) {
-            video.setThumbnail(videoData.thumbs);
-            video.setDuration(videoData.duration);
+        if (thumbData) {
+            video.setThumbnail(thumbData.thumbs);
         }
+
+        if (durationData) {
+            video.setDuration(durationData.duration);
+        }
+
     });
 
 
@@ -92,7 +96,6 @@ export default function App() {
         s1.listen();
         let s2 = new PurchasedVideoService(user.getUserId());
         s2.listen();  // can listen for mediapurchase events!
-
 
         // Get data from each Service's load() method,
         // and use it consistent with this application's logic.
