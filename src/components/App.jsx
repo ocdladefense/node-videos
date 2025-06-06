@@ -53,12 +53,10 @@ async function getVideoParser() {
     let resp = await api.query(query);
     parser.parse(resp.records);
 
-    let videos = parser.getVideos();
-
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    const videoData = await initData(videos); // should be initData(parser.getVideoIds());
+    const videoData = await initData(parser.getVideos());
     console.log("initData returned:", videoData);
 
     parser.getVideos().forEach(video => {
