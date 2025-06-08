@@ -8,6 +8,19 @@ import { PlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyle
 import { ThemeProvider, Box } from '@mui/material';
 import { Skeleton as PlayerPlaceholder, Tooltip } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import YouTubePlayer from '../../js/player/YouTubePlayer.js';
+import AudioPlayer from '../../js/player/AudioPlayer.js';
+
+window.playerMap = {
+    video: YouTubePlayer,
+    audio: AudioPlayer
+};
+
+// Player instance used throughout the application lifecycle.
+// let player = new YouTubePlayer();
+
+// let user = {}; //getCurrentUser();
+
 
 
 
@@ -33,7 +46,7 @@ export default function VideoPlayerContainer({ controls = "standard,float,autohi
     let videoId = params.resourceId;
 
     // Use react-router-dom hook.
-    let { parser, user, player } = useOutletContext();
+    let { parser, user } = useOutletContext();
 
     let navigate = useNavigate();
 
@@ -42,6 +55,11 @@ export default function VideoPlayerContainer({ controls = "standard,float,autohi
 
     // Reference to the video that will be played.
     const [video, setVideo] = useState(parser.getVideo(videoId));
+
+    const isAudio = true; //video.getType() == "audio";
+    const [player, setPlayer] = useState(isAudio ? new AudioPlayer() : new YouTubePlayer());
+    const url = "https://ocdla.app/content/uploads/modules/player/ac-2024/chapter-1.mp3"; //video.getUrl();
+    const type = "audio/mpeg";
 
     const onBack = function() { navigate("/media/" + videoId) };
 
@@ -127,16 +145,21 @@ export default function VideoPlayerContainer({ controls = "standard,float,autohi
                 </TitleContainer>
 
 
-
-                <div id="blocker">
-                    <VideoContainer maxWidth={false}>
-                        <div id="player-wrapper">
-                            <div id="player">
-                                <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+                {isAudio ?
+                    <audio id="player">
+                        <source src={url} type={type} />
+                    </audio>
+                    :
+                    (<div id="blocker">
+                        <VideoContainer maxWidth={false}>
+                            <div id="player-wrapper">
+                                <div id="player">
+                                    <PlayerPlaceholder variant="rectangular" animation="wave" width={width} height={height} />
+                                </div>
                             </div>
-                        </div>
-                    </VideoContainer>
-                </div>
+                        </VideoContainer>
+                    </div>)
+                }
 
                 <MediaControls player={player} onBack={onBack} isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} playerInitialized={playerInitialized} />
 

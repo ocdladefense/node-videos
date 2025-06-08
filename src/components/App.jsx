@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
-import YouTubePlayer from '../js/player/YouTubePlayer.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import User from '../js/models/User.js';
@@ -19,15 +18,6 @@ const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
 const SF_USER_ID = process.env.SF_USER_ID;
 
 
-window.playerMap = {
-    youtube: YouTubePlayer,
-};
-
-// Player instance used throughout the application lifecycle.
-const player = new YouTubePlayer();
-// let user = {}; //getCurrentUser();
-
-
 
 
 let user = new User(SF_USER_ID || "005VC00000ET8LZ");
@@ -36,6 +26,41 @@ window.user = user;
 
 // Top-level reference to the "parser" that can return various lists of videos.
 let parser = new VideoDataParser();
+
+/**
+ * 
+ * applicatonData
+ * appData = new ApplicationData();
+ * 
+ * let media = appData.get('media');
+ * let seminars = appData.get('seminars');
+ * let lists = appData.get('lists');
+ * let videos = appData.get('media').filter();
+ * let audio ....
+ * let thumbs = appData.get('thumbs');
+ * 
+ * class ApplicationData {
+ * 
+ * 
+ * 
+ * 
+ * get(key, useCache?) {
+ * 
+ *    return !useCache ? this[key]() : 
+ * 
+ * }
+ * 
+ * 
+ * 
+ * }
+ * 
+ */
+
+
+
+
+
+
 
 const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c ORDER BY Event__r.Start_Date__c DESC NULLS LAST';
 
@@ -71,6 +96,20 @@ async function getVideoParser() {
 
     return parser;
 }
+
+
+/*
+let appdata = new ApplicationData();
+
+try {
+appdata.addService(salesforce, 'media');
+appdata.addSErvcie(ytthumbs, 'thumbs');
+appdata.addService(ytduration, 'media.duration');
+} catch( service exception e) {
+
+    console.warn("there was an issue loading data');"
+}
+*/
 
 
 
@@ -145,7 +184,7 @@ export default function App() {
         <>
             <Header />
             <div class="container mx-auto">
-                {!parser.isInitialized() ? <h1>My splash screen</h1> : <Outlet context={{ parser, user, player }} />}
+                {!parser.isInitialized() ? <h1>My splash screen</h1> : <Outlet context={{ parser, user }} />}
             </div>
             <Footer />
         </>
