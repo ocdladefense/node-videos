@@ -7,11 +7,7 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-
-
-
-
-export default function VideoDetails() {
+export default function VideoDetails({ parser, user }) {
 
 
     let params = useParams();
@@ -25,28 +21,45 @@ export default function VideoDetails() {
 
     let navigate = useNavigate();
 
-    const [video, setVideo] = useState(parser.getVideo(videoId));
+    const video = parser.getVideo(videoId);
 
-    const watched = user.getWatchedVideo(videoId);
+    const [watched, setWatched] = useState(user.hasWatched(videoId)); //change this line
 
-    const hasWatched = !!watched.resourceId;
+    // const [elapsedTime, setElapsedTime] = useState(user.); //change  this line
 
-    const elapsedTime = watched.timestamp || 0;
+    const [hasWatched, setHasWatched] = useState(false); //change this line
 
     const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
 
     const [showModal, setShowModal] = useState(false);
 
+    const w = user.getWatchedVideo(videoId);
+    let elapsed = w.timestamp;
+    console.log(elapsed);
+    let remaining = video.getDuration() - elapsed;
+
+    const continueWatching = () => {
+        navigate("/player/" + video.getResourceId());
+    };
+
+
     // Navigate to the player or back again.
 
     const onBack = function() { navigate("/"); };
 
-    // function secondsToRoundedMinutes(seconds) {
-    //     if (!seconds || isNaN(seconds)) return 0;
-    //     return Math.ceil(seconds / 60); // Round up
-    // }
+    //this is the code where it rounds the time then showing the exact number(only showing time watched then left)
+    function formatElapsedTime(seconds) {
+        console.log(seconds);
+        // return "20 mins.";
+        if (!seconds || isNaN(seconds)) return '';
+        const minutes = Math.ceil(seconds / 60);
+        // return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+        return `${minutes} mins. remaining`;
+    }
 
-    const almostDone = video && (elapsedTime / video.getDuration() > 0.9);
+    //this alos tries and make the rewatch pop up with no effect
+    // const almostDone = video && video.getDuration() > 0 && (elapsedTime / video.getDuration() > 0.9);
+
 
     const playVideo = function() {
         console.log("About to play the video!");
@@ -73,36 +86,42 @@ export default function VideoDetails() {
     };
 
 
+    /*
+        // Helper function here to get at the remainig time.  Let's evaluate after merge with gabe's code.
+        useEffect(() => {
+            const w = user.getWatchedVideo(videoId);
+            setWatched(w);
+            setElapsedTime(w.timestamp || 0);
+            setHasWatched(!!w.resourceId);
+            setHasAccess(w || user.hasPurchased(videoId));
+        }, [videoId, user]);
+    */
+
+
+
+
+
     const actions = {
         play: playVideo,
-        resume: playVideo,//how much time remaining
-        rewatch: playVideo,
+        resume: playVideo,
+        rewatch: continueWatching,
         purchase: function() { setShowModal(true) }
     };
 
 
-    // display remaining time if video has been watched
-    // data: has been purchased, has been watched, if has been watched, show time remaining
-    if (hasWatched) {
+    if (hasAccess && hasWatched) {
         buttons.push("resume");
+        buttons.push("rewatch");
     }
-    else if (hasWatched && !almostDone) {
-        buttons.push("resume");
+    else if (hasAccess) {
+        buttons.push("play");
     }
-    else if (user.hasPurchasedVideo(video && video.getResourceId())) {
-
-
-        if (hasWatched && !almostDone) {
-            buttons.push("resume");
-        } else if (almostDone || elapsedTime > 0) {
-            buttons.push("rewatch");
-        } else {
-            buttons.push("play");
-        }
-
-    } else {
+    else {
         buttons.push("purchase");
     }
+
+
+
 
     let currentSeminar = video && video.getSeminarName();
     const seminarVideos = parser.getRelatedVideos(video && video.getResourceId());
@@ -127,7 +146,7 @@ export default function VideoDetails() {
                         )}
                         <p className="text-md text-zinc-200 mb-4">{video.getVideoDescription()}</p>
 
-                        <VideoDetailsActions actions={actions} buttons={buttons} />
+                        <VideoDetailsActions actions={actions} buttons={buttons} remaining={formatElapsedTime(remaining)} />
 
                     </div>
                 </div>
