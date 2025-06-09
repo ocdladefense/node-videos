@@ -178,7 +178,7 @@ export default class AudioPlayer extends MediaPlayer {
     }
 
     seekTo(time) {
-        this.#player.seekTo(time, true);
+        this.#player.currentTime = time;
         this.publish(PLAYER_STATE_SEEKING);
     }
 
