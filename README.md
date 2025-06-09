@@ -38,7 +38,7 @@ Headless deployment, on Ubuntu
 <code>sf org display --target-org MyOrg --verbose --json > authFile.json</code>
 
 ### Authorize in CLI using the URL
-<code>sf org login sfdx-url --sfdx-url-file authFile.json --alias MyOrg</code>
+<code>sf org login sfdx-url --sfdx-url-file authFile.json --alias Sandbox__OcdPartial</code>
 
 
 ## Adding submodules
