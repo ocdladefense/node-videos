@@ -76,11 +76,11 @@ export default class User {
     }
 
     hasWatchedVideo(videoId) {
-        return this.watched.get(videoId) || false;
+        return this.watched.get(videoId) != null;
     }
 
     hasWatched(videoId) {
-        return this.watched.get(videoId) || false;
+        return this.watched.get(videoId) != null;
     }
 
     getWatchedVideo(videoId) {

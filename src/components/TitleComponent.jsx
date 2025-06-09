@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router";
+import ProgressBar from "./ProgressBar";
 
 
-export default function TitleComponent({ video, index, setSelectedVideo, setRoute, user }) {
+export default function TitleComponent({ video, index, user }) {
     const hasAccess = video.isFree() || user.getPurchasedVideo(video.getVideoResourceId());
     let navigate = useNavigate();
 
     //  const doNavigation = function() { let href = "/details/" + video.getResourceId(); console.log(href); window.location.href = href; };
+
+    const watchedVid = user.getWatchedVideo(video.getResourceId());
+    const strProgress = video.getProgress(watchedVid.timestamp);
 
     return (
         <li
@@ -23,6 +27,7 @@ export default function TitleComponent({ video, index, setSelectedVideo, setRout
                         alt={'Thumbnail for ' + video.getVideoName()}
                         className="w-full h-full object-cover"
                     />
+                    <ProgressBar progress={strProgress} />
                     {!hasAccess && (
                         <div className="absolute inset-0 bg-zinc-800 bg-opacity-60 flex items-center justify-center">
                             <span className="text-white text-sm font-bold">🔒Purchase</span>
