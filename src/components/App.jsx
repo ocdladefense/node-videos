@@ -62,14 +62,13 @@ async function getVideoParser() {
     parser.getVideos().forEach(video => {
         const thumbData = videoData.get("thumb." + video.resourceId);
         const durationData = videoData.get("duration." + video.resourceId);
-        console.log(thumbData);
 
         if (thumbData) {
             video.setThumbnail(thumbData.thumbs);
         }
 
         if (durationData) {
-            video.setDuration(durationData.duration);
+            video.setDuration(durationData.durations);
         }
 
     });

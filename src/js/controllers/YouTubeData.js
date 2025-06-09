@@ -44,7 +44,7 @@ const YouTubeData = (function() {
             durations: item.duration
         }));;
 
-        console.log("thumbs + dura:", thumbs, durations);
+        //console.log("thumbs + dura:", thumbs, durations);
     }
 
     function ifOkay(json) {

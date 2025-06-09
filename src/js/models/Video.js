@@ -64,7 +64,7 @@ export default class Video {
 
 
     getDuration() {
-        return 2000; //this.duration;
+        return this.duration;
     }
 
     setDuration(duration) {
