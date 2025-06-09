@@ -7,7 +7,7 @@ import VideoDetailsActions from './VideoDetailsActions.jsx';
 
 
 
-export default function VideoDetails({ parser, user }) {
+export default function VideoDetails() {
 
 
     let params = useParams();
