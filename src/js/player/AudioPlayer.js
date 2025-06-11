@@ -118,7 +118,7 @@ export default class AudioPlayer extends MediaPlayer {
 
             const onYouTubeIframeAPIReady = () => {
                 this.#scriptsReady = true;
-                this.#player = document.getElementById("player");
+                this.#player = document.getElementById(elemId);
 
                 if (null != this.#player) {
                     this.#initialized = true;
@@ -161,7 +161,9 @@ export default class AudioPlayer extends MediaPlayer {
     }
 
     play() {
+
         this.#player.play();
+
     }
 
     pause() {
@@ -178,9 +180,22 @@ export default class AudioPlayer extends MediaPlayer {
     }
 
     seekTo(time) {
-        this.#player.currentTime = time;
-        this.publish(PLAYER_STATE_SEEKING);
+        if (this.#player && typeof this.#player.currentTime !== "undefined") {
+            const duration = this.#player.duration;
+
+            // Clamp the seek time within the media duration
+            if (!isNaN(duration)) {
+                this.#player.currentTime = Math.min(Math.max(time, 0), duration);
+            } else {
+                console.warn("Unable to seek: media duration not available.");
+            }
+
+            this.publish(PLAYER_STATE_SEEKING);
+        } else {
+            console.warn("Player not ready or currentTime unsupported.");
+        }
     }
+
 
     getDuration() {
         return this.#player.duration;
@@ -191,7 +206,7 @@ export default class AudioPlayer extends MediaPlayer {
     }
 
     getElapsedTime() {
-        return this.#initialized ? Math.round(this.#player.currentTime) : 0;
+        return Math.round(this.#player.currentTime);
     }
 
 
@@ -269,7 +284,7 @@ export default class AudioPlayer extends MediaPlayer {
 
 
     getPlayerState() {
-        let resourceId = this.#video ? this.#video.getResourceId() : null;
+        let resourceId = this.#video ? this.#video.getResourceId() : "https://ocdla.app/content/uploads/modules/player/ac-2024/chapter-1.mp3";
         let elapsedTime = this.getElapsedTime();
 
         return {
@@ -307,7 +322,7 @@ export default class AudioPlayer extends MediaPlayer {
             detail: playerState,
             bubbles: true
         });
-        this.#player.getIframe().dispatchEvent(e);
+        this.#player.dispatchEvent(e);
     }
 
 
