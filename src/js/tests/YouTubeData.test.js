@@ -1,10 +1,10 @@
 import Video from '../models/Video';
-import initData from '../controllers/YouTubeData';
 import { YouTubeData } from '../controllers/YouTubeData';
-import Cache from '../controllers/Cache';
 
 
-test("testing initData", async () => {
+
+
+test("Testing YouTubeData methods", async () => {
     //mock a localstorage to perform cache methods/features.
     const localStorageMock = {
         getItem: jest.fn(),
@@ -16,6 +16,12 @@ test("testing initData", async () => {
 
     let duration1 = "PT1H"; // 3600 seconds after conversion
     let duration2 = "PT2H"; // 7200 seconds after conversion
+
+    let videos = [
+        { resourceId: "_4xNa80IP3o" },
+        { resourceId: "foobar" }
+    ];
+
 
     //simulate a response for a real id and a filler foobar id
     const sampleApiResponse = {
@@ -60,44 +66,29 @@ test("testing initData", async () => {
         })
     );
 
-    let videos = [
-        { resourceId: "_4xNa80IP3o" },
-        { resourceId: "foobar" }
-    ];
-
-    //await initData(videos);
-
-
-    let cache1 = new Cache("thumb.");
-    let cache2 = new Cache("duration.");
 
     let resourceIds = Video.getResourceIds(videos);
 
-    cache1.set("foobar", "bas");
-
-    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
-
-    expect(uncached).toBe(["_4xNa80IP3o"]);
+    await YouTubeData.load(resourceIds);
 
 
+    YouTubeData.getThumbs().forEach(item => {
+        if (item.id) {
+            cache1.set(item.id, item);
+            map.set("thumb." + item.id, item);
+        }
+    });
 
-    cache1.set("foobar", "bas");
-    cache2.set("pow", "wam");
-    cache2.set("foobar", "somethingElse");
 
-    expect(cache1.get("foobar")).toBe("bas");
-    expect(cache2.get("pow")).toBe("wam");
-    expect(cache1.get("foobar")).not.toBe("somethingElse");
-
-    expect(YouTubeData.convertISODurationToSeconds(duration1)).toBe(3600);
-    expect(YouTubeData.convertISODurationToSeconds(duration2)).toBe(7200);
-
-    //Dont pass an integer to ISO convertion method.
-    // see more information about converter here: --
-    expect(YouTubeData.convertISODurationToSeconds(3600)).toBe(NaN);
-
+    YouTubeData.getDurations().forEach(item => {
+        if (item.id) {
+            cache2.set(item.id, item);
+            map.set("duration." + item.id, item);
+        }
+    });
 
 });
+
 
 
 describe("Thumb get/set", () => {

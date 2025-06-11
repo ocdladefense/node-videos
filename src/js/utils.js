@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 
 
 export default function waitUntil(func, wait) {
@@ -51,3 +53,11 @@ export function chunkArray(array, size) {
     }
     return chunks;
 }
+
+export function convertISODurationToSeconds(ISODuration) {
+    if (typeof ISODuration === 'number' && !isNaN(ISODuration)) {
+        return NaN;
+    }
+    return moment.duration(ISODuration).asSeconds();
+}
+

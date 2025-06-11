@@ -1,25 +1,51 @@
-import moment from 'moment';
-import Cache from './Cache';
-import chunkArray from '../utils';
-import Video from '../models/Video';
+import { chunkArray } from '../utils';
+import { convertISODurationToSeconds } from '../utils';
 
 const YouTubeData = (function() {
 
 
+    const YOUTUBE_DATA_API_LIMIT = 50;
+
     var parts = "snippet,contentDetails";
     var apiKey = process.env.API_KEY;
     var endpoint = "https://www.googleapis.com/youtube/v3/videos";
-    let thumbs;
-    let durations;
+    let thumbs = [];
+    let durations = [];
 
     async function load(ids) {
+
+        const batches = chunkArray(ids, YOUTUBE_DATA_API_LIMIT);
+
+        for (const batch of batches) {
+
+            let response = await doCallout(batch);
+
+            let tmp1 = response.map(item => ({
+                id: item.id,
+                thumbs: item.thumbs
+            }));
+
+            let tmp2 = response.map(item => ({
+                id: item.id,
+                durations: item.duration
+            }));
+
+            thumbs.concat(tmp1);
+            durations.concat(tmp2);
+
+        }
+
+    }
+
+
+    async function doCallout(ids) {
         ids = ids.join(",");
         let url = endpoint + "?part=" + parts + "&id=" + ids + "&key=" + apiKey;
         let statusCode;
         let ok;
 
 
-        let response = await fetch(url)
+        return await fetch(url)
             .then((resp) => {
                 statusCode = resp.status;
                 ok = resp.ok;
@@ -36,26 +62,9 @@ const YouTubeData = (function() {
                 statusCode = null;
                 ok = null;
             });
-
-        thumbs = response.map(item => ({
-            id: item.id,
-            thumbs: item.thumbs
-        }));;
-        durations = response.map(item => ({
-            id: item.id,
-            durations: item.duration
-        }));;
-
-        //console.log("thumbs + dura:", thumbs, durations);
     }
 
 
-    function convertISODurationToSeconds(ISODuration) {
-        if (typeof ISODuration === 'number' && !isNaN(ISODuration)) {
-            return NaN;
-        }
-        return moment.duration(ISODuration).asSeconds();
-    }
 
 
     function ifOkay(json) {
@@ -166,7 +175,6 @@ const YouTubeData = (function() {
 
 
     return {
-        convertISODurationToSeconds: convertISODurationToSeconds,
         load: load,
         getThumbs: getThumbs,
         getDurations: getDurations,
@@ -174,51 +182,7 @@ const YouTubeData = (function() {
 
 })();
 
-async function initData(videos) {
-
-    let cache1 = new Cache("thumb.");
-    let cache2 = new Cache("duration.");
-    let map = new Map();
-
-    const resourceIds = Video.getResourceIds(videos);
-
-    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
-
-    const batches = chunkArray(uncached, 50);
-
-
-    for (const batch of batches) {
-
-        await YouTubeData.load(batch);
-
-        YouTubeData.getDurations().forEach(item => {
-            if (item.id) {
-                cache2.set(item.id, item);
-                map.set("duration." + item.id, item);
-            }
-        });
-
-        YouTubeData.getThumbs().forEach(item => {
-            if (item.id) {
-                cache1.set(item.id, item);
-                map.set("thumb." + item.id, item);
-            }
-        });
-    }
-
-    // console.log("cache:", cache.getCacheContents());
-    // console.log("map:", map);
-
-    //return cache.isEnabled() ? cache : map;
-}
 
 
 
-export function clearThumbCache() {
-    const cache = new Cache();
-    cache.clear();
-    console.log("cache cleared.");
-}
-
-export default initData;
 export { YouTubeData };

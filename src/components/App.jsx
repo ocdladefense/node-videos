@@ -12,10 +12,9 @@ import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import User from '../js/models/User.js';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 import Video from '../js/models/Video.js';
-import initData from '../js/controllers/YouTubeData.js';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
-import { clearThumbCache } from '../js/controllers/YouTubeData.js';
-import Cache from '../js/controllers/Cache.js';
+import Cache, { clearThumbCache } from '../js/controllers/Cache.js';
+import { YouTubeData } from '../js/controllers/YouTubeData.js';
 window.clearCache = clearThumbCache;
 
 
@@ -48,7 +47,9 @@ const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
-
+    let cache1 = new Cache("thumb.");
+    let cache2 = new Cache("duration.");
+    let map = new Map();
 
     let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
     let resp = await api.query(query);
@@ -57,12 +58,11 @@ async function getVideoParser() {
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    await initData(parser.getVideos());
 
-    let cache1 = new Cache("thumb.");
-    let cache2 = new Cache("duration.");
+    let videos = parser.getVideos();
 
-    parser.getVideos().forEach(video => {
+
+    videos.forEach(video => {
         const thumbData = cache1.get(video.resourceId);
         const durationData = cache2.get(video.resourceId);
 
@@ -77,8 +77,33 @@ async function getVideoParser() {
     });
 
 
+    const resourceIds = Video.getResourceIds(videos);
+
+    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
+
+
+
+    await YouTubeData.load(uncached);
+
+
+    YouTubeData.getThumbs().forEach(item => {
+        if (item.id) {
+            cache1.set(item.id, item);
+            map.set("thumb." + item.id, item);
+        }
+    });
+
+
+    YouTubeData.getDurations().forEach(item => {
+        if (item.id) {
+            cache2.set(item.id, item);
+            map.set("duration." + item.id, item);
+        }
+    });
+
     return parser;
 }
+
 
 
 

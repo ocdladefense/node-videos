@@ -47,3 +47,10 @@ export default class Cache {
         return keys.filter(id => !cache1.hasKey(id) || !cache2.hasKey(id));
     }
 }
+
+
+export function clearThumbCache() {
+    const cache = new Cache();
+    cache.clear();
+    console.log("cache cleared.");
+}
