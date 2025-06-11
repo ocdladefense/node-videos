@@ -1,5 +1,7 @@
 import moment from 'moment';
 import Cache from './Cache';
+import chunkArray from '../utils';
+import Video from '../models/Video';
 
 const YouTubeData = (function() {
 
@@ -47,12 +49,21 @@ const YouTubeData = (function() {
         //console.log("thumbs + dura:", thumbs, durations);
     }
 
+
+    function convertISODurationToSeconds(ISODuration) {
+        if (typeof ISODuration === 'number' && !isNaN(ISODuration)) {
+            return NaN;
+        }
+        return moment.duration(ISODuration).asSeconds();
+    }
+
+
     function ifOkay(json) {
         return json.items.map(function(item) {
             var obj = {};
             var duration;
 
-            duration = moment.duration(item.contentDetails.duration).asSeconds(); //convert ISO to seconds
+            duration = convertISODurationToSeconds(item.contentDetails.duration); //convert ISO to seconds
 
             //return object with resourceId, 5 thumbnail resolution urls, and total video duration (in seconds)
             obj["id"] = item.id;
@@ -155,6 +166,7 @@ const YouTubeData = (function() {
 
 
     return {
+        convertISODurationToSeconds: convertISODurationToSeconds,
         load: load,
         getThumbs: getThumbs,
         getDurations: getDurations,
@@ -164,50 +176,43 @@ const YouTubeData = (function() {
 
 async function initData(videos) {
 
-    let cache = new Cache("");
+    let cache1 = new Cache("thumb.");
+    let cache2 = new Cache("duration.");
     let map = new Map();
 
-    const videoIDs = videos.filter(video => !!video.resourceId).map(video => video.resourceId);
+    const resourceIds = Video.getResourceIds(videos);
 
-    //check for thumbs that havent been cached, and therefore need to be fetched
-    const uncachedIDs = videoIDs.filter(id => !cache.hasKey(id));
+    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
 
-    //divide id's to be queried to fit within api call size limits
-    const uncollectedThumbs = chunkArray(uncachedIDs, 50);
+    const batches = chunkArray(uncached, 50);
 
-    for (const batch of uncollectedThumbs) {
+
+    for (const batch of batches) {
 
         await YouTubeData.load(batch);
 
         YouTubeData.getDurations().forEach(item => {
             if (item.id) {
-                cache.set("duration." + item.id, item);
+                cache2.set(item.id, item);
                 map.set("duration." + item.id, item);
             }
         });
 
         YouTubeData.getThumbs().forEach(item => {
             if (item.id) {
-                cache.set("thumb." + item.id, item);
+                cache1.set(item.id, item);
                 map.set("thumb." + item.id, item);
             }
         });
     }
 
-    console.log("cache:", cache.getCacheContents());
-    console.log("map:", map);
+    // console.log("cache:", cache.getCacheContents());
+    // console.log("map:", map);
 
-    return cache.isEnabled() ? cache : map;
+    //return cache.isEnabled() ? cache : map;
 }
 
-//for slicing data to handle youTube api limits
-function chunkArray(array, size) {
-    const chunks = [];
-    for (let i = 0; i < array.length; i += size) {
-        chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
-}
+
 
 export function clearThumbCache() {
     const cache = new Cache();
@@ -216,3 +221,4 @@ export function clearThumbCache() {
 }
 
 export default initData;
+export { YouTubeData };

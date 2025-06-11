@@ -42,4 +42,8 @@ export default class Cache {
         }
         return cacheContents;
     };
+
+    static getUncached(keys, cache1, cache2) {
+        return keys.filter(id => !cache1.hasKey(id) || !cache2.hasKey(id));
+    }
 }

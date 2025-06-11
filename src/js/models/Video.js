@@ -173,4 +173,8 @@ export default class Video {
         Video.defaultThumbNail = url;
     }
 
+    static getResourceIds(videos) {
+        return videos.filter(video => !!video.resourceId).map(video => video.resourceId);
+    }
+
 }

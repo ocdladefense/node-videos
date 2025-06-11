@@ -15,6 +15,7 @@ import Video from '../js/models/Video.js';
 import initData from '../js/controllers/YouTubeData.js';
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import { clearThumbCache } from '../js/controllers/YouTubeData.js';
+import Cache from '../js/controllers/Cache.js';
 window.clearCache = clearThumbCache;
 
 
@@ -56,12 +57,14 @@ async function getVideoParser() {
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
-    const videoData = await initData(parser.getVideos());
-    console.log("initData returned:", videoData);
+    await initData(parser.getVideos());
+
+    let cache1 = new Cache("thumb.");
+    let cache2 = new Cache("duration.");
 
     parser.getVideos().forEach(video => {
-        const thumbData = videoData.get("thumb." + video.resourceId);
-        const durationData = videoData.get("duration." + video.resourceId);
+        const thumbData = cache1.get(video.resourceId);
+        const durationData = cache2.get(video.resourceId);
 
         if (thumbData) {
             video.setThumbnail(thumbData.thumbs);

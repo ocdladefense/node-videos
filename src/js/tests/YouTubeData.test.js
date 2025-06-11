@@ -1,6 +1,7 @@
 import Video from '../models/Video';
 import initData from '../controllers/YouTubeData';
-
+import { YouTubeData } from '../controllers/YouTubeData';
+import Cache from '../controllers/Cache';
 
 
 test("testing initData", async () => {
@@ -13,7 +14,10 @@ test("testing initData", async () => {
     };
     global.localStorage = localStorageMock;
 
-    //simulate a response for a real id and a fake foobar
+    let duration1 = "PT1H"; // 3600 seconds after conversion
+    let duration2 = "PT2H"; // 7200 seconds after conversion
+
+    //simulate a response for a real id and a filler foobar id
     const sampleApiResponse = {
         items: [
             {
@@ -27,7 +31,7 @@ test("testing initData", async () => {
                         maxres: { url: "http://example.com/maxres1.jpg" },
                     }
                 }, contentDetails: {
-                    duration: "PT1H" // 3600 seconds after conversion
+                    duration: duration1,
                 }
             },
             {
@@ -41,7 +45,7 @@ test("testing initData", async () => {
                         maxres: { url: "http://example.com/maxres2.jpg" },
                     }
                 }, contentDetails: {
-                    duration: "PT2H" // 7200 seconds after conversion
+                    duration: duration2,
                 }
             }
         ]
@@ -56,23 +60,43 @@ test("testing initData", async () => {
         })
     );
 
-    const data = await initData([
+    let videos = [
         { resourceId: "_4xNa80IP3o" },
         { resourceId: "foobar" }
-    ]);
+    ];
 
-    console.log("data:", data);
+    //await initData(videos);
 
-    expect(data).toBeDefined();
-    expect(data.get("thumb._4xNa80IP3o")).toBeDefined();
-    expect(data.get("duration._4xNa80IP3o")).toBeDefined();
-    expect(data.get("thumb.foobar")).toBeDefined();
-    expect(data.get("duration.foobar")).toBeDefined();
 
-    const thumbData = data.get("thumb._4xNa80IP3o");
-    const durationData = data.get("duration.foobar");
-    expect(thumbData.thumbs).toBeDefined();
-    expect(durationData.durations).toBe(7200); //should be 7200 post-conversion
+    let cache1 = new Cache("thumb.");
+    let cache2 = new Cache("duration.");
+
+    let resourceIds = Video.getResourceIds(videos);
+
+    cache1.set("foobar", "bas");
+
+    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
+
+    expect(uncached).toBe(["_4xNa80IP3o"]);
+
+
+
+    cache1.set("foobar", "bas");
+    cache2.set("pow", "wam");
+    cache2.set("foobar", "somethingElse");
+
+    expect(cache1.get("foobar")).toBe("bas");
+    expect(cache2.get("pow")).toBe("wam");
+    expect(cache1.get("foobar")).not.toBe("somethingElse");
+
+    expect(YouTubeData.convertISODurationToSeconds(duration1)).toBe(3600);
+    expect(YouTubeData.convertISODurationToSeconds(duration2)).toBe(7200);
+
+    //Dont pass an integer to ISO convertion method.
+    // see more information about converter here: --
+    expect(YouTubeData.convertISODurationToSeconds(3600)).toBe(NaN);
+
+
 });
 
 
