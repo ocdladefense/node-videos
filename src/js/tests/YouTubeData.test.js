@@ -1,10 +1,11 @@
 import Video from '../models/Video';
-import initData from '../controllers/VideoThumbs';
-import { VideoThumbnails } from '../controllers/VideoThumbs';
+import { YouTubeData } from '../controllers/YouTubeData';
 
 
 
-test("testing initData", async () => {
+
+test("Testing YouTubeData methods", async () => {
+    //mock a localstorage to perform cache methods/features.
     const localStorageMock = {
         getItem: jest.fn(),
         setItem: jest.fn(),
@@ -13,9 +14,81 @@ test("testing initData", async () => {
     };
     global.localStorage = localStorageMock;
 
-    const thumbnailMap = await initData([{ resourceId: '_4xNa80IP3o' }, { resourceId: 'foobar' }]);
-    console.log("thumbnailMap:", thumbnailMap);
-})
+    let duration1 = "PT1H"; // 3600 seconds after conversion
+    let duration2 = "PT2H"; // 7200 seconds after conversion
+
+    let videos = [
+        { resourceId: "_4xNa80IP3o" },
+        { resourceId: "foobar" }
+    ];
+
+
+    //simulate a response for a real id and a filler foobar id
+    const sampleApiResponse = {
+        items: [
+            {
+                id: "_4xNa80IP3o",
+                snippet: {
+                    thumbnails: {
+                        default: { url: "http://example.com/default1.jpg" },
+                        high: { url: "http://example.com/high1.jpg" },
+                        medium: { url: "http://example.com/medium1.jpg" },
+                        standard: { url: "http://example.com/standard1.jpg" },
+                        maxres: { url: "http://example.com/maxres1.jpg" },
+                    }
+                }, contentDetails: {
+                    duration: duration1,
+                }
+            },
+            {
+                id: "foobar",
+                snippet: {
+                    thumbnails: {
+                        default: { url: "http://example.com/default2.jpg" },
+                        high: { url: "http://example.com/high2.jpg" },
+                        medium: { url: "http://example.com/medium2.jpg" },
+                        standard: { url: "http://example.com/standard2.jpg" },
+                        maxres: { url: "http://example.com/maxres2.jpg" },
+                    }
+                }, contentDetails: {
+                    duration: duration2,
+                }
+            }
+        ]
+    };
+
+    //200 status so our sample reponse is a pass
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            status: 200,
+            ok: true,
+            json: () => Promise.resolve(sampleApiResponse)
+        })
+    );
+
+
+    let resourceIds = Video.getResourceIds(videos);
+
+    await YouTubeData.load(resourceIds);
+
+
+    YouTubeData.getThumbs().forEach(item => {
+        if (item.id) {
+            cache1.set(item.id, item);
+            map.set("thumb." + item.id, item);
+        }
+    });
+
+
+    YouTubeData.getDurations().forEach(item => {
+        if (item.id) {
+            cache2.set(item.id, item);
+            map.set("duration." + item.id, item);
+        }
+    });
+
+});
+
 
 
 describe("Thumb get/set", () => {
@@ -84,7 +157,7 @@ describe("Thumbs API Error Handling", () => {
         });
 
         //assert error is thrown
-        await expect(VideoThumbnails.getThumbs(["dummyId"])).rejects.toThrow(/Missing Required Parameter/);
+        await expect(initData(["dummyId"])).rejects.toThrow(/Missing Required Parameter/);
 
     });
 
@@ -110,11 +183,7 @@ describe("Thumbs API Error Handling", () => {
         });
 
         //assert error is thrown
-        await expect(VideoThumbnails.getThumbs(["dummyId"])).rejects.toThrow(/Authorization failed, access is forbidden/);
-
-    });
-
-    test("Handles 403 response: Quota Exceeded", async () => {
+        await expect(initData(["dummyId"])).rejects.toThrow(/Authorization failed, access is forbidden/);
 
     });
 

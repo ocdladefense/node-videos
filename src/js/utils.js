@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 
 
 export default function waitUntil(func, wait) {
@@ -42,3 +44,20 @@ export function formatTime(duration) {
         return `${Min}:${paddedSec}`;
     }
 }
+
+//convert array in to array of arrays limited by size
+export function chunkArray(array, size) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+}
+
+export function convertISODurationToSeconds(ISODuration) {
+    if (typeof ISODuration === 'number' && !isNaN(ISODuration)) {
+        return NaN;
+    }
+    return moment.duration(ISODuration).asSeconds();
+}
+

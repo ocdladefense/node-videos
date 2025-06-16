@@ -1,23 +1,51 @@
-import moment from 'moment';
-import Cache from './Cache';
+import { chunkArray } from '../utils';
+import { convertISODurationToSeconds } from '../utils';
 
 const YouTubeData = (function() {
 
 
+    const YOUTUBE_DATA_API_LIMIT = 50;
+
     var parts = "snippet,contentDetails";
     var apiKey = process.env.API_KEY;
     var endpoint = "https://www.googleapis.com/youtube/v3/videos";
-    let thumbs;
-    let durations;
+    let thumbs = [];
+    let durations = [];
 
     async function load(ids) {
+
+        const batches = chunkArray(ids, YOUTUBE_DATA_API_LIMIT);
+
+        for (const batch of batches) {
+
+            let response = await doCallout(batch);
+
+            let tmp1 = response.map(item => ({
+                id: item.id,
+                thumbs: item.thumbs
+            }));
+
+            let tmp2 = response.map(item => ({
+                id: item.id,
+                durations: item.duration
+            }));
+
+            thumbs.concat(tmp1);
+            durations.concat(tmp2);
+
+        }
+
+    }
+
+
+    async function doCallout(ids) {
         ids = ids.join(",");
         let url = endpoint + "?part=" + parts + "&id=" + ids + "&key=" + apiKey;
         let statusCode;
         let ok;
 
 
-        let response = await fetch(url)
+        return await fetch(url)
             .then((resp) => {
                 statusCode = resp.status;
                 ok = resp.ok;
@@ -34,25 +62,17 @@ const YouTubeData = (function() {
                 statusCode = null;
                 ok = null;
             });
-
-        thumbs = response.map(item => ({
-            id: item.id,
-            thumbs: item.thumbs
-        }));;
-        durations = response.map(item => ({
-            id: item.id,
-            durations: item.duration
-        }));;
-
-        //console.log("thumbs + dura:", thumbs, durations);
     }
+
+
+
 
     function ifOkay(json) {
         return json.items.map(function(item) {
             var obj = {};
             var duration;
 
-            duration = moment.duration(item.contentDetails.duration).asSeconds(); //convert ISO to seconds
+            duration = convertISODurationToSeconds(item.contentDetails.duration); //convert ISO to seconds
 
             //return object with resourceId, 5 thumbnail resolution urls, and total video duration (in seconds)
             obj["id"] = item.id;
@@ -162,58 +182,7 @@ const YouTubeData = (function() {
 
 })();
 
-async function initData(videos) {
-
-    let cache = new Cache("");
-    let thumbMap = new Map();
-    let durationMap = new Map();
-
-    const videoIDs = videos.filter(video => !!video.resourceId).map(video => video.resourceId);
-
-    //check for thumbs that havent been cached, and therefore need to be fetched
-    const uncachedIDs = videoIDs.filter(id => !cache.hasKey(id));
-
-    //divide id's to be queried to fit within api call size limits
-    const uncollectedThumbs = chunkArray(uncachedIDs, 50);
-
-    for (const batch of uncollectedThumbs) {
-
-        await YouTubeData.load(batch);
-
-        YouTubeData.getDurations().forEach(item => {
-            if (item.id) {
-                cache.set("duration." + item.id, item);
-                durationMap.set(item.id, item);
-            }
-        });
-
-        YouTubeData.getThumbs().forEach(item => {
-            if (item.id) {
-                cache.set("thumb." + item.id, item);
-                thumbMap.set(item.id, item);
-            }
-        });
-    }
 
 
-    console.log("cache:", cache.getCacheContents());
 
-    return cache.isEnabled() ? cache : thumbMap;
-}
-
-//for slicing data to handle youTube api limits
-function chunkArray(array, size) {
-    const chunks = [];
-    for (let i = 0; i < array.length; i += size) {
-        chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
-}
-
-export function clearThumbCache() {
-    const cache = new Cache();
-    cache.clear();
-    console.log("cache cleared.");
-}
-
-export default initData;
+export { YouTubeData };
