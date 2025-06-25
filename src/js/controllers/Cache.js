@@ -1,19 +1,29 @@
+
+
+const KEY_SEPARATOR = ".";
+
+
+
 export default class Cache {
+
     PREFIX;
+
     #enabled = true;
 
     constructor(prefix) {
         this.PREFIX = prefix
     }
 
+    _key(key) {
+        return [this.PREFIX, KEY_SEPARATOR, key].join("");
+    }
+
     set(key, value) {
-        if (this.#enabled === true) {
-            localStorage.setItem(this.PREFIX + key, JSON.stringify(value));
-        }
+        localStorage.setItem(this._key(key), JSON.stringify(value));
     };
 
     get(key) {
-        return JSON.parse(localStorage.getItem(this.PREFIX + key));
+        return JSON.parse(localStorage.getItem(this._key(key)));
     };
 
     clear() {
@@ -21,11 +31,11 @@ export default class Cache {
     };
 
     remove(key) {
-        localStorage.removeItem(this.PREFIX + key);
+        localStorage.removeItem(this._key(key));
     };
 
     hasKey(key) {
-        return null == localStorage.getItem(this.PREFIX + key) ? false : true;
+        return null != localStorage.getItem(this._key(key));
     };
 
     isEnabled() {
