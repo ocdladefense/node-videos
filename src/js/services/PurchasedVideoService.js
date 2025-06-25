@@ -18,7 +18,7 @@ const mock = [
     }
 ];
 
-export default class PurchasedVideoService {
+export default class PurchasedVideoService extends SalesforceRestApi {
 
 
     // User id that will be included in all inserts and updates to watched video objects.
@@ -28,8 +28,12 @@ export default class PurchasedVideoService {
 
 
 
+    constructor(instance_url, access_token) {
+        super(instance_url, access_token);
+    }
 
-    constructor(userId) {
+
+    setUserId(userId) {
         this.#userId = userId;
     }
 

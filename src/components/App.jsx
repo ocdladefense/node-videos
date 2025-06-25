@@ -59,7 +59,7 @@ let parser = new VideoDataParser();
 
 
 
-
+let access_token, instance_url;
 
 
 const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c ORDER BY Event__r.Start_Date__c DESC NULLS LAST';
@@ -68,12 +68,15 @@ const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
+    let tokens = await fetch("/connect").then(resp => resp.json());
+    ({ access_token, instance_url } = tokens);
+
 
     let cache1 = new Cache("thumbs.");
     let cache2 = new Cache("durations.");
 
 
-    let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
+    let api = new SalesforceRestApi(instance_url, access_token);
     let resp = await api.query(query);
     parser.parse(resp.records);
 
@@ -132,23 +135,18 @@ async function getVideoParser() {
 export default function App() {
 
     const [appReady, setAppReady] = useState(false);
-    const [selectedVideo, setSelectedVideo] = useState(null);
-    const [route, setRoute] = useState("list");
-    let component, hasWatched, purchasedVideo;
 
-
-
-    if (selectedVideo != null) {
-        hasWatched = user.getWatchedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
-        purchasedVideo = user.getPurchasedVideo((selectedVideo && selectedVideo.getVideoResourceId()));
-    }
-    const [hasAccess, setHasAccess] = useState(() => purchasedVideo != null || (selectedVideo && selectedVideo.isFree()));
 
     useEffect(() => {
 
-        let s1 = new WatchedVideoService(user.getUserId());
+        if (!appReady) return;
+
+        let s1 = new WatchedVideoService(instance_url, access_token);
+        s1.setUserId(user.getUserId());
         s1.listen();
-        let s2 = new PurchasedVideoService(user.getUserId());
+
+        let s2 = new PurchasedVideoService(instance_url, access_token);
+        s2.setUserId(user.getUserId());
         s2.listen();  // can listen for mediapurchase events!
 
         // Get data from each Service's load() method,
@@ -182,7 +180,7 @@ export default function App() {
 
         s1.onSave((videoId, timestamp) => { user.addWatched({ resourceId: videoId, timestamp }) });
         s2.onSave((videoId, timestamp) => { user.addPurchased({ resourceId: videoId, timestamp }) });
-    }, []);
+    }, [appReady]);
 
 
     useEffect(() => {

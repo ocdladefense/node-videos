@@ -1,11 +1,10 @@
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
 
-const SF_INSTANCE_URL = process.env.SF_INSTANCE_URL;
-const SF_ACCESS_TOKEN = process.env.SF_ACCESS_TOKEN;
+
 
 const PLAYER_STATE_SEEKING = 101;
 
-export default class WatchedVideoService {
+export default class WatchedVideoService extends SalesforceRestApi {
 
 
     // User id that will be included in all inserts and updates to watched video objects.
@@ -19,7 +18,11 @@ export default class WatchedVideoService {
     counter = 0;
 
 
-    constructor(userId) {
+    constructor(instance_url, access_token) {
+        super(instance_url, access_token);
+    }
+
+    setUserId(userId) {
         this.#userId = userId;
     }
 
@@ -51,8 +54,8 @@ export default class WatchedVideoService {
 
         const query = `SELECT Name, CreatedById, ResourceId__c, Timestamp__c FROM Watched_Video__c WHERE CreatedById='${this.#userId}'`;
 
-        let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
-        return api.query(query);
+
+        return this.query(query);
     }
 
 
@@ -80,12 +83,11 @@ export default class WatchedVideoService {
             Timestamp__c: timestamp
         };
 
-        let api = new SalesforceRestApi(SF_INSTANCE_URL, SF_ACCESS_TOKEN);
 
         let resp;
 
         try {
-            resp = await api.upsert('Watched_Video__c', payload, "ExternalId__c");
+            resp = await this.upsert('Watched_Video__c', payload, "ExternalId__c");
 
         } catch (error) {
             console.warn("Error creating watched video record: ", error);
