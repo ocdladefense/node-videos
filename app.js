@@ -20,18 +20,17 @@ const SF_CLIENT_SECRET = process.env.SF_CLIENT_SECRET;
 const SF_OAUTH_CALLBACK_URL = process.env.SF_OAUTH_CALLBACK_URL;
 const SF_OAUTH_TOKEN_URL = process.env.SF_OAUTH_TOKEN_URL;
 
-// Serve static files from the 'public' directory
+
+
+
+
+
+
+// Serve static files from the 'dist' directory
 app.use(express.static('dist'));
 
 
 app.use(cookieParser());
-
-
-
-// Define a route to serve index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 
 app.get("/introspect", async (req, res) => {
@@ -153,13 +152,25 @@ app.get("/oauth/api/request", async (req, res) => {
     const token_info_response = await fetch(
         `${process.env.SF_OAUTH_TOKEN_URL}?id_token=${id_token}`
     );
-
+  
 
     res.status(token_info_response.status).json(await token_info_response.json());
 */
     res.redirect("/");
 });
 
+
+
+// Define a route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+
+// Define a route to serve index.html
+app.all('/{*any}', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 
 // Start the server

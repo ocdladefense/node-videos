@@ -8,7 +8,6 @@ module.exports = env => {
     console.log(env);
 
     return {
-        mode: "development",
         entry: {
             app: path.resolve(__dirname, "./src/js/index.js")
             // init_head: path.resolve(__dirname, "src/js/custom-elements.js")
