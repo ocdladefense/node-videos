@@ -6,16 +6,18 @@ const KEY_SEPARATOR = ".";
 
 export default class Cache {
 
-    PREFIX;
+    #prefix;
 
     #enabled = true;
 
+
+
     constructor(prefix) {
-        this.PREFIX = prefix
+        this.#prefix = prefix;
     }
 
     _key(key) {
-        return [this.PREFIX, KEY_SEPARATOR, key].join("");
+        return [this.#prefix, KEY_SEPARATOR, key].join("");
     }
 
     set(key, value) {
@@ -27,7 +29,7 @@ export default class Cache {
     };
 
     clear() {
-        localStorage.clear();
+        localStorage.clear(); // yikes, no... this clears everything.
     };
 
     remove(key) {
@@ -42,16 +44,25 @@ export default class Cache {
         return this.#enabled;
     };
 
-    getCacheContents() {
-        let cacheContents = {};
+
+
+    values() {
+
+        return Cache.getCacheContents(this.#prefix);
+    }
+
+
+    static getCacheContents(prefix) {
+        let index = {};
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith(this.PREFIX)) {
-                cacheContents[key] = JSON.parse(localStorage.getItem(key));
+            if (key.startsWith(prefix)) {
+                index[key] = localStorage.getItem(key);
             }
         }
-        return cacheContents;
-    };
+
+        return index;
+    }
 
     static getUncached(keys, cache1, cache2) {
         return keys.filter(id => !cache1.hasKey(id) || !cache2.hasKey(id));
