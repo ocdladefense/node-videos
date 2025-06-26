@@ -19,13 +19,34 @@ import '../../css/videostyles.css';
  * Additional MUI icons can be found at:
  * https://mui.com/material-ui/material-icons/?query=picture+in+picture&selected=PhotoCameraBack
  */
-export default function Controls({ player, previousPage, isFullscreen, toggleFullscreen, playerInitialized, layout = "standard", setLayout }) {
+export default function Controls({ player, previousPage, isFullscreen, toggleFullscreen, layout = "standard", setLayout }) {
 
     const [volume, setVolume] = useState(player.getVolume());
 
     const [isPlaying, setIsPlaying] = useState(player.isPlaying());
 
     const [showControls, setShowControls] = useState(true);
+
+    // Sync to an external system.
+    // The serialize method returns the state of the player in JSON format.
+    // The player "publishes" its state and this component subscribes to these events with its addListener() method.
+    const [playerState, setPlayerState] = useState(JSON.stringify(player.getPlayerState()));
+
+    // Player initialization defaults to false.
+    // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
+    // I.e., playerState > -1 == initialized.
+    const [playerInitialized, setPlayerInitialized] = useState(player.isInitialized());
+
+
+    // Initialize the player.
+    // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
+    // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
+    useEffect(() => {
+        if (!player.isInitialized()) {
+            player.onElapsedTimeChange(setPlayerState);
+        }
+    }, [player.isInitialized()]);
+
 
     const handleVolumeChange = (event, newValue) => {
         setVolume(newValue);

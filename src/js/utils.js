@@ -28,6 +28,8 @@ export function injectScriptElement(src) {
     else {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
+
+    return tag;
 }
 
 export function formatTime(duration) {

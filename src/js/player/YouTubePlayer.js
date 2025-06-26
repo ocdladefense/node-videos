@@ -35,7 +35,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #player;
 
 
-    #scriptsReady = false;
+    static scriptsReady = false;
 
     // The video currently assigned to this player.
     // Note: a value here doesn't necessarily mean that the video is playing.
@@ -51,6 +51,7 @@ export default class YouTubePlayer extends VideoPlayer {
     #_state = UNINITIALIZED;
 
 
+    #script = null;
     // The id of an window-bound broadcaster.
     // The broadcaster executes an onStateChange method at intervals.
     #broadcastId;
@@ -120,7 +121,7 @@ export default class YouTubePlayer extends VideoPlayer {
             };
 
             const onYouTubeIframeAPIReady = () => {
-                this.#scriptsReady = true;
+                YouTubePlayer.scriptsReady = true;
                 const config = this.makeConfig(onReady);
                 let player = new YT.Player(elemId, config);
             };
@@ -128,8 +129,8 @@ export default class YouTubePlayer extends VideoPlayer {
 
             window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-            if (!this.#scriptsReady) {
-                injectScriptElement("https://www.youtube.com/iframe_api");
+            if (!YouTubePlayer.scriptsReady) {
+                this.#script = injectScriptElement("https://www.youtube.com/iframe_api");
             } else {
                 onYouTubeIframeAPIReady();
             }
@@ -144,6 +145,7 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean}
      */
     destroy() {
+        // this.#script.remove();
         this.#_state = UNINITIALIZED;
         this.removeSubscribers();
         this.stopPublishing();

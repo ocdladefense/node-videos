@@ -47,7 +47,7 @@ window.playerMap = {
 
 */
 
-
+let thePlayer;
 
 /**
  *  
@@ -76,24 +76,22 @@ export default function PlayerContainer({ controls = "standard,float,autohide,hi
     const [video, setVideo] = useState(parser.getVideo(videoId));
 
     const isAudio = false; //video.getType() == "audio";
-    const [player, setPlayer] = useState(isAudio ? new AudioPlayer() : new YouTubePlayer());
+
+    // The player instance.
+    const [player, setPlayer] = useState(thePlayer || (isAudio ? new AudioPlayer() : new YouTubePlayer()));
+    thePlayer = player;
     const url = "https://ocdla.app/content/uploads/modules/player/ac-2024/chapter-1.mp3"; //video.getUrl();
+
     const type = "audio/mpeg";
 
     const previousPage = function() { player.destroy(); navigate("/media/" + videoId) };
 
-    // Player initialization defaults to false.
-    // This specific state of "initialized" should probably just piggy-back off the "playerState" variable.
-    // I.e., playerState > -1 == initialized.
-    const [playerInitialized, setPlayerInitialized] = useState(player.isInitialized());
+
 
     // Change the layout of the player: in "standard", "fullscreen" or "pip".
     const [layout, setLayout] = useState("standard");
 
-    // Sync to an external system.
-    // The serialize method returns the state of the player in JSON format.
-    // The player "publishes" its state and this component subscribes to these events with its addListener() method.
-    const [playerState, setPlayerState] = useState(JSON.stringify(player.getPlayerState()));
+
 
 
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -124,8 +122,8 @@ export default function PlayerContainer({ controls = "standard,float,autohide,hi
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
         if (!player.isInitialized()) {
-            player.onElapsedTimeChange(setPlayerState);
-            player.load("player").then((player) => setPlayerInitialized(true));
+            // player.onElapsedTimeChange(setPlayerState);
+            player.load("player");//.then((player) => setPlayerInitialized(true));
         }
     }, [player.isInitialized()]);
 
@@ -158,7 +156,7 @@ export default function PlayerContainer({ controls = "standard,float,autohide,hi
                     </div>)
                 }
 
-                <Controls player={player} previousPage={previousPage} isFullscreen={isFullscreen} toggleFullscreen={function() { }} playerInitialized={playerInitialized} />
+                <Controls player={player} previousPage={previousPage} isFullscreen={isFullscreen} toggleFullscreen={function() { }} />
 
 
             </Box>
