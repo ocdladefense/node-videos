@@ -4,10 +4,9 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from '../components/App';
-const regeneratorRuntime = require("regenerator-runtime");
 import Home from '../components/Home.jsx';
 import VideoDetails from '../components/VideoDetails.jsx';
-import VideoPlayerContainer from '../components/player/VideoPlayerContainer.jsx';
+import PlayerContainer from '../components/player/PlayerContainer.jsx';
 
 
 if (process.env.NODE_ENV === 'debug') {
@@ -42,7 +41,7 @@ root.render(
                 <Route index element={<Home />} />
                 <Route path="media">
                     <Route path=":resourceId" element={<VideoDetails />} />
-                    <Route path=":resourceId/play" element={<VideoPlayerContainer />} />
+                    <Route path=":resourceId/play" element={<PlayerContainer />} />
                 </Route>
             </Route>
         </Routes>
