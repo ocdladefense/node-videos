@@ -4,7 +4,7 @@ import { ControlBarContainer, ArrowBackButton, fullscreenButton } from '../../js
 import { Tooltip, Box } from '@mui/material';
 
 
-export default function MediaControlsFloating({ player, onBack, layout = "standard", setLayout, playerInitialized, pip = true }) {
+export default function FloatingControls({ player, onBack, layout = "standard", setLayout, playerInitialized, pip = true }) {
 
 
     return (

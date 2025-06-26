@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ProgressSlider, BodyContainer, TimeContainer } from '../../js/videostyles.js';
+import { useState, useEffect, useRef } from 'react';
+import { ProgressSlider as MUIProgressSlider, BodyContainer, TimeContainer } from '../../../js/videostyles.js';
 import { Box, Skeleton } from '@mui/material';
-import '../../css/videostyles.css';
-import waitUntil from '../../js/utils.js';
-import { formatTime } from '../../js/utils.js';
+import '../../../css/videostyles.css';
+import waitUntil from '../../../js/utils.js';
+import { formatTime } from '../../../js/utils.js';
 
 
 
 
 
 
-export default function VideoProgressBar({ player, sensitivity = 200 }) {
+export default function ProgressSlider({ player, sensitivity = 200 }) {
 
     // Gets set initially to the player's elapsed time.
     const [sliderValue, setSliderValue] = useState(player.getElapsedTime());
@@ -45,7 +45,7 @@ export default function VideoProgressBar({ player, sensitivity = 200 }) {
         return (
             <Box>
                 <BodyContainer>
-                    <ProgressSlider
+                    <MUIProgressSlider
                         value={sliderValue}
                         min={0}
                         max={player.getDuration()}

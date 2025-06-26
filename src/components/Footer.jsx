@@ -41,7 +41,17 @@ export default function Footer() {
                                 </li>
                                 <li>
 
-                                    <ul class="text-neutral-300"><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://ocdla.org">ocdla.org</a>&lt;li&gt;&lt;/li&gt;<a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="mailto:info@ocdla.org">info@ocdla.org</a><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="tel:+15416868716">(+1) 541-686-8716</a></ul>
+                                    <ul class="text-neutral-300">
+                                        <li>
+                                            <a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://ocdla.org">ocdla.org</a>
+                                        </li>
+                                        <li>
+                                            <a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="mailto:info@ocdla.org">info@ocdla.org</a>
+                                        </li>
+                                        <li>
+                                            <a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="tel:+15416868716">(+1) 541-686-8716</a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
                         </li>
@@ -52,7 +62,6 @@ export default function Footer() {
 
                                     <ul class="flex flex-col gap-1">
                                         <li>
-
                                             <p class="text-base font-bold">SERVICES</p>
                                         </li>
                                         <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://pubs.ocdla.org/directory/members">Membership Directory</a></li>
@@ -64,7 +73,6 @@ export default function Footer() {
 
                                     <ul class="flex flex-col gap-1">
                                         <li>
-
                                             <p class="text-base font-bold">RESEARCH</p>
                                         </li>
                                         <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="https://pubs.ocdla.org/car/list">Research Criminal Appellate Review</a></li>
@@ -76,7 +84,6 @@ export default function Footer() {
 
                                     <ul class="flex flex-col gap-1">
                                         <li>
-
                                             <p class="text-base font-bold">RESOURCES</p>
                                         </li>
                                         <li><a class="hover:underline-blue-500 text-blue-400 hover:opacity-[67.5%] hover:underline hover:underline-offset-2" href="/">CLEs</a></li>

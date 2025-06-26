@@ -11,36 +11,25 @@ export default function VideoDetails() {
 
 
     let params = useParams();
-
     let videoId = params.resourceId;
 
     // Use react-router-dom hook.
     let { parser, user } = useOutletContext();
-
     let buttons = [];
-
     let navigate = useNavigate();
-
     const video = parser.getVideo(videoId);
-
-    const [watched, setWatched] = useState(user.hasWatched(videoId)); //change this line
 
     // const [elapsedTime, setElapsedTime] = useState(user.); //change  this line
 
-    const [hasWatched, setHasWatched] = useState(false); //change this line
-
-    const [hasAccess, setHasAccess] = useState(watched || user.hasPurchased(videoId));
-
+    const [hasWatched, setHasWatched] = useState(user.hasWatched(videoId)); //change this line
+    const [hasAccess, setHasAccess] = useState(hasWatched || user.hasPurchased(videoId));
     const [showModal, setShowModal] = useState(false);
-
     const w = user.getWatchedVideo(videoId);
     let elapsed = w.timestamp;
     console.log(elapsed);
     let remaining = video.getDuration() - elapsed;
 
-    const continueWatching = () => {
-        navigate("/player/" + video.getResourceId());
-    };
+
 
 
     // Navigate to the player or back again.
@@ -64,13 +53,13 @@ export default function VideoDetails() {
     const playVideo = function() {
         console.log("About to play the video!");
 
-        let state = { start: elapsedTime || 0 };
+        let state = { start: elapsed || 0 };
         navigate("/media/" + video.getResourceId() + "/play", { state });
-    }
+    };
 
-    const playVideoFromBeginning = function() {
-        navigate("/player/" + video.getResourceId() + "/play");
-    }
+    const continueWatching = playVideo;
+
+
 
     const confirmPurchase = async () => {
         let resultOfPurchase = await Promise.resolve(true); // simulate success
@@ -86,25 +75,14 @@ export default function VideoDetails() {
     };
 
 
-    /*
-        // Helper function here to get at the remainig time.  Let's evaluate after merge with gabe's code.
-        useEffect(() => {
-            const w = user.getWatchedVideo(videoId);
-            setWatched(w);
-            setElapsedTime(w.timestamp || 0);
-            setHasWatched(!!w.resourceId);
-            setHasAccess(w || user.hasPurchased(videoId));
-        }, [videoId, user]);
-    */
-
 
 
 
 
     const actions = {
         play: playVideo,
-        resume: playVideo,
-        rewatch: continueWatching,
+        resume: continueWatching,
+        rewatch: playVideo,
         purchase: function() { setShowModal(true) }
     };
 

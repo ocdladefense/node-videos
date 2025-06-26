@@ -30,8 +30,15 @@ window.user = user;
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
-    let tokens = await fetch("/connect").then(resp => resp.json());
-    ({ access_token, instance_url } = tokens);
+    let tokens;
+
+    if (process.env.NODE_ENV != 'development') {
+        tokens = await fetch("/connect").then(resp => resp.json());
+    } else {
+        tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
+    }
+
+    ({ instance_url, access_token } = tokens);
 
 
     let cache1 = new Cache("thumb");
@@ -67,22 +74,15 @@ async function getVideoParser() {
     const resourceIds = Video.getResourceIds(videos);
     const uncached = Cache.getUncached(resourceIds, cache1, cache2);
 
-
-
     await YouTubeData.load(uncached);
 
 
     YouTubeData.getThumbs().forEach(item => {
-        if (item.id) {
-            cache1.set(item.id, item);
-        }
+        if (item.id) cache1.set(item.id, item);
     });
 
-
     YouTubeData.getDurations().forEach(item => {
-        if (item.id) {
-            cache2.set(item.id, item);
-        }
+        if (item.id) cache2.set(item.id, item);
     });
 
     return parser;
@@ -151,7 +151,8 @@ export default function App() {
     }, []);
 
 
-    //  
+
+
     return (
         <>
             <Header />
