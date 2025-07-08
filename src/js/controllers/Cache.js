@@ -8,9 +8,6 @@ export default class Cache {
 
     #prefix;
 
-    #enabled = true;
-
-
 
     constructor(prefix) {
         this.#prefix = prefix;
@@ -40,9 +37,6 @@ export default class Cache {
         return null != localStorage.getItem(this._key(key));
     };
 
-    isEnabled() {
-        return this.#enabled;
-    };
 
 
 

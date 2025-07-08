@@ -9,7 +9,7 @@ import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
 import Cache from '../js/controllers/Cache.js';
-import { YouTubeData } from '../js/controllers/YouTubeData.js';
+import { YouTubeData, getThumbs, getDurations } from '../js/controllers/YouTubeData.js';
 
 
 
@@ -56,6 +56,25 @@ async function getVideoParser() {
     let videos = parser.getVideos();
 
 
+
+    const resourceIds = Video.getResourceIds(videos);
+    const uncached = resourceIds;//Cache.getUncached(, cache1, cache2);
+
+    let foo = await YouTubeData.load(uncached);
+
+    let thumbs = getThumbs();
+    let durations = getDurations();
+
+    thumbs.forEach(item => {
+        cache1.set(item.id, item);
+    });
+
+    durations.forEach(item => {
+        cache2.set(item.id, item);
+    });
+
+
+
     videos.forEach(video => {
         const thumbs = cache1.get(video.resourceId);
         const durations = cache2.get(video.resourceId);
@@ -70,20 +89,6 @@ async function getVideoParser() {
 
     });
 
-
-    const resourceIds = Video.getResourceIds(videos);
-    const uncached = Cache.getUncached(resourceIds, cache1, cache2);
-
-    await YouTubeData.load(uncached);
-
-
-    YouTubeData.getThumbs().forEach(item => {
-        if (item.id) cache1.set(item.id, item);
-    });
-
-    YouTubeData.getDurations().forEach(item => {
-        if (item.id) cache2.set(item.id, item);
-    });
 
     return parser;
 }

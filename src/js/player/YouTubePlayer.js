@@ -50,12 +50,9 @@ export default class YouTubePlayer extends VideoPlayer {
     // The state of the player.
     #_state = UNINITIALIZED;
 
-
-    #script = null;
     // The id of an window-bound broadcaster.
     // The broadcaster executes an onStateChange method at intervals.
     #broadcastId;
-
 
     // Functions to call when the player's state changes.
     // Other processes can use the addListener() method to subscribe to state changes.
@@ -130,7 +127,7 @@ export default class YouTubePlayer extends VideoPlayer {
             window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
             if (!YouTubePlayer.scriptsReady) {
-                this.#script = injectScriptElement("https://www.youtube.com/iframe_api");
+                injectScriptElement("https://www.youtube.com/iframe_api");
             } else {
                 onYouTubeIframeAPIReady();
             }
@@ -145,7 +142,6 @@ export default class YouTubePlayer extends VideoPlayer {
      * @returns {boolean}
      */
     destroy() {
-        // this.#script.remove();
         this.#_state = UNINITIALIZED;
         this.removeSubscribers();
         this.stopPublishing();

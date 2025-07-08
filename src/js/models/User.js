@@ -93,7 +93,7 @@ export default class User {
 
     // Add methods.
     addWatched(record) {
-        console.log(record);
+        // console.log(record);
         this.watched.set(record.resourceId, record);
     }
 

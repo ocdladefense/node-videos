@@ -37,7 +37,7 @@ export default class AudioPlayer extends MediaPlayer {
     #player;
 
 
-    #scriptsReady = false;
+    static scriptsReady = false;
 
     // The video currently assigned to this player.
     // Note: a value here doesn't necessarily mean that the video is playing.
@@ -117,7 +117,7 @@ export default class AudioPlayer extends MediaPlayer {
             };
 
             const onYouTubeIframeAPIReady = () => {
-                this.#scriptsReady = true;
+                AudioPlayer.scriptsReady = true;
                 this.#player = document.getElementById(elemId);
 
                 if (null != this.#player) {
