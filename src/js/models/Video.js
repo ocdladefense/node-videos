@@ -1,3 +1,4 @@
+import Thumbnail from "./Thumbnail";
 
 export default class Video {
 
@@ -18,7 +19,7 @@ export default class Video {
 
     free;
 
-    thumbnail;
+    thumbnails;
 
     speakers;
 
@@ -141,11 +142,35 @@ export default class Video {
 
     // ------------------- Video Thumbnails ------------------- //
 
-    getVideoThumbnail(resolution = "default") {
+
+    getThumbnailUrl(size = Thumbnail.SMALL) {
+        let resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
+
+        //if (size )
+
+        // identify index where the value of lowestAcceptableResolution lives in the array
+        // let lowestAcceptableResolutionIndex = resolutionOrder.indexOf(lowestAcceptableResolution);
+
+        // Silce the array at that found index
+        // resolutionOrder = resolutionOrder.slice(0, lowestAcceptableResolutionIndex + 1);
+
+        if (this.thumbnails) {
+            for (let resolution of resolutionOrder) {
+                if (this.thumbnails[resolution] && this.thumbnails[resolution].url) {
+                    return this.thumbnails[resolution].url;
+                }
+            }
+        }
+
+        return `No url for thumbnail with resolution: ${lowestAcceptableResolution}`;
+    }
+
+
+    getThumbnailUrl(resolution = "default") {
         //if no thumb, return default
 
-        if (this.thumbnail && this.thumbnail[resolution]) {
-            return this.thumbnail[resolution].url;
+        if (this.thumbnails && this.thumbnails[resolution]) {
+            return this.thumbnails[resolution].url;
         } else {
             return `No thumbnailData for resolution: ${resolution}`;
         }
@@ -154,9 +179,9 @@ export default class Video {
     getMaxResThumb() {
         const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
 
-        if (this.thumbnail) {
+        if (this.thumbnails) {
             for (let resolution of resolutionOrder) {
-                if (this.thumbnail[resolution] && this.thumbnail[resolution].url) {
+                if (this.thumbnails[resolution] && this.thumbnails[resolution].url) {
                     return resolution;
                 }
             }
@@ -166,7 +191,7 @@ export default class Video {
     }
 
     setThumbnail(thumbnailData) {
-        this.thumbnail = thumbnailData;
+        this.thumbnails = thumbnailData;
     }
 
     static setDefaultThumbnail(url) {

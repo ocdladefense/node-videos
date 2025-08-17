@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 import Modal from './Modal.jsx';
 import RelatedVideos from './RelatedVideos.jsx';
 import VideoDetailsActions from './VideoDetailsActions.jsx';
+import Thumbnail from "../js/models/Thumbnail";
 
 
 
@@ -113,7 +114,7 @@ export default function VideoDetails() {
                 <div className="video-content relative w-full">
                     {/* <h1 className="text-2xl text-zinc-100 text-left">{video.getVideoName()}</h1> */}
                     <img
-                        src={video.getVideoThumbnail(video.getMaxResThumb())}
+                        src={video.getThumbnailUrl(Thumbnail.LARGE)}
                         alt={'Thumbnail for ${video.getVideoName()}'}
                         className="w-full object-cover h-[700px] md:h-[400px] lg:h-[300px]"
                     />

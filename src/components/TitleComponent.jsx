@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import ProgressBar from "./ProgressBar";
-
+import Thumbnail from "../js/models/Thumbnail";
 
 export default function TitleComponent({ video, index, user }) {
     const hasAccess = video.isFree() || user.getPurchasedVideo(video.getVideoResourceId());
@@ -23,7 +23,7 @@ export default function TitleComponent({ video, index, user }) {
 
                 <div className="relative w-full h-[185px]">
                     <img
-                        src={video.getVideoThumbnail(video.getMaxResThumb())}
+                        src={video.getThumbnailUrl(Thumbnail.SMALL)}
                         alt={'Thumbnail for ' + video.getVideoName()}
                         className="w-full h-full object-cover"
                     />
