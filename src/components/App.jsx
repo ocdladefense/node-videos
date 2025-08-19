@@ -122,6 +122,11 @@ export default function App() {
 
             let records = resp.records;
 
+            if (records == null) {
+                //throw new Error("No records found. Check access token.")
+                console.error("No records found. Check access token.");
+            }
+
             records.forEach(record => {
                 const resourceId = record.ResourceID__c;
                 const timestamp = record.Timestamp__c;

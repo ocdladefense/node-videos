@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Thumbnail from '../js/models/Thumbnail';
 
 export default function RelatedVideos({ video, currentSeminar, seminarVideos }) {
 
@@ -50,7 +51,7 @@ export default function RelatedVideos({ video, currentSeminar, seminarVideos }) 
                             onClick={() => setSelectedVideo(vid)}
                         >
                             <img
-                                src={vid.getVideoThumbnail(vid.getMaxResThumb())}
+                                src={vid.getThumbnailUrl(Thumbnail.SMALL)}
                                 alt={vid.getVideoName()}
                                 className="w-full h-36 object-cover rounded"
                             />

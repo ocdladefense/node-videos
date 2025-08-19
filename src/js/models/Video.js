@@ -146,7 +146,7 @@ export default class Video {
     getThumbnailUrl(size = Thumbnail.SMALL) {
         let resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
 
-        if (size == "default") {
+        if (size == Thumbnail.SMALL) {
             resolutionOrder = resolutionOrder.reverse();
         }
 
@@ -158,33 +158,9 @@ export default class Video {
             }
         }
 
-        return `No url for thumbnail with resolution: ${lowestAcceptableResolution}`;
+        return `No url for thumbnail with resolution: ${size}`;
     }
 
-
-    getThumbnailUrl(resolution = "default") {
-        //if no thumb, return default
-
-        if (this.thumbnails && this.thumbnails[resolution]) {
-            return this.thumbnails[resolution].url;
-        } else {
-            return `No thumbnailData for resolution: ${resolution}`;
-        }
-    }
-
-    getMaxResThumb() {
-        const resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
-
-        if (this.thumbnails) {
-            for (let resolution of resolutionOrder) {
-                if (this.thumbnails[resolution] && this.thumbnails[resolution].url) {
-                    return resolution;
-                }
-            }
-        }
-
-        return "default";
-    }
 
     setThumbnail(thumbnailData) {
         this.thumbnails = thumbnailData;
