@@ -146,13 +146,9 @@ export default class Video {
     getThumbnailUrl(size = Thumbnail.SMALL) {
         let resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
 
-        //if (size )
-
-        // identify index where the value of lowestAcceptableResolution lives in the array
-        // let lowestAcceptableResolutionIndex = resolutionOrder.indexOf(lowestAcceptableResolution);
-
-        // Silce the array at that found index
-        // resolutionOrder = resolutionOrder.slice(0, lowestAcceptableResolutionIndex + 1);
+        if (size == "default") {
+            resolutionOrder = resolutionOrder.reverse();
+        }
 
         if (this.thumbnails) {
             for (let resolution of resolutionOrder) {
