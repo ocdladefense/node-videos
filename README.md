@@ -7,8 +7,8 @@ View and purchase OCDLA videos.
 Parts of this project may require the Salesforce REST API.
 * Install the [Salesforce development tools for VSCode](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide/install).
   * This includes the VSCode extensions, the Salesforce CLI, and an appropriate version of the Java Development Kit.
-* Connect to org: sf org login web --alias Sandbox__OcdPartial --instance-url https://test.salesforce.com
-* sf org display
+* Connect to org: <code>sf org login web --alias Sandbox__OcdPartial --instance-url https://test.salesforce.com</code>
+* Display details about the connection: <code>sf org display</code>
 
 
 ## Installation
@@ -22,12 +22,29 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
  * nodemon app.js
 6. Optionally, preview the base website using <code>npm run watch</code>.
 
-## Additional resources
+# Additional resources
+
+## Salesforce - Apex REST endpoints
+* Exercise: Participate and take notes on "Creating Apex Classes" (in-meeting) tutorial.
+  * Duplicate and recreate the <code>AwsSns</code> Apex class.
+  * Duplicate and recreate the <code>AwsSnsTest</code> Apex test class.
+* Review the layout and content of Salesforce's ["Exposing Apex Classes as REST Web Services"](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_rest.htm)
+* Create an Apex class (either in the GUI or in VSCode)
+* Annotate the Apex class consistent with the above Salesforce recommendations in "Exposing Apex Classes".
+* Find an existing Apex REST class; use this class as an example for development.
+* Document the location of the <code>@ocdla/salesforce</code> package in <code>dev_modules/</code>.
+* 
+
+
+## Babel transpiling
 * [Babel online parser](https://babeljs.io/repl/#?browsers=defaults)
-* Ubuntu: How to run an express server [as a service](https://www.google.com/search?q=ubuntu+how+to+run+a+node+express+server+as+a+service)
+
+## React
 * [React Router](https://reactrouter.com/start/framework/navigating)
 * [Complete guide to routing in React](https://hygraph.com/blog/routing-in-react)
 
+## Server setup
+* Ubuntu: How to run an express server [as a service](https://www.google.com/search?q=ubuntu+how+to+run+a+node+express+server+as+a+service)
 
 ## Deployment
 Headless deployment, on Ubuntu
