@@ -33,7 +33,7 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
 * Annotate the Apex class consistent with the above Salesforce recommendations in "Exposing Apex Classes".
 * Find an existing Apex REST class; use this class as an example for development.
 * Document the location of the <code>@ocdla/salesforce</code> package in <code>dev_modules/</code>.
-* 
+* Document the current use of the related <code>SalesforceRestApi</code> class, especially in <code>components/App.jsx</code> in <code>getVideoParser()</code>.
 
 
 ## Babel transpiling
