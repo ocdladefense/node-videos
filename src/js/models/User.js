@@ -1,3 +1,5 @@
+import SalesforceRestApi from "@ocdla/salesforce/SalesforceRestApi";
+
 export default class User {
 
 
@@ -13,10 +15,13 @@ export default class User {
     watched = new Map();
 
 
+    api = null;
 
 
-    constructor(userId) {
+
+    constructor(userId, api) {
         this.userId = userId;
+        this.api = api;
     }
 
     static fromUserData(data) {
@@ -37,6 +42,9 @@ export default class User {
         return this.username;
     }
 
+    setApi(api) {
+        this.api = api;
+    }
 
     // Purchased video methods.
 
@@ -53,8 +61,43 @@ export default class User {
         return this.purchased.get(videoId) || false;
     }
 
-    hasPurchased(videoId) {
-        return this.purchased.get(videoId) || false;
+    hasPurchased(mediaId) {
+        return this.purchased.get(mediaId) || false;
+    }
+
+    async hasAccess(mediaId) {
+        /*
+         if (!this.api) {
+            console.error("SalesforceRestApi instance not set on User.");
+            return false;
+        }
+
+        try {
+            const response = await this.api.access(mediaId);
+            return response?.status === 200 || response?.access === true;
+        } catch (err) {
+            console.error("Error checking access:", err);
+            return false;
+        }
+
+
+
+        let tokens;
+
+        if (process.env.NODE_ENV != 'development') {
+            tokens = await fetch("/connect").then(resp => resp.json());
+        } else {
+            tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
+        }
+
+        ({ instance_url, access_token } = tokens);
+
+        let api = new SalesforceRestApi(instance_url, access_token);
+
+        let accessResp = await api.access(mediaId);    
+
+        
+         */
     }
 
     getPurchasedVideo(videoId) {

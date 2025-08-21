@@ -158,7 +158,7 @@ export default class Video {
             }
         }
 
-        return `No url for thumbnail with resolution: ${size}`;
+        return `Default thumb if there is no available image: ${size}`;
     }
 
 
