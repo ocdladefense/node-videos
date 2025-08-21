@@ -33,7 +33,7 @@ export default class Video {
 
 
 
-    static defaultThumbNail;
+    static defaultThumbnail;
 
 
     constructor(title) {
@@ -167,7 +167,7 @@ export default class Video {
     }
 
     static setDefaultThumbnail(url) {
-        Video.defaultThumbNail = url;
+        Video.defaultThumbnail = url;
     }
 
     static getResourceIds(videos) {
