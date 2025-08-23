@@ -76,5 +76,5 @@ export default function Home() {
         </div>
 
     );
-    q
+
 }

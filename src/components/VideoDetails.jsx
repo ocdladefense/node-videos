@@ -23,11 +23,11 @@ export default function VideoDetails() {
     // const [elapsedTime, setElapsedTime] = useState(user.); //change  this line
 
     const [hasWatched, setHasWatched] = useState(user.hasWatched(videoId)); //change this line
-    const [hasAccess, setHasAccess] = useState(hasWatched || user.hasPurchased(videoId));
+    //const [hasAccess, setHasAccess] = useState(hasWatched || user.hasPurchased(videoId));
+    const [hasAccess, setHasAccess] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const w = user.getWatchedVideo(videoId);
     let elapsed = w.timestamp;
-    console.log(elapsed);
     let remaining = video.getDuration() - elapsed;
 
 
@@ -39,7 +39,7 @@ export default function VideoDetails() {
 
     //this is the code where it rounds the time then showing the exact number(only showing time watched then left)
     function formatElapsedTime(seconds) {
-        console.log(seconds);
+        //console.log(seconds);
         // return "20 mins.";
         if (!seconds || isNaN(seconds)) return '';
         const minutes = Math.ceil(seconds / 60);
@@ -77,6 +77,13 @@ export default function VideoDetails() {
 
 
 
+    useEffect(() => {
+        async function fn() {
+            let result = await user.hasAccess(videoId);
+            setHasAccess(result);
+        }
+        fn();
+    }, []);
 
 
 

@@ -49,7 +49,6 @@ async function getVideoParser() {
     user.setApi(api);
 
     let resp = await api.query(query);
-    let accessResp = await api.access("qtEXp5v4rlU"); //await user.hasAccess("qtEXp5v4rlU");
     parser.parse(resp.records);
 
     // Default thumb in case there is no available image.
