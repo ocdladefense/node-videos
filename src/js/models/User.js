@@ -67,33 +67,17 @@ export default class User {
 
     async hasAccess(mediaId) {
 
-        let accessResp = await this.api.access(mediaId);
-
-        let statusCode = accessResp.status;
-        console.log(statusCode);
-
-        if (statusCode == 200) {
-            return true;
-        } else {
+        try {
+            let accessResp = await this.api.access(mediaId);
+            return accessResp.status === 200;
+        } catch (err) {
+            console.error("hasAccess failed", err);
             return false;
         }
 
-        return Promise.resolve(accessResp);
+        //return Promise.resolve(accessResp);
 
         /*
-         if (!this.api) {
-            console.error("SalesforceRestApi instance not set on User.");
-            return false;
-        }
-
-        try {
-            const response = await this.api.access(mediaId);
-            return response?.status === 200 || response?.access === true;
-        } catch (err) {
-            console.error("Error checking access:", err);
-            return false;
-        }
-
 
 
         let tokens;
