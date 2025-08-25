@@ -74,29 +74,8 @@ export default class User {
             console.error("hasAccess failed", err);
             return false;
         }
-
-        //return Promise.resolve(accessResp);
-
-        /*
-
-
-        let tokens;
-
-        if (process.env.NODE_ENV != 'development') {
-            tokens = await fetch("/connect").then(resp => resp.json());
-        } else {
-            tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
-        }
-
-        ({ instance_url, access_token } = tokens);
-
-        let api = new SalesforceRestApi(instance_url, access_token);
-
-        let accessResp = await api.access(mediaId);    
-
-        
-         */
     }
+
 
     getPurchasedVideo(videoId) {
         let found = this.purchased.get(videoId);
