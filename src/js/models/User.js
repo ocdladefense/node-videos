@@ -76,14 +76,31 @@ export default class User {
         }
     }
 
+    async purchase(mediaId) {
+
+        try {
+
+            let resp = await this.api.purchase(mediaId);
+
+            if (resp.status === 200) {
+                this.addPurchased({
+                    resourceId: mediaId,
+                });
+                return true;
+            }
+
+        } catch (err) {
+            console.error("Purchase failed", err);
+            return false;
+        }
+    }
+
 
     getPurchasedVideo(videoId) {
         let found = this.purchased.get(videoId);
 
         return found || {};
     }
-
-
 
     // Watched video methods.
 
@@ -108,7 +125,6 @@ export default class User {
 
         return found || {};
     }
-
 
 
     // Add methods.
