@@ -7,6 +7,7 @@ import App from '../components/App';
 import Home from '../components/Home.jsx';
 import VideoDetails from '../components/VideoDetails.jsx';
 import PlayerContainer from '../components/player/PlayerContainer.jsx';
+import PurchasePage from "../components/PurchasePage.jsx";
 
 
 if (process.env.NODE_ENV === 'debug') {
@@ -42,6 +43,7 @@ root.render(
                 <Route path="media">
                     <Route path=":resourceId" element={<VideoDetails />} />
                     <Route path=":resourceId/play" element={<PlayerContainer />} />
+                    <Route path=":resourceId/purchase" element={<PurchasePage />} />
                 </Route>
             </Route>
         </Routes>

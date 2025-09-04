@@ -8,22 +8,17 @@ import Thumbnail from "../js/models/Thumbnail";
 
 
 
-export default function VideoDetails({ video, setRoute, user, parser, onBack }) {
+export default function VideoDetails() {
 
 
-    // let params = useParams();
-    //const videoId = params.resourceId;
-
-    if (!video || !user) {
-        return <div className="text-white p-6">Loading video details...</div>;
-    }; // safety guard
-    const videoId = video.getResourceId();
+    let params = useParams();
+    let videoId = params.resourceId;
 
     // Use react-router-dom hook.
-    //let { parser, user } = useOutletContext();
+    let { parser, user } = useOutletContext();
     let buttons = [];
-    //let navigate = useNavigate();
-    //const video = parser.getVideo(videoId);
+    let navigate = useNavigate();
+    const video = parser.getVideo(videoId);
 
     // const [elapsedTime, setElapsedTime] = useState(user.); //change  this line
 
@@ -31,7 +26,6 @@ export default function VideoDetails({ video, setRoute, user, parser, onBack }) 
     //const [hasAccess, setHasAccess] = useState(hasWatched || user.hasPurchased(videoId));
     const [hasAccess, setHasAccess] = useState(false);
     const [showModal, setShowModal] = useState(false);
-
     const w = user.getWatchedVideo(videoId);
     let elapsed = w.timestamp;
     let remaining = video.getDuration() - elapsed;
@@ -41,7 +35,7 @@ export default function VideoDetails({ video, setRoute, user, parser, onBack }) 
 
     // Navigate to the player or back again.
 
-    //const onBack = function() { navigate("/"); };
+    const onBack = function() { navigate("/"); };
 
     //this is the code where it rounds the time then showing the exact number(only showing time watched then left)
     function formatElapsedTime(seconds) {
@@ -53,16 +47,15 @@ export default function VideoDetails({ video, setRoute, user, parser, onBack }) 
         return `${minutes} mins. remaining`;
     }
 
-    //this also tries and make the rewatch pop up with no effect
+    //this alos tries and make the rewatch pop up with no effect
     // const almostDone = video && video.getDuration() > 0 && (elapsedTime / video.getDuration() > 0.9);
 
 
     const playVideo = function() {
         console.log("About to play the video!");
 
-        //let state = { start: elapsed || 0 };
-        //navigate("/media/" + video.getResourceId() + "/play", { state });
-        setRoute("player");
+        let state = { start: elapsed || 0 };
+        navigate("/media/" + video.getResourceId() + "/play", { state });
     };
 
     const continueWatching = playVideo;
@@ -98,8 +91,8 @@ export default function VideoDetails({ video, setRoute, user, parser, onBack }) 
         play: playVideo,
         resume: continueWatching,
         rewatch: playVideo,
-        purchase: () => setRoute("purchase")
-
+        purchase: function() { navigate("/media/" + video.getResourceId() + "/purchase") }
+        //function() { setShowModal(true) }
     };
 
 

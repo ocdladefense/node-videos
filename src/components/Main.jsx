@@ -95,9 +95,6 @@ export default function Home({ parser }) {
         // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));
         component = <VideoPlayerContainer player={player} video={selectedVideo} setRoute={setRoute} user={user} onBack={() => { setRoute("details"); }} />
     }
-    else if (route == "purchase") {
-        component = <PurchasePage video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("details"); }} />
-    }
 
     return component;
 }
