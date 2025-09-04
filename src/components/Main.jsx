@@ -3,6 +3,7 @@ import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 import VideoPlayerContainer from './player/VideoPlayerContainer.jsx';
 import YouTubePlayer from '../js/player/YouTubePlayer.js';
+import PurchasePage from './PurchasePage.jsx';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import User from '../js/models/User.js';
@@ -92,7 +93,10 @@ export default function Home({ parser }) {
     else if (route == "player") {
         // player.cueVideo(video);
         // player.setUserVideoPrefs(user.getWatchedVideoPrefs(video.id));
-        component = <VideoPlayerContainer player={player} video={selectedVideo} user={user} onBack={() => { setRoute("details"); }} />
+        component = <VideoPlayerContainer player={player} video={selectedVideo} setRoute={setRoute} user={user} onBack={() => { setRoute("details"); }} />
+    }
+    else if (route == "purchase") {
+        component = <PurchasePage video={selectedVideo} setRoute={setRoute} onBack={() => { setRoute("details"); }} />
     }
 
     return component;

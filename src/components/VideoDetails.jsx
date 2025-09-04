@@ -12,7 +12,7 @@ export default function VideoDetails() {
 
 
     let params = useParams();
-    let videoId = params.resourceId;
+    const videoId = params.resourceId;
 
     // Use react-router-dom hook.
     let { parser, user } = useOutletContext();
@@ -91,7 +91,8 @@ export default function VideoDetails() {
         play: playVideo,
         resume: continueWatching,
         rewatch: playVideo,
-        purchase: function() { setShowModal(true) }
+        purchase: () => setRoute("purchase")
+
     };
 
 
