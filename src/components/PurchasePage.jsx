@@ -1,40 +1,62 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from "react-router";
 import Modal from './Modal';
 
-export default function PurchasePage({ video, onBack }) {
-    // const videoId = video.getResourceId();
+export default function PurchasePage(/* { video, onBack } */) {
+    let params = useParams();
+    let videoId = params.resourceId;
 
-    // const [showModal, setShowModal] = useState(false);
-    // const [processing, setProcessing] = useState(false);
+    let navigate = useNavigate();
+    const onBack = function() { navigate("/"); };
 
-    // const handlePurchase = async () => {
-    //     setProcessing(true);
-    //     try {
-    //         let response = await fetch(`/services/apexrest/api/media/${videoId}/purchase`, {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({ contactId: '003VC00000rtzKUYAY' }) // Hard-coded contactId
-    //         });
+    //const [showModal, setShowModal] = useState(false);
+    const [processing, setProcessing] = useState(false);
 
-    //         if (response.ok) {
-    //             alert("Purchase successful!");
-    //         } else {
-    //             alert("Purchase failed.");
-    //         }
-    //     } catch (err) {
-    //         console.error(err);
-    //         alert("Error occurred.");
-    //     } finally {
-    //         setProcessing(false);
-    //         onBack(); // return to details
-    //         //setShowModal(false); // close modal after
-    //     }
-    // };
+    const handlePurchase = async () => {
+        setProcessing(true);
+        try {
+            let response = await fetch(`/services/apexrest/api/media/${videoId}/purchase`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contactId: '003VC00000rtzKUYAY' }) // Hard-coded contactId
+            });
+
+            if (response.ok) {
+                console.log("Purchase successful");
+            } else {
+                console.log("Purchase failed.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error occurred.");
+        } finally {
+            setProcessing(false);
+            onBack(); // return to details
+            //setShowModal(false); // close modal after
+        }
+    };
+
+    // Function that handles the form submission
+    const handleSubmit = (event) => {
+        event.preventDefault(); // Prevents the default form submission behavior
+        handlePurchase();
+    };
 
     return (
         <div>
             <h1>Hello</h1>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Form:
+                    <input type="text" />
+                </label>
+                <button type="submit" disabled={processing}>
+                    {processing ? "Processing..." : "Confirm Purchase"}
+                </button>
+            </form>
         </div>
+
+
         // <div>
         //     <h1 className="text-2xl font-bold mb-4">Purchase {video.getVideoName()}</h1>
         //     <p>Would you like to purchase this video for <strong>$19.99</strong>?</p>
