@@ -24,6 +24,7 @@ export default function PurchasePage(/* { video, onBack } */) {
             if (response.ok) {
                 console.log("Purchase successful");
             } else {
+                console.error("Purchase failed. Status:", response.status, "Text:", await response.text());
                 console.log("Purchase failed.");
             }
         } catch (err) {
@@ -43,51 +44,28 @@ export default function PurchasePage(/* { video, onBack } */) {
     };
 
     return (
-        <div>
-            <h1>Hello</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Form:
-                    <input type="text" />
-                </label>
-                <button type="submit" disabled={processing}>
-                    {processing ? "Processing..." : "Confirm Purchase"}
-                </button>
-            </form>
+        <div className="flex justify-center">
+            <div className="w-full max-w-xl p-8 rounded-lg shadow-lg bg-zinc-800 border border-zinc-700">
+                <h1 className="text-3xl font-bold text-center mb-6">Purchase Video</h1>
+                <div className="flex justify-center items-center min-h-screen bg-zinc-900 text-zinc-100 p-4">
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="purchaseFormInput" className="block text-sm font-medium mb-1">
+                            Form:
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full p-2.5 rounded-md bg-zinc-700 border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                            type="submit"
+                            className="flex-1 py-2 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={processing}
+                        >
+                            {processing ? "Processing..." : "Confirm Purchase"}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-
-
-        // <div>
-        //     <h1 className="text-2xl font-bold mb-4">Purchase {video.getVideoName()}</h1>
-        //     <p>Would you like to purchase this video for <strong>$19.99</strong>?</p>
-
-        //     {/* later: form for card details goes here */}
-
-        //     <div className="mt-4 flex gap-2">
-        //         <button
-        //             onClick={onBack}
-        //             className="bg-gray-500 text-white px-4 py-2 rounded"
-        //         >
-        //             Cancel
-        //         </button>
-        //         <button
-        //             onClick={handlePurchase}
-        //             disabled={processing}
-        //             className="bg-blue-600 text-white px-4 py-2 rounded"
-        //         >
-        //             {processing ? "Processing..." : "Confirm Purchase"}
-        //         </button>
-        //     </div>
-
-        //     {showModal && (
-        //         <Modal
-        //             setShowModal={setShowModal}
-        //             confirmAction={handlePurchase}
-        //             title="Confirm Purchase"
-        //         >
-        //             <p>Do you really want to purchase this media item?</p>
-        //         </Modal>
-        //     )}
-        // </div>
     );
 }
