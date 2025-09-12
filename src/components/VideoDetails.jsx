@@ -79,8 +79,9 @@ export default function VideoDetails() {
 
     useEffect(() => {
         async function fn() {
-            let result = await user.hasAccess(videoId);
-            setHasAccess(result);
+            let r1 = await user.hasAccess(videoId);
+            let r2 = user.hasPurchased(videoId);
+            setHasAccess(r1 || r2);
         }
         fn();
     }, []);

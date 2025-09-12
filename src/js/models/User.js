@@ -77,7 +77,6 @@ export default class User {
     }
 
     async purchase(mediaId) {
-
         try {
 
             let resp = await this.api.purchase(mediaId);

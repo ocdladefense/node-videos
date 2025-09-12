@@ -1,32 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from "react-router";
+import { useOutletContext } from 'react-router-dom';
 import Modal from './Modal';
 
 export default function PurchasePage(/* { video, onBack } */) {
     let params = useParams();
     let videoId = params.resourceId;
 
+    let { user } = useOutletContext();
+
     let navigate = useNavigate();
-    const onBack = function() { navigate("/"); };
+    const onBack = function() { navigate("/media/" + videoId); };
 
     //const [showModal, setShowModal] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [purchased, setPurchased] = useState(false);
 
     const handlePurchase = async () => {
         setProcessing(true);
         try {
-            let response = await fetch(`/services/apexrest/api/media/${videoId}/purchase`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contactId: '003VC00000rtzKUYAY' }) // Hard-coded contactId
-            });
+            let response = await user.purchase(videoId);
 
-            if (response.ok) {
+            if (response) {
                 console.log("Purchase successful");
+
             } else {
                 console.error("Purchase failed. Status:", response.status, "Text:", await response.text());
                 console.log("Purchase failed.");
             }
+
+            // let response = await fetch(`/services/apexrest/api/media/${videoId}/purchase`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ contactId: '003VC00000rtzKUYAY' }) // Hard-coded contactId
+            // });
+
+            // if (response.ok) {
+            //     console.log("Purchase successful");
+            // } else {
+            //     console.error("Purchase failed. Status:", response.status, "Text:", await response.text());
+            //     console.log("Purchase failed.");
+            // }
         } catch (err) {
             console.error(err);
             alert("Error occurred.");
@@ -42,6 +56,14 @@ export default function PurchasePage(/* { video, onBack } */) {
         event.preventDefault(); // Prevents the default form submission behavior
         handlePurchase();
     };
+
+    // useEffect(() => {
+    //     async function fn() {
+    //         let result = await user.purchase(videoId);
+    //         setPurchased(result);
+    //     }
+    //     fn();
+    // }, []);
 
     return (
         <div className="flex justify-center">
