@@ -32,7 +32,7 @@ async function getVideoParser() {
 
     let tokens;
 
-    if (process.env.NODE_ENV != 'development') {
+    if (process.env.NODE_ENV == 'production') {
         tokens = await fetch("/connect").then(resp => resp.json());
     } else {
         tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
