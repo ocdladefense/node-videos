@@ -1,19 +1,25 @@
+import { useEffect, useState } from 'react';
 import { MenuTop, MenuMobile } from "./navigation/Menus";
 import Hamburger from "./navigation/Hamburger";
+import { getCookie } from '@ocdla/salesforce/CookieUtils';
 
 
 export default function Header() {
+
+    const [loggedIn, setLoggedIn] = useState(getCookie("accessToken"));
 
     let items = [
         {
             url: "/",
             label: "home"
         },
-        {
-            url: "/login",
-            label: "login",
-            hidden: true
-        },
+        // {
+        //     url: "/login",
+        //     label: "login",
+        //     hidden: true,
+        //     loggedIn: loggedIn
+
+        // },
         {
             url: "/settings",
             label: "settings",
@@ -21,9 +27,32 @@ export default function Header() {
         }
     ];
 
+    let loginItem = {
+        url: "/login",
+        label: "login",
+        hidden: true,
+        // loggedIn: loggedIn
+    };
+
+    let logoutItem = {
+        url: "/logout",
+        label: "logout",
+        hidden: true,
+        // loggedIn: loggedIn
+    };
+
+    if (loggedIn) {
+        console.log("User is logged in");
+        items.push(logoutItem);
+    } else {
+        console.log("User is NOT logged in");
+        items.push(loginItem);
+    }
+
+
 
     return (
-        <header class="w-full mb-0 pb-1 p-[10px] sticky top-0 bg-wb-black z-50">
+        <header className="w-full mb-0 pb-1 p-[10px] sticky top-0 bg-wb-black z-50">
             <nav className="tablet:px-8">
 
                 <ul className="text-zinc-100 inline-block" style={{ width: "100%" }}>
@@ -36,7 +65,7 @@ export default function Header() {
 
                     <MenuTop items={items} />
 
-                    <li style={{ float: "right" }} class={`hidden phone:hidden tablet:inline-block`}>
+                    <li style={{ float: "right" }} className={`hidden phone:hidden tablet:inline-block`}>
                         <Hamburger />
                     </li>
                 </ul>

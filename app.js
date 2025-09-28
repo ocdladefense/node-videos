@@ -102,6 +102,19 @@ app.get("/login", (req, res) => {
 
 
 
+app.get("/logout", (req, res) => {
+
+    res.cookie('instanceUrl', '', { expires: new Date(0) }); // Setting expiration to epoch
+    res.cookie('accessToken', '', { expires: new Date(0) }); // Setting expiration to epoch
+
+    res.redirect("/");
+
+    // res.clearCookie('instanceUrl');
+    // res.clearCookie('accessToken');
+});
+
+
+
 
 app.get("/oauth/api/request", async (req, res) => {
 

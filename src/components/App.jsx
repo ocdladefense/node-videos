@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import User from '../js/models/User.js';
 import Video from '../js/models/Video.js';
 import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
+import { getCookie } from '@ocdla/salesforce/CookieUtils.js';
 import WatchedVideoService from '../js/services/WatchedVideoService.js'
 import PurchasedVideoService from '../js/services/PurchasedVideoService.js'
 import VideoDataParser from "../js/controllers/VideoDataParser.js";
@@ -24,7 +25,26 @@ let access_token, instance_url;
 window.user = user;
 
 
+// function getCookie(name) {
+//     const cookieName = name + "=";
+//     const decodedCookie = decodeURIComponent(document.cookie);
+//     const ca = decodedCookie.split(';');
+//     for (let i = 0; i < ca.length; i++) {
+//         let c = ca[i];
+//         while (c.charAt(0) === ' ') {
+//             c = c.substring(1);
+//         }
+//         if (c.indexOf(cookieName) === 0) {
+//             return c.substring(cookieName.length, c.length);
+//         }
+//     }
+//     return "";
+// }
 
+
+
+const myCookieValue = getCookie("myCookieName");
+console.log(myCookieValue);
 
 // @jbernal - previously in index.js
 // Retrieve video data and related thumbnail data.
@@ -32,10 +52,18 @@ async function getVideoParser() {
 
     let tokens;
 
+    //Check if there are cookies to use for instance_url and access_token
     if (process.env.NODE_ENV == 'production') {
         tokens = await fetch("/connect").then(resp => resp.json());
     } else {
-        tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
+        let instance_url = getCookie("instanceUrl");
+        let access_token = getCookie("accessToken");
+        if (instance_url && access_token) {
+            console.log("Using cookies for instance_url and access_token");
+            tokens = { instance_url: instance_url, access_token: access_token };
+        } else {
+            tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
+        }
     }
 
     ({ instance_url, access_token } = tokens);
@@ -168,7 +196,7 @@ export default function App() {
     return (
         <>
             <Header />
-            <div class="container mx-auto">
+            <div className="container mx-auto">
                 {!parser.isInitialized() ? <h1>My splash screen</h1> : <Outlet context={{ parser, user }} />}
             </div>
             <Footer />
