@@ -4,9 +4,9 @@ import Hamburger from "./navigation/Hamburger";
 import { getCookie } from '@ocdla/salesforce/CookieUtils';
 
 
-export default function Header() {
+export default function Header({ loggedIn = false }) {
 
-    const [loggedIn, setLoggedIn] = useState(getCookie("accessToken"));
+
 
     let items = [
         {

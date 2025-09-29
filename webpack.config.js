@@ -90,19 +90,6 @@ module.exports = env => {
         },
         plugins: [
             new Dotenv(),
-            new webpack.DefinePlugin({
-                USE_MOCK: JSON.stringify(env.USE_MOCK || false),// Can we even pass booleans from the CLI?
-                MODULE_PATH: JSON.stringify(env.MODULE_PATH || ""),
-                API_KEY: JSON.stringify(env.API_KEY),
-                SF_ACCESS_TOKEN: JSON.stringify(env.SF_ACCESS_TOKEN),
-                SF_INSTANCE_URL: JSON.stringify(env.SF_INSTANCE_URL),
-                SF_ACCESS_TOKEN: JSON.stringify(env.SF_ACCESS_TOKEN),
-                SF_USER_ID: JSON.stringify(env.SF_USER_ID)
-            }),
-            new webpack.DefinePlugin({
-                USE_MOCK: JSON.stringify(env.USE_MOCK || false),// Can we even pass booleans from the CLI?
-                MODULE_PATH: JSON.stringify(env.MODULE_PATH || "")
-            }),
             new HtmlWebpackPlugin({
                 template: path.resolve(__dirname, "./src/index.html"),
                 chunks: ["app"],

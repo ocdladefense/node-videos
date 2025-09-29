@@ -25,58 +25,56 @@ let access_token, instance_url;
 window.user = user;
 
 
-// function getCookie(name) {
-//     const cookieName = name + "=";
-//     const decodedCookie = decodeURIComponent(document.cookie);
-//     const ca = decodedCookie.split(';');
-//     for (let i = 0; i < ca.length; i++) {
-//         let c = ca[i];
-//         while (c.charAt(0) === ' ') {
-//             c = c.substring(1);
-//         }
-//         if (c.indexOf(cookieName) === 0) {
-//             return c.substring(cookieName.length, c.length);
-//         }
-//     }
-//     return "";
-// }
 
 
+function isLoggedIn() {
 
-const myCookieValue = getCookie("myCookieName");
-console.log(myCookieValue);
+    let sessionInstanceUrl = getCookie("instanceUrl");
+    let sessionAccessToken = getCookie("accessToken");
+
+    if (process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE) {
+        sessionInstanceUrl = process.env.SF_OAUTH_SESSION_INSTANCE_URL_OVERRIDE;
+        sessionAccessToken = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
+    }
+
+    return !!sessionAccessToken;
+}
 
 // @jbernal - previously in index.js
 // Retrieve video data and related thumbnail data.
 async function getVideoParser() {
 
-    let tokens;
+    let sessionInstanceUrl, sessionAccessToken;
+    let applicationInstanceUrl, applicationAccessToken;
 
-    //Check if there are cookies to use for instance_url and access_token
+    // Check if there are cookies to use for instance_url and access_token.
     if (process.env.NODE_ENV == 'production') {
-        tokens = await fetch("/connect").then(resp => resp.json());
-    } else {
-        let instance_url = getCookie("instanceUrl");
-        let access_token = getCookie("accessToken");
-        if (instance_url && access_token) {
-            console.log("Using cookies for instance_url and access_token");
-            tokens = { instance_url: instance_url, access_token: access_token };
-        } else {
-            tokens = { instance_url: process.env.SF_INSTANCE_URL, access_token: process.env.SF_ACCESS_TOKEN };
-        }
+        console.log("NODE PRODUCTION ENV!");
+        let applicationTokens = await fetch("/connect").then(resp => resp.json());
+        applicationInstanceUrl = applicationTokens.instance_url;
+        applicationAccessToken = applicationTokens.access_token;
     }
 
-    ({ instance_url, access_token } = tokens);
+    sessionInstanceUrl = getCookie("instanceUrl");
+    sessionAccessToken = getCookie("accessToken");
+
+
+
+    if (process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE) {
+        sessionInstanceUrl = process.env.SF_OAUTH_SESSION_INSTANCE_URL_OVERRIDE;
+        sessionAccessToken = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
+    }
 
 
     let cache1 = new Cache("thumb");
     let cache2 = new Cache("duration");
 
 
-    let api = new SalesforceRestApi(instance_url, access_token);
-    user.setApi(api);
+    let session = new SalesforceRestApi(sessionInstanceUrl, sessionAccessToken);
+    let application = new SalesforceRestApi(applicationInstanceUrl, applicationAccessToken);
+    user.setApi(session);
 
-    let resp = await api.query(query);
+    let resp = await application.query(query);
     parser.parse(resp.records);
 
     // Default thumb in case there is no available image.
@@ -129,6 +127,7 @@ async function getVideoParser() {
 export default function App() {
 
     const [appReady, setAppReady] = useState(false);
+
 
 
     useEffect(() => {
@@ -195,7 +194,7 @@ export default function App() {
 
     return (
         <>
-            <Header />
+            <Header loggedIn={isLoggedIn()} />
             <div className="container mx-auto">
                 {!parser.isInitialized() ? <h1>My splash screen</h1> : <Outlet context={{ parser, user }} />}
             </div>

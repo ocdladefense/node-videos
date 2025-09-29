@@ -20,7 +20,17 @@ _Note: A secret is necessary to utilitze GitHub's Deploy to GitHub Pages functio
 5. Optionally run any required server processes
  * sudo npm install -g nodemon
  * nodemon app.js
-6. Optionally, preview the base website using <code>npm run watch</code>.
+
+## Running the app
+_Note: This project can be run in two target environments: <code>npm run watch</code> and <code>nodemon</code>.  TODO: additional instructions should be provided here about how this works in practice and how commands affect the target environment._
+### Node express environment:
+1. Run <code>npm run build-prod</code> to build the appropriate code in <code>dist/</code>.
+2. Run <code>npm run start-server</code>.
+3. Disable any already-running server software (these will conflict with the port 80 config of Express server).
+4. Navigate to [Localhost](http://localhost).
+
+### Webpack server environment:
+1. Preview the base website using <code>npm run watch</code>.
 
 # Additional resources
 
