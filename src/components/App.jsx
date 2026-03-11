@@ -32,7 +32,8 @@ function isLoggedIn() {
     let sessionInstanceUrl = getCookie("instanceUrl");
     let sessionAccessToken = getCookie("accessToken");
 
-    if (process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE) {
+    if (process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE)
+    {
         sessionInstanceUrl = process.env.SF_OAUTH_SESSION_INSTANCE_URL_OVERRIDE;
         sessionAccessToken = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
     }
@@ -47,23 +48,14 @@ async function getVideoParser() {
     let sessionInstanceUrl, sessionAccessToken;
     let applicationInstanceUrl, applicationAccessToken;
 
-    // Check if there are cookies to use for instance_url and access_token.
-    if (process.env.NODE_ENV == 'production') {
-        console.log("NODE PRODUCTION ENV!");
-        let applicationTokens = await fetch("/connect").then(resp => resp.json());
-        applicationInstanceUrl = applicationTokens.instance_url;
-        applicationAccessToken = applicationTokens.access_token;
-    }
+    let applicationTokens = await fetch("/connect").then(resp => resp.json());
+    applicationInstanceUrl = applicationTokens.instance_url;
+    applicationAccessToken = applicationTokens.access_token;
+
 
     sessionInstanceUrl = getCookie("instanceUrl");
     sessionAccessToken = getCookie("accessToken");
 
-
-
-    if (process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE) {
-        sessionInstanceUrl = process.env.SF_OAUTH_SESSION_INSTANCE_URL_OVERRIDE;
-        sessionAccessToken = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
-    }
 
 
     let cache1 = new Cache("thumb");
@@ -107,11 +99,13 @@ async function getVideoParser() {
         const thumbs = cache1.get(video.resourceId);
         const durations = cache2.get(video.resourceId);
 
-        if (thumbs) {
+        if (thumbs)
+        {
             video.setThumbnail(thumbs.thumbs);
         }
 
-        if (durations) {
+        if (durations)
+        {
             video.setDuration(durations.durations);
         }
 
@@ -151,7 +145,8 @@ export default function App() {
 
             let records = resp.records;
 
-            if (records == null) {
+            if (records == null)
+            {
                 //throw new Error("No records found. Check access token.")
                 console.error("No records found. Check access token.");
             }

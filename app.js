@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path'); // Import the path module
 const { access } = require('fs');
 const app = express();
-const port = 8081;
+const port = process.env.PORT || 80;
 
 
 const SF_ACCESS_TOKEN = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
