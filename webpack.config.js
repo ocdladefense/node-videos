@@ -5,8 +5,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const InterpolateHtmlPlugin = require("interpolate-html-plugin");
 
-module.exports = env => {
+module.exports = (env, argv) => {
     console.log(env);
+    const isProd = argv.mode === 'production';
 
 
     return {
@@ -99,7 +100,7 @@ module.exports = env => {
                 filename: "index.html"
             }),
             new InterpolateHtmlPlugin({
-                GOOGLE_ANALYTICS_ID: env.production ? env.GOOGLE_ANALYTICS_ID : null
+                GOOGLE_ANALYTICS_ID: isProd ? env.GOOGLE_ANALYTICS_ID : null
             }),
             new CopyPlugin({
                 patterns: [
