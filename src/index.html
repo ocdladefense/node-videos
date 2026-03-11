@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%GOOGLE_ANALYTICS_ID%"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '%GOOGLE_ANALYTICS_ID%');
+    </script>
     <meta charset="utf-8" />
     <title>OCDLA VideoApp | Development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=overlays-content" />
@@ -79,13 +87,15 @@
     </noscript>
 
     <script>
-        let domReady = (cb) => {
+        let domReady = (cb) =>
+        {
             document.readyState === 'interactive' || document.readyState === 'complete'
                 ? cb()
                 : document.addEventListener('DOMContentLoaded', cb);
         };
 
-        domReady(() => {
+        domReady(() =>
+        {
             // Display body when DOM is loaded
             document.body.style.visibility = 'visible';
         });
