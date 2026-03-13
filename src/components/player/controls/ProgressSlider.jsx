@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ProgressSlider as MUIProgressSlider, BodyContainer, TimeContainer } from '../../../js/videostyles.js';
 import { Box, Skeleton } from '@mui/material';
-import '../../../css/videostyles.css';
+import '../../../css/VideoStyles.css';
 import waitUntil from '../../../js/utils.js';
 import { formatTime } from '../../../js/utils.js';
 
@@ -41,7 +41,8 @@ export default function ProgressSlider({ player, sensitivity = 200 }) {
     }, [player.getElapsedTime()]);
 
 
-    if (player.isInitialized()) {
+    if (player.isInitialized())
+    {
         return (
             <Box>
                 <BodyContainer>
@@ -63,7 +64,8 @@ export default function ProgressSlider({ player, sensitivity = 200 }) {
         )
     }
 
-    else {
+    else
+    {
         return (
             <Box>
                 <BodyContainer>

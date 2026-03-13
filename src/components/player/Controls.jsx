@@ -12,7 +12,7 @@ import ProgressSlider from './controls/ProgressSlider.jsx';
 import { ControlBarContainer, ArrowBackButton } from '../../js/videostyles.js';
 import { ThemeProvider, Container, Box, Tooltip } from '@mui/material';
 import { PlayerTheme } from '../../js/videostyles.js';
-import '../../css/videostyles.css';
+import '../../css/VideoStyles.css';
 
 /**
  * 
@@ -42,7 +42,8 @@ export default function Controls({ player, previousPage, isFullscreen, toggleFul
     // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
-        if (!player.isInitialized()) {
+        if (!player.isInitialized())
+        {
             player.onElapsedTimeChange(setPlayerState);
         }
     }, [player.isInitialized()]);

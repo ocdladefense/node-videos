@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router";
 import { useOutletContext } from 'react-router-dom';
-import '../../css/videostyles.css';
+import '../../css/VideoStyles.css';
 import Controls from './Controls.jsx';
 import { PlayerTheme, VideoContainer, TitleContainer } from '../../js/videostyles.js';
 import { ThemeProvider, Box } from '@mui/material';
@@ -121,7 +121,8 @@ export default function PlayerContainer({ controls = "standard,float,autohide,hi
     // Initialization involves both downloading the YT API script and instantiating an instance of YTPlayer.
     // ***We shouldn't need to pass most of the setter functions along to the YouTube class.
     useEffect(() => {
-        if (!player.isInitialized()) {
+        if (!player.isInitialized())
+        {
             // player.onElapsedTimeChange(setPlayerState);
             player.load("player");//.then((player) => setPlayerInitialized(true));
         }
