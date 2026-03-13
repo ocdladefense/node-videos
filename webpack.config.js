@@ -1,11 +1,21 @@
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
-const Dotenv = require('dotenv-webpack');
-const InterpolateHtmlPlugin = require("interpolate-html-plugin");
+import path from "path";
+// import webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import CopyPlugin from "copy-webpack-plugin";
+import Dotenv from 'dotenv-webpack';
+import InterpolateHtmlPlugin from "interpolate-html-plugin";
+import { fileURLToPath } from 'url';
 
-module.exports = (env, argv) => {
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+
+
+
+export default (env, argv) => {
     console.log(env);
     const isProd = argv.mode === 'production';
 

@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 
-const defaultTheme = require("tailwindcss/defaultTheme");
+import defaultTheme from "tailwindcss/defaultTheme";
 
-module.exports = {
+export default {
     content: [
         "./src/**/*.{html,js,jsx}",
         "./dev_modules/@ocdla/global-components/**/*.{html,js,jsx}",

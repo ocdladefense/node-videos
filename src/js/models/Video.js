@@ -1,4 +1,4 @@
-import Thumbnail from "./Thumbnail";
+import Thumbnail from "./Thumbnail.js";
 
 export default class Video {
 
@@ -73,7 +73,8 @@ export default class Video {
     }
 
     getProgress(timestamp) {
-        if (!timestamp) {
+        if (!timestamp)
+        {
             return "0%";
         }
         const progress = timestamp / this.getDuration();
@@ -99,7 +100,8 @@ export default class Video {
     }
 
     getVideoDescription() {
-        if (this.description != null) {
+        if (this.description != null)
+        {
             return this.description;
         } else return "No description given."
     }
@@ -129,7 +131,8 @@ export default class Video {
     }
 
     getSeminarDate() {
-        if (this.seminar == null) {
+        if (this.seminar == null)
+        {
             return "No seminar data";
         }
         return this.seminar.Start_Date__c;
@@ -146,13 +149,17 @@ export default class Video {
     getThumbnailUrl(size = Thumbnail.SMALL) {
         let resolutionOrder = ["maxres", "standard", "high", "medium", "default"];
 
-        if (size == Thumbnail.SMALL) {
+        if (size == Thumbnail.SMALL)
+        {
             resolutionOrder = resolutionOrder.reverse();
         }
 
-        if (this.thumbnails) {
-            for (let resolution of resolutionOrder) {
-                if (this.thumbnails[resolution] && this.thumbnails[resolution].url) {
+        if (this.thumbnails)
+        {
+            for (let resolution of resolutionOrder)
+            {
+                if (this.thumbnails[resolution] && this.thumbnails[resolution].url)
+                {
                     return this.thumbnails[resolution].url;
                 }
             }

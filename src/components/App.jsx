@@ -46,11 +46,11 @@ function isLoggedIn() {
 async function getVideoParser() {
 
     let sessionInstanceUrl, sessionAccessToken;
-    let applicationInstanceUrl, applicationAccessToken;
+    // let applicationInstanceUrl, applicationAccessToken;
 
-    let applicationTokens = await fetch("/connect").then(resp => resp.json());
-    applicationInstanceUrl = applicationTokens.instance_url;
-    applicationAccessToken = applicationTokens.access_token;
+    // let applicationTokens = await fetch("/connect").then(resp => resp.json());
+    // applicationInstanceUrl = applicationTokens.instance_url;
+    // applicationAccessToken = applicationTokens.access_token;
 
 
     sessionInstanceUrl = getCookie("instanceUrl");
@@ -63,18 +63,20 @@ async function getVideoParser() {
 
 
     let session = new SalesforceRestApi(sessionInstanceUrl, sessionAccessToken);
-    let application = new SalesforceRestApi(applicationInstanceUrl, applicationAccessToken);
+    // let application = new SalesforceRestApi(applicationInstanceUrl, applicationAccessToken);
     user.setApi(session);
 
-    let resp = await application.query(query);
-    parser.parse(resp.records);
+    // let resp = await application.query(query);
+    let records = await fetch("/media").then(resp => resp.json());
+
+    parser.parse(records);
 
     // Default thumb in case there is no available image.
     Video.setDefaultThumbnail('http:/foobar');
 
 
     let videos = parser.getVideos();
-
+    console.log(videos);
 
 
     const resourceIds = Video.getResourceIds(videos);

@@ -3,14 +3,15 @@ import { createRoot } from 'react-dom/client';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from '../components/App';
+import App from '../components/App.jsx';
 import Home from '../components/Home.jsx';
 import VideoDetails from '../components/VideoDetails.jsx';
 import PlayerContainer from '../components/player/PlayerContainer.jsx';
 import PurchasePage from "../components/PurchasePage.jsx";
 
 
-if (process.env.NODE_ENV === 'debug') {
+if (process.env.NODE_ENV === 'debug')
+{
     setDebugLevel(1);
 }
 

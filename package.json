@@ -2,6 +2,7 @@
     "name": "myapp",
     "version": "0.1.0",
     "description": "My app.",
+    "type": "module",
     "main": "index.js",
     "scripts": {
         "test": "jest",
@@ -28,7 +29,7 @@
         "@mui/icons-material": "^7.0.2",
         "@mui/material": "^7.0.2",
         "@ocdla/global-components": "file:./dev_modules/@local/global-components",
-        "@ocdla/lib-http": "^2.1.0",
+        "@ocdla/lib-http": "file:./dev_modules/@ocdla/lib-http",
         "@ocdla/lib-routing": "^1.1.0",
         "@ocdla/salesforce": "file:./dev_modules/@ocdla/salesforce",
         "@ocdla/view": "~2.5.0",

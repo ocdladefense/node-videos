@@ -1,4 +1,4 @@
-import SalesforceRestApi from "@ocdla/salesforce/SalesforceRestApi";
+
 
 export default class User {
 
@@ -67,28 +67,33 @@ export default class User {
 
     async hasAccess(mediaId) {
 
-        try {
+        try
+        {
             let accessResp = await this.api.access(mediaId);
             return accessResp.status === 200;
-        } catch (err) {
+        } catch (err)
+        {
             console.error("hasAccess failed", err);
             return false;
         }
     }
 
     async purchase(mediaId) {
-        try {
+        try
+        {
 
             let resp = await this.api.purchase(mediaId);
 
-            if (resp.status === 200) {
+            if (resp.status === 200)
+            {
                 this.addPurchased({
                     resourceId: mediaId,
                 });
                 return true;
             }
 
-        } catch (err) {
+        } catch (err)
+        {
             console.error("Purchase failed", err);
             return false;
         }

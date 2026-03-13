@@ -1,5 +1,5 @@
-import { chunkArray } from '../utils';
-import { convertISODurationToSeconds } from '../utils';
+import { chunkArray } from '../utils.js';
+import { convertISODurationToSeconds } from '../utils.js';
 
 
 
@@ -31,7 +31,8 @@ const YouTubeData = (function() {
 
         const batches = chunkArray(ids, YOUTUBE_DATA_API_LIMIT);
 
-        for (const batch of batches) {
+        for (const batch of batches)
+        {
 
             let resp = await doCallout(batch);
 
@@ -67,7 +68,8 @@ const YouTubeData = (function() {
                 return resp.json();
             })
             .then((json) => {
-                if (ok) {
+                if (ok)
+                {
                     return ifOkay(json);
                 }
                 const errorReason = statusCode + ok + json.error.errors[0].reason;

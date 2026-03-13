@@ -5,11 +5,20 @@
  */
 
 
-require('dotenv').config();
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const path = require('path'); // Import the path module
-const { access } = require('fs');
+// require('dotenv').config();
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+import cookieParser from "cookie-parser";
+import path from "path";
+import { access } from "fs";
+import { fileURLToPath } from 'url';
+import SalesforceRestApi from '@ocdla/salesforce/SalesforceRestApi.js';
+
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 80;
 
@@ -17,20 +26,6 @@ const port = process.env.PORT || 80;
 const SF_ACCESS_TOKEN = process.env.SF_OAUTH_SESSION_ACCESS_TOKEN_OVERRIDE;
 
 
-
-/*
-from webpack.json
-
-new webpack.DefinePlugin({
-                USE_MOCK: JSON.stringify(env.USE_MOCK || false),// Can we even pass booleans from the CLI?
-                MODULE_PATH: JSON.stringify(env.MODULE_PATH || ""),
-                API_KEY: JSON.stringify(env.API_KEY),
-                SF_ACCESS_TOKEN: JSON.stringify(env.SF_ACCESS_TOKEN),
-                SF_INSTANCE_URL: JSON.stringify(env.SF_INSTANCE_URL),
-                SF_ACCESS_TOKEN: JSON.stringify(env.SF_ACCESS_TOKEN),
-                SF_USER_ID: JSON.stringify(env.SF_USER_ID)
-            }),
-*/
 
 
 // Serve static files from the 'dist' directory
@@ -132,10 +127,8 @@ app.get("/oauth/api/request", async (req, res) => {
 
 
 
+async function foobar() {
 
-
-
-app.get("/connect", async (req, res) => {
 
     const data = new URLSearchParams({
         grant_type: "client_credentials",
@@ -155,10 +148,41 @@ app.get("/connect", async (req, res) => {
     });
 
     console.log("Receiving client credential response...");
-    const token = await response.json();
+
+    return await response.json();
+}
+
+
+
+
+
+app.get("/connect", async (req, res) => {
+
+
+    let token = await foobar();
     console.log(token);
 
     res.json(token);
+});
+
+
+app.get("/media", async (req, res) => {
+
+    const query = 'SELECT Id, Name, Description__c, Event__c, Event__r.Name, Event__r.Start_Date__c, Speakers__c, ResourceId__c, Date__c, Published__c, IsPublic__c FROM Media__c ORDER BY Event__r.Start_Date__c DESC NULLS LAST';
+
+    let applicationInstanceUrl, applicationAccessToken;
+
+    let applicationTokens = await foobar();
+    applicationInstanceUrl = applicationTokens.instance_url;
+    applicationAccessToken = applicationTokens.access_token;
+
+
+    let application = new SalesforceRestApi(applicationInstanceUrl, applicationAccessToken);
+
+
+    let resp = await application.query(query);
+
+    res.json(resp.records);
 });
 
 
