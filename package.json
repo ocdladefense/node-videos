@@ -9,7 +9,7 @@
         "babel-build": "babel src --out-dir dist --source-maps",
         "build": "webpack --config webpack.config.js --env USE_MOCK --mode development",
         "build-dev": "webpack --config webpack.config.js --env USE_MOCK --mode development",
-        "build-prod": "webpack --config webpack.config.js --env USE_MOCK --mode production --env GOOGLE_ANALYTICS_ID=G-JJSTR1V9PP",
+        "build-prod": "webpack --config webpack.config.js --env USE_MOCK --mode production --env GOOGLE_ANALYTICS_ID=G-NDK9Q3J7YK",
         "watch": "npx webpack serve --open --port 80 --env USE_MOCK --mode development",
         "merge-package-json": "cp package.json package-main.json && package-json-merge package-main.json package-overrides.json > package.json",
         "backup-package-json": "cp package.json package-orig.json",
