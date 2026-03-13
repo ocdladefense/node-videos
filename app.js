@@ -173,6 +173,7 @@ app.get("/media", async (req, res) => {
     let applicationInstanceUrl, applicationAccessToken;
 
     let applicationTokens = await foobar();
+    console.log(applicationTokens);
     applicationInstanceUrl = applicationTokens.instance_url;
     applicationAccessToken = applicationTokens.access_token;
 
